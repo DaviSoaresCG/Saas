@@ -7,13 +7,20 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    $users = User::all();
-    dd($users);
+    return redirect()->route('plans');
 });
 
 Route::controller(MainController::class)->group(function(){
-    Route::get('/login', 'loginPage')->name('login');
-    Route::get('/login/{id}', 'loginSubmit')->name('login.submit');
-    Route::get('/logout', 'logout')->name('logout');
 
+    Route::middleware('auth')->group(function(){
+        Route::get('/logout', 'logout')->name('logout');
+        Route::get('/plans', 'plans')->name('plans');
+    });
+
+    Route::middleware('guest')->group(function(){
+        Route::get('/login', 'loginPage')->name('login');
+        Route::get('/login/{id}', 'loginSubmit')->name('login.submit');
+    });
+    
+    
 });

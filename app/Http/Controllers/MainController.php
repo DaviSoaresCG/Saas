@@ -19,7 +19,7 @@ class MainController extends Controller
         $user = User::findOrFail($id);
         if($user){
             Auth::login($user);
-            echo "LOGADO COM SUCESSO: ".$user->name;
+            return redirect()->route('plans');
         }
     }
 
@@ -27,5 +27,10 @@ class MainController extends Controller
     {
         Auth::logout();
         return redirect()->route('login');
+    }
+
+    public function plans()
+    {
+        return view('plans');
     }
 }
