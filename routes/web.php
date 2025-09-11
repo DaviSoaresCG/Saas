@@ -15,6 +15,9 @@ Route::controller(MainController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::get('/logout', 'logout')->name('logout');
         Route::get('/plans', 'plans')->name('plans');
+        Route::get('/plan_selected/{id}', 'planSelected')->name('plans.selected');
+        
+        Route::get('/subscription/success', 'subscriptionSuccess')->name('subscription.success');
     });
 
     Route::middleware('guest')->group(function(){
