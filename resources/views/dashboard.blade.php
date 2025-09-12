@@ -23,7 +23,25 @@
 
     <div class="text-center mt-5">
         <p class="display-6">Dashboard!</p>
+
     </div>
+
+    <hr>
+
+    <div class="text-center">
+        <p>Subsctiption termina em <strong>{{$subscription_end}}</strong></p>
+    </div>
+
+    <hr>
+
+    @foreach($invoices as $invoice)
+        <div class="text-center">
+            <a href="{{ Route('invoice.download', ['id' => $invoice->id]) }}" 
+                class="btn btn-primary">
+                Gerar Nota Fiscal
+            </a>
+        </div>
+    @endforeach
 
 </body>
 

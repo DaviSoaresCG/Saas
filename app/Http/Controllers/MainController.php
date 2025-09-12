@@ -56,11 +56,11 @@ class MainController extends Controller
         $price_id = $plan[1];
 
         return auth()->user()
-        ->newSubscription($product_id, $price_id)
-        ->checkout([
-            'success_url' => route('subscription.success'),
-            'cancel_url' => route('plans'),
-        ]);
+            ->newSubscription($product_id, $price_id)
+            ->checkout([
+                'success_url' => route('subscription.success'),
+                'cancel_url' => route('plans'),
+            ]);
     }
 
     public function subscriptionSuccess()
@@ -70,6 +70,34 @@ class MainController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard');
+
+        // check the experation
+        $timestamp = Auth::user()
+            ->subscription(env('STRIPE_PRODUCT_ID'))
+            ->asStripeSubscription()
+            ->current_period_end;
+
+        $subscription_end = date('d/m/y H:i:s', $timestamp);
+
+        // get invoices da assinatura(especifiquei o produto)
+        $invoices = Auth::user()->subscription(env('STRIPE_PRODUCT_ID'))->invoices();
+
+        return view('dashboard', compact('subscription_end', 'invoices'));
+    }
+
+    public function invoiceDownload($id)
+    {
+        return Auth::user()->downloadInvoice($id);
+
+        return Auth::user()->downloadInvoice($id, [
+            'vendor' => 'Silencio LTD',
+            'product' => 'SILENCIO',
+            'street' => 'Main Str. 1',
+            'location' => '2000 Antwerp, Belgium',
+            'phone' => '+32 499 00 00 00',
+            'email' => 'info@example.com',
+            'url' => 'https://example.com',
+            'vendorVat' => 'BE123456789',
+        ]);
     }
 }

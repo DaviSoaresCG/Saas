@@ -21,6 +21,7 @@ Route::controller(MainController::class)->group(function () {
         Route::middleware([hasSubscription::class])->group(function () {
             Route::get('/dashboard', 'dashboard')->name('dashboard');
             Route::get('/subscription/success', 'subscriptionSuccess')->name('subscription.success');
+            Route::get('/invoice/{id}', 'invoiceDownload')->name('invoice.download');
         });
 
         // nao acessa se tiver uma subscription
@@ -28,8 +29,6 @@ Route::controller(MainController::class)->group(function () {
             Route::get('/plans', 'plans')->name('plans');
             Route::get('/plan_selected/{id}', 'planSelected')->name('plans.selected');
         });
-
-
     });
 
     Route::middleware('guest')->group(function () {
