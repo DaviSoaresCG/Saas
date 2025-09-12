@@ -16,6 +16,7 @@ class MainController extends Controller
 
     public function loginSubmit($id)
     {
+
         //login direto
         $user = User::findOrFail($id);
         if ($user) {
@@ -27,6 +28,8 @@ class MainController extends Controller
     public function logout()
     {
         Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
         return redirect()->route('login');
     }
 
@@ -62,6 +65,11 @@ class MainController extends Controller
 
     public function subscriptionSuccess()
     {
-        echo "Inscrição realizada com sucesso";
+        return view('subscription_success');
+    }
+
+    public function dashboard()
+    {
+        return view('dashboard');
     }
 }

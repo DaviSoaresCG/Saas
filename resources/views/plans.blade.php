@@ -13,7 +13,7 @@
     <div class="container my-5">
         <p class="display-6 text-center my-5">Laravel Cashier (Stripe)</p>
         <hr>
-        <p class="text-center">Usuário: <strong class="text-info">{{ Auth::user() }}</strong></p>
+        <p class="text-center">Usuário: <strong class="text-info">{{ Auth::user()->name }}</strong></p>
         <a href="{{ route('logout') }}" class="btn btn-sm btn-danger px-3 ms-3">Sair</a>
         <hr>
     </div>
