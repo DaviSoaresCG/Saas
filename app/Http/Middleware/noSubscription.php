@@ -17,7 +17,7 @@ class noSubscription
     public function handle(Request $request, Closure $next): Response
     {
         // check if the user has no subscription
-        if(Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))){
+        if(Auth::check() && Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))){
             return redirect()->route('dashboard');
         }
 

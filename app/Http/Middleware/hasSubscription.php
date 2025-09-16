@@ -17,10 +17,14 @@ class hasSubscription
     public function handle(Request $request, Closure $next): Response
     {
         // check if user has subscription
-        if(!Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))){
+        if(Auth::check()){
+            if(!Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))){
+                return redirect()->route('plans');
+            }else{
+                return $next($request);
+            }
+        }else{
             return redirect()->route('plans');
         }
-        
-        return $next($request);
     }
 }
