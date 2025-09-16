@@ -87,7 +87,7 @@ class MainController extends Controller
 
     public function invoiceDownload($id)
     {
-        return Auth::user()->downloadInvoice($id);
+        // return Auth::user()->downloadInvoice($id);
 
         return Auth::user()->downloadInvoice($id, [
             'vendor' => 'Silencio LTD',
