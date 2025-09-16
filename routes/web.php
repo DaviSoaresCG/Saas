@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Middleware\hasSubscription;
 use App\Http\Middleware\noSubscription;
 use App\Http\Middleware\ResolveTenant;
@@ -33,13 +35,26 @@ Route::controller(MainController::class)->group(function () {
             Route::get('/subscription/success', 'subscriptionSuccess')->name('subscription.success');
             Route::get('/invoice/{id}', 'invoiceDownload')->name('invoice.download');
         });
+
+        Route::middleware([noSubscription::class])->group(function () {
+            Route::get('/plan_selected/{id}', 'planSelected')->name('plans.selected');
+        });
     });
 
         // nao acessa se tiver uma subscription
         Route::middleware([noSubscription::class])->group(function () {
             Route::get('/plans', 'plans')->name('plans');
-            Route::get('/plan_selected/{id}', 'planSelected')->name('plans.selected');
         });
-    });
+});
 
-Auth::routes();
+Route::middleware(['guest'])->group(function(){
+    Route::controller(LoginController::class)->group(function(){
+        Route::get('/login', 'login')->name('login');
+        Route::post('/login', 'loginSubmit')->name('login.submit');
+    });
+    Route::controller(RegisterController::class)->group(function(){
+        Route::get('/register', 'register')->name('register');
+        Route::post('/register', 'registerSubmit')->name('register.submit');
+    });
+});
+

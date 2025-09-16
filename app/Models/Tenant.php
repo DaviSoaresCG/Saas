@@ -9,5 +9,5 @@ class Tenant extends Model
 {
     use Billable;
 
-    protected $fillable = ['name', 'slug', 'stripe_customer_id', 'whatsapp'];
+    protected $fillable = ['name', 'slug', 'email', 'password' , 'whatsapp'];
 }
