@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->decimal('value', 10, 2);
-            $table->foreignId('tenant_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
@@ -26,9 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function(Blueprint $table){
-            $table->dropForeign('tenent_id');
-        });
+        
         Schema::dropIfExists('products');
     }
 };

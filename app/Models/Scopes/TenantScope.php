@@ -3,6 +3,7 @@
 namespace App\Models\Scopes;
 
 use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -14,7 +15,7 @@ class TenantScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $tenant = app()->make(Tenant::class);
-        $builder->where($model->getTable().'.tenant_id', $tenant->id);
+        $user = app()->make(User::class);
+        $builder->where($model->getTable().'.user_id', $user->id);
     }
 }

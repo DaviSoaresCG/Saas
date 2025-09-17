@@ -15,6 +15,13 @@
                 <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
                     <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Designed for business teams like yours</h2>
                     <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">Here at Flowbite we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth.</p>
+                    @auth()
+                        <form action="{{route('logout')}}" method="post">
+                            @csrf
+                            <input type="submit" value="Logout" class="cursor-pointer bg-blue-600 p-3 rounded">
+                        </form>
+                    @endauth
+
                 </div>
                 <div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
                     <!-- Pricing Card -->
@@ -60,7 +67,7 @@
                         <h3 class="mb-4 text-2xl font-semibold">Company</h3>
                         <p class="font-light text-gray-500 sm:text-lg dark:text-gray-400">Relevant for multiple users, extended & premium support.</p>
                         <div class="flex justify-center items-baseline my-8">
-                            <span class="mr-2 text-5xl font-extrabold">R$ 199</span>
+                            <span class="mr-2 text-5xl font-extrabold">R$ 499</span>
                             <span class="text-gray-500 dark:text-gray-400">/anual</span>
                         </div>
                         <!-- List -->

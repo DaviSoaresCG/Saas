@@ -22,7 +22,6 @@ class User extends Authenticatable
         'name',
         'email',
         'slug',
-        'stripe_customer_id',
         'whatsapp',
         'password',
     ];

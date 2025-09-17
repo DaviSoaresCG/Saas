@@ -1,1 +1,2 @@
-Falta configurar as rotas, controllers e fazer as páginas 
+Usar o Laravel UI?
+Falta configurar as rotas, controllers e fazer as páginas

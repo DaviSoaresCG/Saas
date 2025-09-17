@@ -10,7 +10,7 @@ trait BelongsToTenant
         static::addGlobalScope(new TenantScope);
 
         static::creating(function ($model) {
-            $model->tenant_id = app()->make(\App\Models\Tenant::class)->id;
+            $model->user_id = app()->make(\App\Models\User::class)->id;
         });
     }
 }

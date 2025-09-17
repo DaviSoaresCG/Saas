@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Tenant;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +21,9 @@ class ResolveTenant
        $hostSegments = explode('.', $request->getHost());
        $slug = $hostSegments[0];
 
-       $tenant = Tenant::where('slug', $slug)->firstOrFail();
+       $user = User::where('slug', $slug)->firstOrFail();
 
-       app()->instance(Tenant::class, $tenant);
+       app()->instance(User::class, $user);
 
        return $next($request);
     }
