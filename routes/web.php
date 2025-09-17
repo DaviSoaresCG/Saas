@@ -37,8 +37,6 @@ Route::controller(MainController::class)->group(function () {
             Route::get('/invoice/{id}', 'invoiceDownload')->name('invoice.download');
         });
 
-        // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
         Route::middleware([noSubscription::class])->group(function () {
             Route::get('/plan_selected/{id}', 'planSelected')->name('plans.selected');
         });
@@ -50,16 +48,6 @@ Route::controller(MainController::class)->group(function () {
         });
 });
 
-Route::middleware(['guest'])->group(function(){
-    // Route::controller(AuthController::class)->group(function(){
-    //     Route::get('/login', 'login')->name('login');
-    //     Route::post('/login', 'loginSubmit')->name('login.submit');
-    // });
-    // Route::controller(AuthController::class)->group(function(){
-    //     Route::get('/register', 'register')->name('register');
-    //     Route::post('/register', 'registerSubmit')->name('register.submit');
-    // });
-});
 
 
 Auth::routes();
