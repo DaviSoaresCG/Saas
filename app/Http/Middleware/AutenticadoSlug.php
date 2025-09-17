@@ -2,12 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class hasSubscription
+class AutenticadoSlug
 {
     /**
      * Handle an incoming request.
@@ -16,15 +17,10 @@ class hasSubscription
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // check if user has subscription
-        if(Auth::check()){
-            if(!Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))){
-                return redirect()->away('http://' . env('APP_DOMAIN'));
-            }else{
-                return $next($request);
-            }
-        }else{
-            return redirect()->route('login');
+        $user = app(User::class);
+        if(!Auth::check()){
+            return redirect()->route('products.index', ['slug' => $user->slug]);
         }
+        return $next($request);
     }
 }

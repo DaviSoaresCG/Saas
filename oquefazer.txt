@@ -1,2 +1,2 @@
-Usar o Laravel UI?
+CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
 Falta configurar as rotas, controllers e fazer as páginas

@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Middleware\AutenticadoSlug;
 use App\Http\Middleware\hasSubscription;
 use App\Http\Middleware\noSubscription;
 use App\Http\Middleware\ResolveTenant;
@@ -12,56 +14,44 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('plans');
-});
+// Route::get('/', function () {
+//     return redirect()->route('plans');
+// });
 
 Route::domain('{slug}.' . env('APP_DOMAIN'))
-    ->middleware([ResolveTenant::class, 'auth'])
+    ->middleware([ResolveTenant::class])
     ->group(function () {
-        Route::get('/', function(){
-            echo "AAA";
+
+        Route::get('/', function () {
+            $user = app(User::class);
+            return redirect()->route('products.index', ['slug' => $user->slug]);
         });
+
+        Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         // Route::get('produtos', 'Front\ProductController@index')->name('products.index');
         // Route::get('produtos/{slug}', 'Front\ProductController@show')->name('products.show');
-        // outras rotas de painel público ou admin
-    });
 
-Route::controller(MainController::class)->group(function () {
-
-    Route::middleware('auth')->group(function () {
-        // nao acessa se não tiver uma subscription
-        Route::middleware([hasSubscription::class])->group(function () {
-            Route::get('/dashboard', 'dashboard')->name('dashboard');
-            Route::get('/subscription/success', 'subscriptionSuccess')->name('subscription.success');
-            Route::get('/invoice/{id}', 'invoiceDownload')->name('invoice.download');
-        });
-
-        // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-        Route::middleware([noSubscription::class])->group(function () {
-            Route::get('/plan_selected/{id}', 'planSelected')->name('plans.selected');
+        Route::middleware(['auth'])->group(function () {
+            Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
+            // outras rotas de adm...
         });
     });
-
-        // nao acessa se tiver uma subscription
-        Route::middleware([noSubscription::class])->group(function () {
-            Route::get('/plans', 'plans')->name('plans');
-        });
-});
-
-Route::middleware(['guest'])->group(function(){
-    // Route::controller(AuthController::class)->group(function(){
-    //     Route::get('/login', 'login')->name('login');
-    //     Route::post('/login', 'loginSubmit')->name('login.submit');
-    // });
-    // Route::controller(AuthController::class)->group(function(){
-    //     Route::get('/register', 'register')->name('register');
-    //     Route::post('/register', 'registerSubmit')->name('register.submit');
-    // });
-});
-
 
 Auth::routes();
+
+Route::middleware('guest')->group(function () {
+    Route::middleware([noSubscription::class])->group(function () {
+        Route::get('/plans', [MainController::class, 'plans'])->name('plans');
+        Route::get('/plan_selected/{id}', [MainController::class, 'planSelected'])->name('plans.selected');
+    });
+});
+
+
+Route::middleware('auth')->group(function () {
+    Route::middleware([hasSubscription::class])->group(function () {
+        Route::get('/subscription/success', [MainController::class, 'subscriptionSuccess'])->name('subscription.success');
+        Route::get('/invoice/{id}', [MainController::class, 'invoiceDownload'])->name('invoice.download');
+    });
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

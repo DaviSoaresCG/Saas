@@ -20,7 +20,7 @@
                     <p class="display-6 text-success">Muito obrigado pela sua subscrição!</p>
                     <p>Já pode avançar para a dashboard!</p>
                     <div class="text-center">
-                        <a href="{{ Route('dashboard') }}" class="btn btn-primary px-5 mt-3">Dashboard</a>
+                        <a href="{{ Route('dashboard', ['slug' => $slug]) }}" class="btn btn-primary px-5 mt-3">Dashboard</a>
                     </div>
                 </div>
 

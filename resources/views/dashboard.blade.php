@@ -17,7 +17,10 @@
         <div>
             <span>{{ Auth::user()->name }}</span>
             <span class="px-3">|</span>
-            <a href="{{ Route('logout') }}">Logout</a>
+            <form action="{{route('logout')}}" method="post">
+                @csrf
+                <input type="submit" value="Logout">
+            </form>
         </div>
     </div>
 
@@ -30,6 +33,7 @@
 
     <div class="text-center">
         <p>Subsctiption termina em <strong>{{$subscription_end}}</strong></p>
+        <a href="{{ route('products.index', ['slug' => $user->slug]) }}">Acessar página da loja</a>
     </div>
 
     <hr>

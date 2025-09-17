@@ -65,7 +65,8 @@ class MainController extends Controller
 
     public function subscriptionSuccess()
     {
-        return view('subscription_success');
+        $user = Auth::user();
+        return view('subscription_success', ['slug' => $user->slug]);
     }
 
     public function dashboard()
@@ -82,7 +83,8 @@ class MainController extends Controller
         // get invoices da assinatura(especifiquei o produto)
         $invoices = Auth::user()->subscription(env('STRIPE_PRODUCT_ID'))->invoices();
 
-        return view('dashboard', compact('subscription_end', 'invoices'));
+        $user = app(User::class);
+        return view('dashboard', compact('subscription_end', 'invoices', 'user'));
     }
 
     public function invoiceDownload($id)

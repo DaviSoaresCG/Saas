@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResolveTenant
@@ -17,14 +18,21 @@ class ResolveTenant
      */
     public function handle(Request $request, Closure $next): Response
     {
-       // pega o subdomínio
-       $hostSegments = explode('.', $request->getHost());
-       $slug = $hostSegments[0];
+        // pega o subdomínio
+        $slug = explode('.', $request->getHost())[0];
 
-       $user = User::where('slug', $slug)->firstOrFail();
+        if ($slug === 'www' || $slug === env('APP_DOMAIN')) {
+            return redirect()->away('http://' . env('APP_DOMAIN'));
+        }
 
-       app()->instance(User::class, $user);
+        $user = User::where('slug', $slug)->firstOrFail();
 
-       return $next($request);
+        if (!$user->subscribed(env('STRIPE_PRODUCT_ID'))) {
+            return redirect()->away('http://' . env('APP_DOMAIN'));
+        }
+
+        app()->instance(User::class, $user);
+
+        return $next($request);
     }
 }
