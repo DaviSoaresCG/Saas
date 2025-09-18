@@ -36,11 +36,11 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
 
 Auth::routes();
 
-Route::get('/', [MainController::class, 'plans']);
+Route::get('/', [MainController::class, 'plans'])->name('home');
 
 Route::middleware([noSubscription::class])->group(function () {
         Route::get('/plans', [MainController::class, 'plans'])->name('plans');
-        Route::get('/plan_selected/{id}', [MainController::class, 'planSelected'])->name('plans.selected')->middleware('guest');
+        Route::get('/plan_selected/{id}', [MainController::class, 'planSelected'])->name('plans.selected')->middleware('auth');
 });
 
 
@@ -51,4 +51,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -9,30 +9,34 @@
 
 </head>
 
-<body class="h-screen w-screen flex items-center justify-center dark:bg-slate-950 bg-gray-200  p-3">
+<body class="h-screen w-screen flex items-center justify-center :bg-slate-950 bg-gray-200  p-3">
     <main class="w-72 m-auto sm:w-96">
         <div class="text-center">
-            <h1 class="font-bold text-2xl dark:text-white">Login</h1>
+            <h1 class="font-bold text-2xl :text-white">Login</h1>
         </div>
         <br>
-        <section class="space-y-4 bg-white dark:bg-gray-900 rounded-2xl w-full h-full shadow-lg px-8 py-10">
+        <section class="space-y-4 bg-white :bg-gray-900 rounded-2xl w-full h-full shadow-lg px-8 py-10">
             <form action="{{ route('login') }}" method="post">
                 @csrf
                 <div class="flex flex-col">
-                    <label for="email" class="ml-1 dark:text-white">Email</label>
+                    <label for="email" class="ml-1 :text-white">Email</label>
                     <input type="text" name="email"
-                        class="dark:text-white border-2 border-gray-500 rounded-2xl py-2 px-2 dark:bg-slate-800">
+                        class=":text-white border-2 border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
                 </div>
                 <div class="flex flex-col">
-                    <label for="senha" class="ml-1 dark:text-white">Senha</label>
+                    <label for="senha" class="ml-1 :text-white">Senha</label>
                     <input type="text" name="password"
-                        class="border-2 dark:text-white border-gray-500 rounded-2xl py-2 px-2 dark:bg-slate-800">
+                        class="border-2 :text-white border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
                 </div>
                 <div class="flex gap-2 flex-col">
                     <p>
-                        <a href="#"
-                            class="dark:text-white dark:hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
-                            Esqueci minha senha
+                        <a href="{{route('register')}}"
+                            class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
+                            Registrar
+                        </a>
+                        <a href="{{route('home')}}"
+                            class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
+                            Página inicial
                         </a>
                     </p>
                     <button
@@ -46,11 +50,11 @@
 
     <script>
         function claro() {
-            document.documentElement.classList.remove('dark')
+            document.documentElement.classList.remove('')
         }
 
         function escuro() {
-            document.documentElement.classList.add('dark')
+            document.documentElement.classList.add('')
         }
     </script>
 </body>
