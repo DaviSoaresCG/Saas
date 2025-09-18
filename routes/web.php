@@ -14,9 +14,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return redirect()->route('plans');
-// });
 
 Route::domain('{slug}.' . env('APP_DOMAIN'))
     ->middleware([ResolveTenant::class])
@@ -25,7 +22,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         Route::get('/', function () {
             $user = app(User::class);
             return redirect()->route('products.index', ['slug' => $user->slug]);
-        });
+        })->middleware(AutenticadoSlug::class);
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         // Route::get('produtos', 'Front\ProductController@index')->name('products.index');
@@ -39,11 +36,11 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
 
 Auth::routes();
 
-Route::middleware('guest')->group(function () {
-    Route::middleware([noSubscription::class])->group(function () {
+Route::get('/', [MainController::class, 'plans']);
+
+Route::middleware([noSubscription::class])->group(function () {
         Route::get('/plans', [MainController::class, 'plans'])->name('plans');
-        Route::get('/plan_selected/{id}', [MainController::class, 'planSelected'])->name('plans.selected');
-    });
+        Route::get('/plan_selected/{id}', [MainController::class, 'planSelected'])->name('plans.selected')->middleware('guest');
 });
 
 

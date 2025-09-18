@@ -1,2 +1,3 @@
 CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
+Redirecionar o usuario ao logar para o subdominio dele
 Falta configurar as rotas, controllers e fazer as páginas
