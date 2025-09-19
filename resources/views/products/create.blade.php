@@ -1,0 +1,40 @@
+@extends('layouts.app')
+@section('content')
+<main class="w-72 m-auto sm:w-96">
+    <div class="text-center">
+        <h1 class="font-bold text-2xl :text-white">Login</h1>
+    </div>
+    <br>
+    <section class="space-y-4 bg-white :bg-gray-900 rounded-2xl w-full h-full shadow-lg px-8 py-10">
+        <form action="{{ route('login') }}" method="post">
+            @csrf
+            <div class="flex flex-col">
+                <label for="email" class="ml-1 :text-white">Email</label>
+                <input type="text" name="email"
+                    class=":text-white border-2 border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
+            </div>
+            <div class="flex flex-col">
+                <label for="senha" class="ml-1 :text-white">Senha</label>
+                <input type="text" name="password"
+                    class="border-2 :text-white border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
+            </div>
+            <div class="flex gap-2 flex-col">
+                <p>
+                    <a href="{{route('register')}}"
+                        class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
+                        Registrar
+                    </a>
+                    <a href="{{route('home')}}"
+                        class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
+                        Página inicial
+                    </a>
+                </p>
+                <button
+                    class="cursor-pointer text-white bg-blue-500 w-full rounded-2xl px-4 py-2 hover:bg-blue-600 
+                transition-all duration-300 ease mt-2">Login
+                </button>
+            </div>
+        </form>
+    </section>
+</main>
+@endsection

@@ -18,6 +18,13 @@
                     @auth()
                         <form action="{{route('logout')}}" method="post">
                             @csrf
+                            <p class="text-white">
+                                User: {{Auth::user()->name}}
+                                @if(Auth::user()->subscribed(env('STRIPE_PRODUCT_ID')))
+                                    <br>
+                                    Voce ja tem uma inscrição <a href="{{route('products.index', ['slug' => Auth::user()->slug])}}" class="text-white">clique aqui para acessar</a>
+                                @endif
+                            </p>
                             <input type="submit" value="Logout" class="cursor-pointer bg-blue-600 p-3 rounded">
                         </form>
                     @endauth

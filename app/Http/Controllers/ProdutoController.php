@@ -14,4 +14,10 @@ class ProdutoController extends Controller
         // $products = Products::all();
         return view('products.index', compact('user'));
     }
+
+    public function create()
+    {
+        // $categorias = Categoria::all()
+        return view('products.create');
+    }
 }

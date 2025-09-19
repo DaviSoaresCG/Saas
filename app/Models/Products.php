@@ -9,5 +9,5 @@ class Products extends Model
 {
     use BelongsToTenant;
     
-    protected $fillable = ['name', 'description', 'value', 'tenant_id'];
+    protected $fillable = ['name', 'description', 'value', 'user_id'];
 }

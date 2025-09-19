@@ -23,14 +23,16 @@ class ResolveTenant
 
         if ($slug === 'www' || $slug === env('APP_DOMAIN')) {
             return redirect()->away('http://' . env('APP_DOMAIN'));
+
+            // return redirect()->away('http://127.0.0.1:8000');
         }
 
         $user = User::where('slug', $slug)->firstOrFail();
         // dd($slug, $user);
 
         if (!$user->subscribed(env('STRIPE_PRODUCT_ID'))) {
-            // return redirect()->away('http://' . env('APP_DOMAIN'));
-            return redirect()->away('http://127.0.0.1:8000');
+            return redirect()->away('http://' . env('APP_DOMAIN'));
+            // return redirect()->away('http://127.0.0.1:8000');
         }
 
         app()->instance(User::class, $user);

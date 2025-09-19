@@ -22,11 +22,17 @@
                     <label for="email" class="ml-1 :text-white">Email</label>
                     <input type="text" name="email"
                         class=":text-white border-2 border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
+                    @error('email')
+                        <p class="text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="flex flex-col">
                     <label for="senha" class="ml-1 :text-white">Senha</label>
-                    <input type="text" name="password"
+                    <input type="password" name="password"
                         class="border-2 :text-white border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
+                    @error('password')
+                        <p class="text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="flex gap-2 flex-col">
                     <p>
