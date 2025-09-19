@@ -12,8 +12,8 @@ class ProdutoController extends Controller
     public function index()
     {
         $user = app(User::class);
-        // $products = Products::all();
-        return view('products.index', compact('user'));
+        $products = Products::all();
+        return view('products.index', compact('user', 'products'));
     }
 
     public function create()
