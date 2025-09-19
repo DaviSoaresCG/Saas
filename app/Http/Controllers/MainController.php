@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class MainController extends Controller
 {
@@ -48,7 +49,7 @@ class MainController extends Controller
         // check if ID is valid
         $plan = Crypt::decryptString($id);
         if (!$plan) {
-            return redirect()->route('plans');
+            return redirect()->route('home');
         }
 
         $plan = explode('|', $plan);
@@ -59,13 +60,15 @@ class MainController extends Controller
             ->newSubscription($product_id, $price_id)
             ->checkout([
                 'success_url' => route('subscription.success'),
-                'cancel_url' => route('plans'),
+                'cancel_url' => route('erro'),
             ]);
     }
 
     public function subscriptionSuccess()
     {
         $user = Auth::user();
+        $user->slug = Str::slug(fake()->unique()->words(2, true)); 
+        $user->save();
         return view('subscription_success', ['slug' => $user->slug]);
     }
 
