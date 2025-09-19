@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BelongsToTenant;
+namespace App\Traits;
 use App\Models\Scopes\TenantScope;
 
 trait BelongsToTenant

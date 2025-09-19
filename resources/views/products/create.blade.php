@@ -1,40 +1,41 @@
 @extends('layouts.app')
 @section('content')
-<main class="w-72 m-auto sm:w-96">
-    <div class="text-center">
-        <h1 class="font-bold text-2xl :text-white">Login</h1>
+<form action="{{ route('products.store', ['slug' => Auth::user()->slug]) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+
+    <div>
+        <label for="nome">Nome do Produto:</label>
+        <input type="text" id="name" name="name" value="{{old('name')}}" required  class="border-2 p-2">
     </div>
-    <br>
-    <section class="space-y-4 bg-white :bg-gray-900 rounded-2xl w-full h-full shadow-lg px-8 py-10">
-        <form action="{{ route('login') }}" method="post">
-            @csrf
-            <div class="flex flex-col">
-                <label for="email" class="ml-1 :text-white">Email</label>
-                <input type="text" name="email"
-                    class=":text-white border-2 border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
-            </div>
-            <div class="flex flex-col">
-                <label for="senha" class="ml-1 :text-white">Senha</label>
-                <input type="text" name="password"
-                    class="border-2 :text-white border-gray-500 rounded-2xl py-2 px-2 :bg-slate-800">
-            </div>
-            <div class="flex gap-2 flex-col">
-                <p>
-                    <a href="{{route('register')}}"
-                        class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
-                        Registrar
-                    </a>
-                    <a href="{{route('home')}}"
-                        class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
-                        Página inicial
-                    </a>
-                </p>
-                <button
-                    class="cursor-pointer text-white bg-blue-500 w-full rounded-2xl px-4 py-2 hover:bg-blue-600 
-                transition-all duration-300 ease mt-2">Login
-                </button>
-            </div>
-        </form>
-    </section>
+    @error('name')
+        <p class="text-red-600 text-sm">{{$message}}</p>
+    @enderror
+
+    <div>
+        <label for="imagem">Imagem do Produto:</label>
+        <input type="file" id="image" name="image" class="border-2 p-2">
+    </div>
+    @error('name')
+        <p class="text-red-600 text-sm">{{$message}}</p>
+    @enderror
+
+    <div>
+        <label for="description">Descrição:</label>
+        <input type="text" id="description" name="description" value="{{old('description')}}" required class="border-2 p-2">
+    </div>
+    @error('name')
+        <p class="text-red-600 text-sm">{{$message}}</p>
+    @enderror
+
+    <div>
+        <label for="value">Valor:</label>
+        <input type="text" id="value" name="value" value="{{old('value')}}" required class="border-2 p-2">
+    </div>
+    @error('name')
+        <p class="text-red-600 text-sm">{{$message}}</p>
+    @enderror
+
+    <button type="submit">Salvar Produto</button>
+</form>
 </main>
 @endsection

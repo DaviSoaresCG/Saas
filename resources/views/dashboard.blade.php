@@ -34,6 +34,8 @@
     <div class="text-center">
         <p>Subsctiption termina em <strong>{{$subscription_end}}</strong></p>
         <a href="{{ route('products.index', ['slug' => $user->slug]) }}">Acessar página da loja</a>
+        <br>
+        <a href="{{ route('products.create', ['slug' => $user->slug]) }}">Criar um produto</a>
     </div>
 
     <hr>

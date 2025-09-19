@@ -30,7 +30,8 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
 
         Route::middleware(['auth'])->group(function () {
             Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
-            Route::get('/create', [ProdutoController::class, 'create'])->name('products.create');
+            Route::get('/produtos/create', [ProdutoController::class, 'create'])->name('products.create');
+            Route::post('/produtos/create', [ProdutoController::class, 'store'])->name('products.store');
             // outras rotas de adm...
         });
     });
