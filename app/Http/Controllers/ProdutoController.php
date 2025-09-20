@@ -16,6 +16,14 @@ class ProdutoController extends Controller
         return view('products.index', compact('user', 'products'));
     }
 
+    public function show($slug, $id)
+    {
+
+        $product = Products::findOrFail($id);
+
+        return view('products.show', compact('product'));
+    }
+
     public function create()
     {
         // $categorias = Categoria::all()

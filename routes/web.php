@@ -25,6 +25,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         })->middleware(AutenticadoSlug::class);
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
+        Route::get('/produtos/{id}', [ProdutoController::class, 'show'])->name('products.show');
         // Route::get('produtos', 'Front\ProductController@index')->name('products.index');
         // Route::get('produtos/{slug}', 'Front\ProductController@show')->name('products.show');
 
@@ -34,7 +35,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
             Route::post('/produtos/create', [ProdutoController::class, 'store'])->name('products.store');
             // outras rotas de adm...
         });
-    });
+});
 
 Auth::routes();
 

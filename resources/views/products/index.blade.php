@@ -39,6 +39,9 @@
         <div class="flex items-center space-x-4">
           <a href="{{route('products.create', ['slug' => $user->slug])}}" class="text-white p-2 bg-blue-600 rounded">Criar produto</a>
         </div>
+        <div class="flex items-center space-x-4">
+          <a href="{{route('dashboard', ['slug' => $user->slug])}}" class="text-white p-2 bg-blue-600 rounded">Dashboard</a>
+        </div>
       </div>
 
       <div class="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4">
@@ -46,7 +49,7 @@
 
         <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <div class="h-56 w-full">
-            <a href="#">
+            <a href="{{ route('products.show', ['id' => $product->id, 'slug' => $user->slug]) }}">
               <img class="mx-auto h-full dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="" />
               <img class="mx-auto hidden h-full dark:block" src="{{asset('storage/'. $product->path)}}" alt="" width="200"/>
             </a>
@@ -81,7 +84,7 @@
               </div>
             </div>
   
-            <a href="#" class="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white">{{$product->name}}</a>
+            <a href="{{ route('products.show', ['id' => $product->id, 'slug' => $user->slug]) }}" class="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white">{{$product->name}}</a>
   
             <div class="mt-2 flex items-center gap-2">
               <div class="flex items-center">
