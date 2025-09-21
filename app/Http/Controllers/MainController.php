@@ -59,17 +59,27 @@ class MainController extends Controller
         return auth()->user()
             ->newSubscription($product_id, $price_id)
             ->checkout([
-                'success_url' => route('subscription.success'),
-                'cancel_url' => route('erro'),
+                'success_url' => route('subscription.pending'),
+                'cancel_url' => route('erro')
             ]);
     }
 
     public function subscriptionSuccess()
     {
+        // echo "AAA";
+        if (!Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))) {
+            return view('subscription_pending');
+        }
+
         $user = Auth::user();
-        $user->slug = Str::slug(fake()->unique()->words(2, true)); 
+        $user->slug = Str::slug(fake()->unique()->words(2, true));
         $user->save();
         return view('subscription_success', ['slug' => $user->slug]);
+    }
+
+    public function subscriptionPending()
+    {
+        return view('subscription_pending');
     }
 
     public function dashboard()

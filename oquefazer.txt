@@ -1,3 +1,4 @@
+LEMBRAR SEMPRE DE LIGAR O WEBHOOK
 Terminar rota dos produtos
 CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
 Falta configurar as rotas, controllers e fazer as páginas

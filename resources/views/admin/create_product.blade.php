@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
 <form action="{{ route('products.store', ['slug' => Auth::user()->slug]) }}" method="POST" enctype="multipart/form-data">
     @csrf

@@ -50,14 +50,18 @@ Route::middleware([noSubscription::class])->group(function () {
 
 
 Route::middleware('auth')->group(function () {
-    Route::middleware([hasSubscription::class])->group(function () {
         Route::get('/subscription/success', [MainController::class, 'subscriptionSuccess'])->name('subscription.success');
-        Route::get('/invoice/{id}', [MainController::class, 'invoiceDownload'])->name('invoice.download');
+        Route::get('/subscription/pending', [MainController::class, 'subscriptionPending'])->name('subscription.pending');
+        Route::get('/invoice/{id}', [MainController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
     });
-});
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/n', function(){
     echo "NAO DEU CERTO";
 })->name('erro');
+
+//API
+Route::get('/api/subscription/status', function () {
+    return ['subscribed' => auth()->user()->subscribed(env("STRIPE_PRODUCT_ID"))];
+})->name('api.subscription.status')->middleware('auth');
