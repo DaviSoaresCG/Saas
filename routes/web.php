@@ -19,6 +19,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
     ->middleware([ResolveTenant::class])
     ->group(function () {
 
+        // redireciona para dashboard se for admin
         Route::get('/', function () {
             $user = app(User::class);
             return redirect()->route('products.index', ['slug' => $user->slug]);
@@ -26,13 +27,11 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{id}', [ProdutoController::class, 'show'])->name('products.show');
-        // Route::get('produtos', 'Front\ProductController@index')->name('products.index');
-        // Route::get('produtos/{slug}', 'Front\ProductController@show')->name('products.show');
 
-        Route::middleware(['auth'])->group(function () {
+        Route::middleware('auth')->group(function () {
             Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
-            Route::get('/produtos/create', [ProdutoController::class, 'create'])->name('products.create');
-            Route::post('/produtos/create', [ProdutoController::class, 'store'])->name('products.store');
+            Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
+            Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
             // outras rotas de adm...
         });
 });

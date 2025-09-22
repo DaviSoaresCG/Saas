@@ -9,7 +9,7 @@
             <span class="px-3">|</span>
             <form action="{{route('logout')}}" method="post">
                 @csrf
-                <input type="submit" value="Logout">
+                <input type="submit" value="Logout" class="text-white cursor-pointer">
             </form>
         </div>
     </div>
@@ -24,6 +24,7 @@
     <div class="text-center">
         <p>Subsctiption termina em <strong>{{$subscription_end}}</strong></p>
         <a href="{{ route('products.index', ['slug' => $user->slug]) }}">Acessar página da loja</a>
+        <a href="{{ route('products.create', ['slug' => $user->slug]) }}">Criar um produto</a>
     </div>
 
     <hr>

@@ -1,6 +1,9 @@
 LEMBRAR SEMPRE DE LIGAR O WEBHOOK
+E se eu logar com o login de um vendedor e estiver na página de outro vendedor?
 Terminar rota dos produtos
 CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
 Falta configurar as rotas, controllers e fazer as páginas
 Melhorar as rotas plmds
 Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio)
+
+

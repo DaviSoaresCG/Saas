@@ -41,20 +41,22 @@ class ProdutoController extends Controller
 
         $path = null;
 
-        // 2. Verifica se o arquivo de imagem foi enviado
+        //  Verifica se o arquivo de imagem foi enviado
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
 
-            // 3. Armazena a imagem no disco 'public' e obtém o caminho
+            // Armazena a imagem no disco 'public' e obtém o caminho
             // O Laravel gera um nome de arquivo único automaticamente
             $path = $request->file('image')->store('path', 'public');
+        }else{
+            echo "Nao enviou a imagem";
         }
 
-        // 4. Cria o produto no banco de dados
+        //Cria o produto no banco de dados
         Products::create([
             'name' => $request->name,
             'value' => $request->value,
-            'description' => $request->description, // Exemplo
-            'path' => $path, // Salva o caminho no banco
+            'description' => $request->description,
+            'path' => $path,
             'user_id' => app(User::class)->id
         ]);
 

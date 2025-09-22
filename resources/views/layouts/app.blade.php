@@ -22,6 +22,9 @@
 </head>
 
 <body>
+    <header>
+        {{-- header --}}
+    </header>
     <main class="">
         @yield('content')
     </main>

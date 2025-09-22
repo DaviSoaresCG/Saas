@@ -15,25 +15,6 @@ class MainController extends Controller
         return view('login');
     }
 
-    public function loginSubmit($id)
-    {
-
-        //login direto
-        $user = User::findOrFail($id);
-        if ($user) {
-            Auth::login($user);
-            return redirect()->route('plans');
-        }
-    }
-
-    public function logout()
-    {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect()->route('login');
-    }
-
     public function plans()
     {
         $prices = [
@@ -97,7 +78,7 @@ class MainController extends Controller
         $invoices = Auth::user()->subscription(env('STRIPE_PRODUCT_ID'))->invoices();
 
         $user = app(User::class);
-        return view('dashboard', compact('subscription_end', 'invoices', 'user'));
+        return view('admin.dashboard', compact('subscription_end', 'invoices', 'user'));
     }
 
     public function invoiceDownload($id)
