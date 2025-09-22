@@ -7,6 +7,7 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Middleware\AutenticadoSlug;
+use App\Http\Middleware\EnsureUserBelongsToTenant;
 use App\Http\Middleware\hasSubscription;
 use App\Http\Middleware\noSubscription;
 use App\Http\Middleware\ResolveTenant;
@@ -28,7 +29,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{id}', [ProdutoController::class, 'show'])->name('products.show');
 
-        Route::middleware('auth')->group(function () {
+        Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
             Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
             Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
