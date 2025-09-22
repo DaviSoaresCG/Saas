@@ -62,4 +62,26 @@ class ProdutoController extends Controller
 
         return redirect()->route('products.index', ['slug' => app(User::class)->slug]);
     }
+
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
 }

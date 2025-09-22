@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
-class MainController extends Controller
+class AdminController extends Controller
 {
-    public function loginPage()
-    {
-        return view('login');
-    }
 
     public function plans()
     {
@@ -95,5 +92,11 @@ class MainController extends Controller
             'url' => 'https://example.com',
             'vendorVat' => 'BE123456789',
         ]);
+    }
+
+    public function getAllProducts()
+    {
+        $products = Products::paginate(10);
+        return view('admin.products', compact('products'));
     }
 }

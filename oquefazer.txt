@@ -1,9 +1,14 @@
 LEMBRAR SEMPRE DE LIGAR O WEBHOOK
-E se eu logar com o login de um vendedor e estiver na página de outro vendedor?
-Terminar rota dos produtos
 CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
 Falta configurar as rotas, controllers e fazer as páginas
 Melhorar as rotas plmds
 Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio)
 
 
+--FUNIONALIDADES
+- Terminar rota dos produtos
+- Implementar o carrinho
+- Fazer o tratamento dos dados(formatação da moeda)
+- Terminar o dashboard(mostrar a lista de pedidos)
+- Redirecionar para o Whatsapp ao confirmar o pedido(pedido é registrado no banco de dados e o vendedor consegue acessar atraves de ID que foi passado na dashboard)
+- Envio de Emails(Recuperação de senha e email de boas vindas)

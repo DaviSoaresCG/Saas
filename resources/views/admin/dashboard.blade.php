@@ -25,6 +25,7 @@
         <p>Subsctiption termina em <strong>{{$subscription_end}}</strong></p>
         <a href="{{ route('products.index', ['slug' => $user->slug]) }}">Acessar página da loja</a>
         <a href="{{ route('products.create', ['slug' => $user->slug]) }}">Criar um produto</a>
+        <a href="{{ route('admin.products', ['slug' => $user->slug]) }}">Lista de Produtos</a>
     </div>
 
     <hr>

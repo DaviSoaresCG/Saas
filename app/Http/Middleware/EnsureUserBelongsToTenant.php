@@ -18,6 +18,7 @@ class EnsureUserBelongsToTenant
         $tenantSlug = $request->route('slug'); // slug do domínio
         $user = auth()->user();
 
+        //verifica se o usuario est
         if ($user && $user->slug !== $tenantSlug) {
             // Opcional: deslogar o usuário
             auth()->logout();

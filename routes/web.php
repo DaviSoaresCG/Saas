@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\MainController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Middleware\AutenticadoSlug;
@@ -30,7 +30,9 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         Route::get('/produtos/{id}', [ProdutoController::class, 'show'])->name('products.show');
 
         Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
-            Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');
+            //admin.dashboard
+            Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+            Route::get('/dashboard/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
             Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
             // outras rotas de adm...
@@ -39,20 +41,20 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
 
 Auth::routes();
 
-Route::get('/', [MainController::class, 'plans'])->name('home');
+Route::get('/', [AdminController::class, 'plans'])->name('home');
 
 
 Route::middleware([noSubscription::class])->group(function () {
-        Route::get('/plans', [MainController::class, 'plans'])->name('plans');
+        Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
 
-        Route::get('/plan_selected/{id}', [MainController::class, 'planSelected'])->name('plans.selected')->middleware('auth');
+        Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware('auth');
 });
 
 
 Route::middleware('auth')->group(function () {
-        Route::get('/subscription/success', [MainController::class, 'subscriptionSuccess'])->name('subscription.success');
-        Route::get('/subscription/pending', [MainController::class, 'subscriptionPending'])->name('subscription.pending');
-        Route::get('/invoice/{id}', [MainController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
+        Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
+        Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
+        Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
     });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
