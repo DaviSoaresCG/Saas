@@ -34,11 +34,12 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
             //admin.dashboard
             Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
             Route::get('/dashboard/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
-            Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
-            Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
-            Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
-            Route::post('/produtos/update', [ProdutoController::class, 'update'])->name('products.update');
-            Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
+            Route::resource('products', ProdutoController::class)->except(['index, show']);
+            // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
+            // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
+            // Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
+            // Route::post('/produtos/update', [ProdutoController::class, 'update'])->name('products.update');
+            // Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
             // outras rotas de adm...
         });
 });

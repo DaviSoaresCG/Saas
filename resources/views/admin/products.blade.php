@@ -95,7 +95,7 @@
                     <tbody>
                         @foreach($products as $product)
                             <tr class="border-b dark:border-gray-700">
-                                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"><a href="{{route('products.show', ['slug' => Auth::user()->slug, 'id' => $product->id])}}">{{$product->name}}</a></th>
+                                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"><a href="{{route('products.show', ['slug' => Auth::user()->slug, 'product' => $product->id])}}">{{$product->name}}</a></th>
                                 <td class="px-4 py-3">R$ {{ $product->value }}</td>
                                 <td class="px-4 py-3">Estoque</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
@@ -107,14 +107,14 @@
                                     <div id="{{$product->id}}-dropdown" class="hidden z-0 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="{{$product->id}}-dropdown-button">
                                             <li>
-                                                <a href="{{route('products.show', ['slug' => Auth::user()->slug, 'id' => $product->id])}}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
+                                                <a href="{{route('products.show', ['slug' => Auth::user()->slug, 'product' => $product->id])}}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
                                             </li>
                                             <li>
-                                                <a href="{{ route('products.edit', ['slug' => Auth::user()->slug,'id' => $product->id] ) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+                                                <a href="{{ route('products.edit', ['slug' => Auth::user()->slug,'product' => $product->id] ) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
                                             </li>
                                         </ul>
                                         <div class="py-1">
-                                            <form action="{{route('products.destroy', ['slug' => Auth::user()->slug, 'id' => $product->id])}}" method="post">
+                                            <form action="{{route('products.destroy', ['slug' => Auth::user()->slug, 'product' => $product->id])}}" method="post">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer w-full text-start">Delete</button>
