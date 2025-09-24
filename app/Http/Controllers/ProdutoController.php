@@ -47,7 +47,7 @@ class ProdutoController extends Controller
             // Armazena a imagem no disco 'public' e obtém o caminho
             // O Laravel gera um nome de arquivo único automaticamente
             $path = $request->file('image')->store('path', 'public');
-        }else{
+        } else {
             echo "Nao enviou a imagem";
         }
 
@@ -80,24 +80,30 @@ class ProdutoController extends Controller
             'description' => 'required|min:3|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:16384'
         ]);
-        //  Verifica se o arquivo de imagem foi enviado
+        //  verifica se o arquivo de imagem foi enviado
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
 
-            // Armazena a imagem no disco 'public' e obtém o caminho
-            // O Laravel gera um nome de arquivo único automaticamente
+            // armazena a imagem em public/path
             $path = $request->file('image')->store('path', 'public');
-        }else{
-            $path = $request->path;
         }
 
         $product = Products::findOrFail($request->id);
-        $product->update([
-            'name' => $request->name,
-            'value' => $request->value,
-            'description' => $request->description,
-            'path' => $path
-        ]);
 
+        //se o vendedor nao enviou a imagem, nao faz o update do path
+        if (!empty($path)) {
+            $product->update([
+                'name' => $request->name,
+                'value' => $request->value,
+                'description' => $request->description,
+                'path' => $path
+            ]);
+        } else {
+            $product->update([
+                'name' => $request->name,
+                'value' => $request->value,
+                'description' => $request->description
+            ]);
+        }
         return redirect()->route('admin.products', ['slug' => $request->slug]);
     }
 
@@ -108,5 +114,4 @@ class ProdutoController extends Controller
     {
         //
     }
-
 }

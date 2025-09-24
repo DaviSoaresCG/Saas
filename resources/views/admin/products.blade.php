@@ -95,7 +95,7 @@
                     <tbody>
                         @foreach($products as $product)
                             <tr class="border-b dark:border-gray-700">
-                                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $product->name }}</th>
+                                <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"><a href="{{route('products.show', ['slug' => Auth::user()->slug, 'id' => $product->id])}}">{{$product->name}}</a></th>
                                 <td class="px-4 py-3">R$ {{ $product->value }}</td>
                                 <td class="px-4 py-3">Estoque</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
