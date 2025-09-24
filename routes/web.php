@@ -38,6 +38,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
             Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
             Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
             Route::post('/produtos/update', [ProdutoController::class, 'update'])->name('products.update');
+            Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
             // outras rotas de adm...
         });
 });
