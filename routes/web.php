@@ -29,12 +29,15 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{id}', [ProdutoController::class, 'show'])->name('products.show');
 
+
         Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
             //admin.dashboard
             Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
             Route::get('/dashboard/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
             Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
+            Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
+            Route::post('/produtos/update', [ProdutoController::class, 'update'])->name('products.update');
             // outras rotas de adm...
         });
 });
