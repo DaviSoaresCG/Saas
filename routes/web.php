@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Middleware\AutenticadoSlug;
@@ -24,17 +25,24 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         Route::get('/', function () {
             $user = app(User::class);
             return redirect()->route('products.index', ['slug' => $user->slug]);
-        })->middleware(AutenticadoSlug::class);
+        });
+
+        //cart
+        Route::get('/cart/index', [CartController::class, 'index'])->name('cart.index');
+        Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+        Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+        Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+        Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
-        Route::get('/produtos/{id}', [ProdutoController::class, 'show'])->name('products.show');
+        Route::get('/produtos/{product}', [ProdutoController::class, 'show'])->name('products.show');
 
 
         Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
             //admin.dashboard
             Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
             Route::get('/dashboard/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
-            Route::resource('products', ProdutoController::class)->except(['index, show']);
+            Route::resource('products', ProdutoController::class)->except(['index', 'show']);
             // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
             // Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');

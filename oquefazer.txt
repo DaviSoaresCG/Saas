@@ -3,11 +3,12 @@ CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
 Falta configurar as rotas, controllers e fazer as páginas
 Melhorar as rotas plmds
 Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio)
+Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Terminar rota dos produtos
 - Implementar o carrinho
+- Relizar Pedido
 - Fazer o tratamento dos dados(formatação da moeda)
 - Terminar o dashboard(mostrar a lista de pedidos)
 - Redirecionar para o Whatsapp ao confirmar o pedido(pedido é registrado no banco de dados e o vendedor consegue acessar atraves de ID que foi passado na dashboard)
