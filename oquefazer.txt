@@ -1,13 +1,11 @@
 LEMBRAR SEMPRE DE LIGAR O WEBHOOK
-CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
-Falta configurar as rotas, controllers e fazer as páginas
-Melhorar as rotas plmds
-Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio)
+CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS(verificar dps)
+Melhorar as rotas e controllers plmds
+Fazer verificações no controllers
 Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Implementar o carrinho
 - Relizar Pedido
 - Fazer o tratamento dos dados(formatação da moeda)
 - Terminar o dashboard(mostrar a lista de pedidos)

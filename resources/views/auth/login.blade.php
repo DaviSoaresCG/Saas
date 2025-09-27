@@ -38,11 +38,11 @@
                     <p>
                         <a href="{{route('register')}}"
                             class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
-                            Registrar
+                            Faça o Registro
                         </a>
                         <a href="{{route('home')}}"
                             class=":text-white :hover:text-blue-300 hover:text-blue-600 transition-all duration-100 ease-in-out">
-                            Página inicial
+                            Retornar para a página inicial
                         </a>
                     </p>
                     <button
