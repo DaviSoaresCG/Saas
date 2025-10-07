@@ -13,3 +13,15 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 - Terminar o dashboard(mostrar a lista de pedidos)
 - Redirecionar para o Whatsapp ao confirmar o pedido(pedido é registrado no banco de dados e o vendedor consegue acessar atraves de ID que foi passado na dashboard)
 - Envio de Emails(Recuperação de senha e email de boas vindas)
+
+
+pedido
+    id
+    user_id
+    total
+
+itens_pedido
+    id
+    pedido_id
+    produto_id
+    

@@ -30,7 +30,7 @@ class CartController extends Controller
             $cart[$id] = [
                 'id' => $product->id,
                 'name' => $product->name,
-                'price' => $product->value,
+                'value' => $product->value,
                 'quantity' => 1
             ];
         }

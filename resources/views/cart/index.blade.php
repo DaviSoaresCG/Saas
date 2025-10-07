@@ -20,7 +20,7 @@
                         {{ $item['name'] }}
                     </td>
                     <td class="px-6 py-4">
-                        R$ {{ number_format($item['price'], 2, ',', '.') }}
+                        R$ {{ number_format($item['value'], 2, ',', '.') }}
                     </td>
                     <td class="px-6 py-4">
                         <form action="{{ route('cart.update', ['slug' => $user->slug, 'id' => $id]) }}" method="POST" class="flex items-center space-x-2">
@@ -34,7 +34,7 @@
                         </form>
                     </td>
                     <td class="px-6 py-4">
-                        R$ {{ number_format($item['price'] * $item['quantity'], 2, ',', '.') }}
+                        R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
                     </td>
                     <td class="px-6 py-4">
                         <a href="{{ route('cart.remove', ['slug' => $user->slug, 'id' => $id]) }}"
@@ -46,9 +46,10 @@
             @endforeach
         </tbody>
     </table>
+    a
 </div>
 
-
-<a href="{{ route('cart.clear', ['slug' => $user->slug]) }}">Esvaziar carrinho</a>
+<a href="{{route('whatsapp', ['slug' => $user->slug])}}" class="bg-yellow-500 p-4 rounded">Finalizar pedido</a>
+<a class="bg-blue-600 p-4 rounded text-white" href="{{ route('cart.clear', ['slug' => $user->slug]) }}">Esvaziar carrinho</a>
 
 @endsection

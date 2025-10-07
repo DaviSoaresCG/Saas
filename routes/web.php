@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Middleware\AutenticadoSlug;
@@ -33,6 +34,10 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
         Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
         Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+        //pedido
+        Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('whatsapp');
+        Route::get('/pedido', [PedidoController::class, 'whatsapp'])->name('falarWhatsapp');
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{product}', [ProdutoController::class, 'show'])->name('products.show');
