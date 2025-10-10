@@ -12,14 +12,21 @@ class PedidoController extends Controller
 
     public function index($slug)
     {
-        $user = app(User::class)->slug;
+        $user = app(User::class);
+        $pedidos = Pedido::with('iten_pedido')->paginate(10);
 
-        return route('pedidos.index');
+        return view('pedidos.index', compact('pedidos', 'user'));
     }
 
     public function show($slug, $id)
     {
-        
+        $itens_pedido = ItemPedido::with('product')->where('pedido_id', $id)->paginate(10);
+        // dd($itens_pedido);
+
+        if(empty($itens_pedido)){
+            return redirect()->back()->with('error', 'pedido nao encontrado');
+        }
+        return view('pedidos.show', compact('itens_pedido'));
     }
 
     public function finalizar($slug)

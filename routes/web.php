@@ -46,8 +46,15 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
             //admin.dashboard
             Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+            //products routes
             Route::get('/dashboard/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
             Route::resource('products', ProdutoController::class)->except(['index', 'show']);
+
+            //pedidos routes
+            Route::get('/pedidos/index', [PedidoController::class, 'index'])->name('pedidos.index');
+            Route::get('/pedidos/show/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
+
             // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
             // Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
@@ -55,7 +62,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
             // Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
             // outras rotas de adm...
         });
-});
+    });
 
 Auth::routes();
 
@@ -63,21 +70,21 @@ Route::get('/', [AdminController::class, 'plans'])->name('home');
 
 
 Route::middleware([noSubscription::class])->group(function () {
-        Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
+    Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
 
-        Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware('auth');
+    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware('auth');
 });
 
 
 Route::middleware('auth')->group(function () {
-        Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
-        Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
-        Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
-    });
+    Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
+    Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
+    Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
+});
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/n', function(){
+Route::get('/n', function () {
     echo "NAO DEU CERTO";
 })->name('erro');
 
