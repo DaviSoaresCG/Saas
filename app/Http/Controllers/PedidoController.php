@@ -26,7 +26,8 @@ class PedidoController extends Controller
         if(empty($itens_pedido)){
             return redirect()->back()->with('error', 'pedido nao encontrado');
         }
-        return view('pedidos.show', compact('itens_pedido'));
+        $user = app(User::class);
+        return view('pedidos.show', compact('itens_pedido', 'user'));
     }
 
     public function finalizar($slug)

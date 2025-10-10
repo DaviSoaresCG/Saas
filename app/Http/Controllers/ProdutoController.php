@@ -87,7 +87,7 @@ class ProdutoController extends Controller
             $path = $request->file('image')->store('path', 'public');
         }
 
-        $product = Products::findOrFail($request->id);
+        $product = Products::findOrFail($request->product);
 
         //se o vendedor nao enviou a imagem, nao faz o update do path
         if (!empty($path)) {

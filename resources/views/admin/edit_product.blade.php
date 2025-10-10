@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 @section('content')
-<form action="{{ route('products.update', ['slug' => Auth::user()->slug, 'id' => Auth::user()->id]) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('products.update', ['slug' => Auth::user()->slug, 'product' => $product->id]) }}" method="POST" enctype="multipart/form-data">
+    @method('PATCH')
     @csrf
 
     <div>
