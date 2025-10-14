@@ -37,7 +37,8 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
 
         //pedido
         Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('whatsapp');
-        Route::get('/pedido', [PedidoController::class, 'whatsapp'])->name('falarWhatsapp');
+        Route::get('/pedido', [PedidoController::class, 'index'])->name('falarWhatsapp');
+        
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{product}', [ProdutoController::class, 'show'])->name('products.show');
@@ -52,8 +53,9 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
             Route::resource('products', ProdutoController::class)->except(['index', 'show']);
 
             //pedidos routes
-            Route::get('/pedidos/index', [PedidoController::class, 'index'])->name('pedidos.index');
+            Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
             Route::get('/pedidos/show/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
+            Route::get('/pedido/seach', [PedidoController::class, 'pesquisar'])->name('pedido.pesquisar');
 
             // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');

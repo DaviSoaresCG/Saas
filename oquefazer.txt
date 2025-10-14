@@ -7,21 +7,12 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Implementar o carrinho
-- Relizar Pedido
+- Pesquisar por pedido(id)
+- Opções sobre assinaturas
 - Fazer o tratamento dos dados(formatação da moeda)
 - Terminar o dashboard(mostrar a lista de pedidos)
-- Redirecionar para o Whatsapp ao confirmar o pedido(pedido é registrado no banco de dados e o vendedor consegue acessar atraves de ID que foi passado na dashboard)
 - Envio de Emails(Recuperação de senha e email de boas vindas)
 
 
-pedido
-    id
-    user_id
-    total
+preciso redirecionar para onde estava indo nos logins e registrers
 
-itens_pedido
-    id
-    pedido_id
-    produto_id
-    
