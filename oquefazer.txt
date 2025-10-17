@@ -7,10 +7,8 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Pesquisar por pedido(id)
 - Opções sobre assinaturas
 - Fazer o tratamento dos dados(formatação da moeda)
-- Terminar o dashboard(mostrar a lista de pedidos)
 - Envio de Emails(Recuperação de senha e email de boas vindas)
 
 

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    
+
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-4 col-sm-8">
@@ -20,7 +20,7 @@
                     <p class="display-6 text-success">Aguarde enquanto estamos processando sua inscrição!</p>
                     <p>Isso pode levar alguns segundos</p>
                     <div class="text-center">
-                        
+
                     </div>
                 </div>
 
@@ -39,4 +39,5 @@
         }, 3000); // verifica a cada 3 segundos
     </script>
 </body>
+
 </html>

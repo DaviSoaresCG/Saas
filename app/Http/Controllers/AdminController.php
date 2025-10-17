@@ -37,6 +37,7 @@ class AdminController extends Controller
         return auth()->user()
             ->newSubscription($product_id, $price_id)
             ->checkout([
+                'locale' => 'pt-BR',
                 'success_url' => route('subscription.pending'),
                 'cancel_url' => route('erro')
             ]);
@@ -51,6 +52,10 @@ class AdminController extends Controller
 
         $user = Auth::user();
         $user->slug = Str::slug(fake()->unique()->words(2, true));
+
+        $user->updateStripeCustomer([
+            'preferred_locales' => ['pt-BR'],
+        ]);
         $user->save();
         return view('subscription_success', ['slug' => $user->slug]);
     }

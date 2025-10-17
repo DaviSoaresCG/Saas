@@ -14,6 +14,7 @@ use App\Http\Middleware\hasSubscription;
 use App\Http\Middleware\noSubscription;
 use App\Http\Middleware\ResolveTenant;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,8 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
             return redirect()->route('products.index', ['slug' => $user->slug]);
         });
 
+        //
+
         //cart
         Route::get('/cart/index', [CartController::class, 'index'])->name('cart.index');
         Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
@@ -38,7 +41,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
         //pedido
         Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('whatsapp');
         Route::get('/pedido', [PedidoController::class, 'index'])->name('falarWhatsapp');
-        
+
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{product}', [ProdutoController::class, 'show'])->name('products.show');
@@ -56,6 +59,11 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))
             Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
             Route::get('/pedidos/show/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
             Route::get('/pedido/seach', [PedidoController::class, 'pesquisar'])->name('pedido.pesquisar');
+
+            //assinatura
+            Route::get('/billing', function (Request $request) {
+                return $request->user()->redirectToBillingPortal();
+            })->name('billing');
 
             // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');

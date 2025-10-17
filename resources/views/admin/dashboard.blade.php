@@ -27,6 +27,7 @@
         <a href="{{ route('products.create', ['slug' => $user->slug]) }}" class="inline-block bg-blue-700 p-2 text-white rounded">Criar um produto</a>
         <a href="{{ route('admin.products', ['slug' => $user->slug]) }}" class="bg-green-700 inline-block p-2 text-white rounded">Lista de Produtos</a>
         <a href="{{ route('pedidos.index', ['slug' => $user->slug]) }}" class="bg-red-700 inline-block p-2 text-white rounded">Lista de pedidos</a>
+        <a href="{{ route('billing', ['slug' => $user->slug]) }}" class="bg-purple-700 inline-block p-2 text-white rounded">Opções de assinatura</a>
     </div>
 
     <hr>

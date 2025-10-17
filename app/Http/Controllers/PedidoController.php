@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class PedidoController extends Controller
 {
-
     public function index($slug)
     {
         $user = app(User::class);
@@ -23,22 +22,23 @@ class PedidoController extends Controller
         $itens_pedido = ItemPedido::with('product')->where('pedido_id', $id)->paginate(10);
         // dd($itens_pedido);
 
-        if(empty($itens_pedido)){
+        if (empty($itens_pedido)) {
             return redirect()->back()->with('error', 'pedido nao encontrado');
         }
         $user = app(User::class);
+
         return view('pedidos.show', compact('itens_pedido', 'user'));
     }
 
     public function finalizar($slug)
     {
         $cart = session()->get('cart', []);
-        if(empty($cart)){
+        if (empty($cart)) {
             return redirect()->back()->with('error', 'Carrinho nao encontrado');
         }
 
         $total = 0;
-        foreach($cart as $product){
+        foreach ($cart as $product) {
             $total += $product['value'] * $product['quantity'];
         }
 
@@ -46,15 +46,15 @@ class PedidoController extends Controller
 
         $pedido = Pedido::create([
             'user_id' => app(User::class)->id,
-            'total' => $total
+            'total' => $total,
         ]);
 
-        foreach($cart as $product){
+        foreach ($cart as $product) {
             $itens_pedido = ItemPedido::create([
                 'pedido_id' => $pedido->id,
                 'product_id' => $product['id'],
                 'value' => $product['value'],
-                'quantidade' => $product['quantity']
+                'quantidade' => $product['quantity'],
             ]);
         }
 
@@ -63,24 +63,23 @@ class PedidoController extends Controller
         $mensagem = "Olá, acabei de finalizar o pedido #{$pedido->id}. Total: R$ {$pedido->total}";
 
         // Monta a URL do WhatsApp
-        $url = "https://wa.me/{$tenantPhone}?text=" . urlencode($mensagem);
+        $url = "https://wa.me/{$tenantPhone}?text=".urlencode($mensagem);
         session()->forget('cart');
 
         return view('pedidos.whatsapp', compact('pedido', 'url'));
-        
+
     }
 
     public function pesquisar(Request $request)
     {
         $pedido = Pedido::find($request->id);
 
-        if(empty($pedidos)){
-//            return redirect()->back()->with('error', 'Pedido nao encontrado');
+        if (empty($pedidos)) {
+            //            return redirect()->back()->with('error', 'Pedido nao encontrado');
         }
 
         $user = app(User::class);
-        
+
         return view('pedidos.search', compact('pedido', 'user'));
     }
-
 }

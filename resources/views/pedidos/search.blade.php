@@ -6,10 +6,11 @@
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <form action="{{ route('pedido.pesquisar', ['slug' => $user->slug]) }}" class="flex items-center" method="GET">
+                        <form action="{{ route('pedido.pesquisar', ['slug' => $user->slug]) }}" class="flex items-center"
+                            method="GET">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
-                                
+
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
                                         fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -132,10 +133,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if(empty($pedido))
+                            @if (empty($pedido))
                                 <p class="p-3 bg-red-600 text-white rounded">Pedido nao encontrado</p>
-                            @else               
-                                <tr class="border-b dark:border-gray-700 hover:bg-gray-700 transition-all duration-50 ease-in-out cursor-pointer" onclick="window.location='{{ route('pedidos.show', ['slug' => $user->slug, 'id' => $pedido->id]) }}'">
+                            @else
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-700 transition-all duration-50 ease-in-out cursor-pointer"
+                                    onclick="window.location='{{ route('pedidos.show', ['slug' => $user->slug, 'id' => $pedido->id]) }}'">
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $pedido->id }}</td>
                                     <td class="px-4 py-3">{{ $pedido->total }}</td>
