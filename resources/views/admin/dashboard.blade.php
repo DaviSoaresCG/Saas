@@ -30,7 +30,7 @@
         <a href="{{ route('billing', ['slug' => $user->slug]) }}" class="bg-purple-700 inline-block p-2 text-white rounded">Opções de assinatura</a>
     </div>
 
-    <hr>
+    <hr>s
 
     @foreach($invoices as $invoice)
         <div class="text-center mb-2">
