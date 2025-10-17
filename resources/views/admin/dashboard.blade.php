@@ -33,10 +33,10 @@
     <hr>
 
     @foreach($invoices as $invoice)
-        <div class="text-center">
+        <div class="text-center mb-2">
             <a href="{{ Route('invoice.download', ['id' => $invoice->id]) }}" 
                 class="p-2 bg-yellow-500 rounded inline-block">
-                Gerar Nota Fiscal
+                Fatura do dia {{ $invoice->date()->format('d/m/y') }}
             </a>
         </div>
     @endforeach
