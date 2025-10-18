@@ -7,7 +7,7 @@
         <div>
             <span>{{ Auth::user()->name }}</span>
             <span class="px-3">|</span>
-            <form action="{{route('logout')}}" method="post">
+            <form action="{{ route('logout') }}" method="post">
                 @csrf
                 <input type="submit" value="Logout" class="text-white p-2 bg-blue-600 rounded cursor-pointer">
             </form>
@@ -22,22 +22,35 @@
     <hr>
 
     <div class="text-center">
-        <p>Subsctiption termina em <strong>{{$subscription_end}}</strong></p>
-        <a href="{{ route('products.index', ['slug' => $user->slug]) }}" class="inline-block bg-gray-600 p-2 text-white rounded">Acessar página da loja</a>
-        <a href="{{ route('products.create', ['slug' => $user->slug]) }}" class="inline-block bg-blue-700 p-2 text-white rounded">Criar um produto</a>
-        <a href="{{ route('admin.products', ['slug' => $user->slug]) }}" class="bg-green-700 inline-block p-2 text-white rounded">Lista de Produtos</a>
-        <a href="{{ route('pedidos.index', ['slug' => $user->slug]) }}" class="bg-red-700 inline-block p-2 text-white rounded">Lista de pedidos</a>
-        <a href="{{ route('billing', ['slug' => $user->slug]) }}" class="bg-purple-700 inline-block p-2 text-white rounded">Opções de assinatura</a>
+        <p>Subsctiption termina em <strong>{{ $subscription_end }}</strong></p>
+        <a href="{{ route('products.index', ['slug' => $user->slug]) }}"
+            class="inline-block bg-gray-600 p-2 text-white rounded">Acessar página da loja</a>
+        <a href="{{ route('products.create', ['slug' => $user->slug]) }}"
+            class="inline-block bg-blue-700 p-2 text-white rounded">Criar um produto</a>
+        <a href="{{ route('admin.products', ['slug' => $user->slug]) }}"
+            class="bg-green-700 inline-block p-2 text-white rounded">Lista de Produtos</a>
+        <a href="{{ route('pedidos.index', ['slug' => $user->slug]) }}"
+            class="bg-red-700 inline-block p-2 text-white rounded">Lista de pedidos</a>
+        <a href="{{ route('billing', ['slug' => $user->slug]) }}"
+            class="bg-purple-700 inline-block p-2 text-white rounded">Opções de assinatura</a>
     </div>
 
-    <hr>s
+    <hr>
 
-    @foreach($invoices as $invoice)
+    @foreach ($invoices as $invoice)
         <div class="text-center mb-2">
-            <a href="{{ Route('invoice.download', ['id' => $invoice->id]) }}" 
-                class="p-2 bg-yellow-500 rounded inline-block">
-                Fatura do dia {{ $invoice->date()->format('d/m/y') }}
-            </a>
+            @if ($invoice->status == 'open')
+                <a href="{{ $invoice->hosted_invoice_url }}"
+                    class="p-2 bg-yellow-500 rounded inline-block">
+                    Fatura Aberta {{ $invoice->date()->format('d/m/y') }} - {{ $invoice->total() }}
+                </a>
+            @endif
+            @if ($invoice->status == 'paid')
+                <a href="{{ Route('invoice.download', ['id' => $invoice->id]) }}"
+                    class="p-2 bg-green-600 text-white rounded inline-block">
+                    Fatura Paga - {{ $invoice->date()->format('d/m/y') }} - {{ $invoice->total() }}
+                </a>
+            @endif
         </div>
     @endforeach
 @endsection
