@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\EmailJob;
+use App\Mail\WelcomeEmail;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
@@ -57,6 +60,10 @@ class AdminController extends Controller
             'preferred_locales' => ['pt-BR'],
         ]);
         $user->save();
+
+        //sending email on queue
+        EmailJob::dispatch($user);
+        
         return view('subscription_success', ['slug' => $user->slug]);
     }
 
