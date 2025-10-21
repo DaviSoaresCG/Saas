@@ -8,7 +8,10 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 --FUNIONALIDADES
 - Fazer o tratamento dos dados(formatação da moeda e datas)
-- Envio de Emails(Recuperação de senha e email de boas vindas)
+- Envio de Emails
+    - Boas vindas (com o link do dashboard) ✅
+    - Confirmação de email
+    - Recuperação de senha
 
 
 preciso redirecionar para onde estava indo nos logins e registrers

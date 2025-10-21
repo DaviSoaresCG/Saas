@@ -37,7 +37,7 @@ class AdminController extends Controller
         $product_id = $plan[0];
         $price_id = $plan[1];
 
-        return auth()->user()
+        return Auth::user()
             ->newSubscription($product_id, $price_id)
             ->checkout([
                 'locale' => 'pt-BR',
@@ -63,7 +63,7 @@ class AdminController extends Controller
 
         //sending email on queue
         EmailJob::dispatch($user);
-        
+
         return view('subscription_success', ['slug' => $user->slug]);
     }
 

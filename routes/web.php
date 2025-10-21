@@ -9,6 +9,7 @@ use App\Http\Middleware\hasSubscription;
 use App\Http\Middleware\noSubscription;
 use App\Http\Middleware\ResolveTenant;
 use App\Models\User;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -74,10 +75,12 @@ Route::get('/', [AdminController::class, 'plans'])->name('home');
 Route::middleware([noSubscription::class])->group(function () {
     Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
 
-    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware('auth');
+    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])
+        ->name('plans.selected')
+        ->middleware('auth', 'verified');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'verified')->group(function () {
     Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
     Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
     Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
@@ -85,20 +88,33 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/n', function () {
-    echo 'NAO DEU CERTO';
-})->name('erro');
-
 // API
 Route::get('/api/subscription/status', function () {
     return ['subscribed' => auth()->user()->subscribed(env('STRIPE_PRODUCT_ID'))];
 })->name('api.subscription.status')->middleware('auth');
 
-// forgot password
-// Route::get('/forgot-password', function () {
-//     return view('auth.');
-// });
+// email verification
+Route::prefix('email')
+    ->middleware(['auth'])
+    ->name('verification.')
+    ->group(function () {
 
-Route::get('/verify', function(){
-    return view('auth.passwords.email');
-});
+        // email verification view
+        Route::get('/verify', function () {
+            return view('auth.email.verify-email');
+        })->name('notice');
+
+        // link to verify hash
+        Route::get('verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+            $request->fulfill();
+
+            return redirect('/home');
+        })->middleware(['signed'])->name('verify');
+
+        // resend the email verification
+        Route::post('verification-notification', function (Request $request) {
+            $request->user()->sendEmailVerificationNotification();
+
+            return back()->with('success', 'Email de verificação enviado novamente!');
+        })->middleware(['throttle:6,1'])->name('send');
+    });
