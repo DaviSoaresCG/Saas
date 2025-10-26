@@ -95,14 +95,13 @@ Route::get('/api/subscription/status', function () {
 
 // email verification
 Route::prefix('email')
-    ->middleware(['auth'])
     ->name('verification.')
     ->group(function () {
 
         // email verification view
         Route::get('/verify', function () {
             return view('auth.email.verify-email');
-        })->name('notice');
+        })->name('notice')->middleware(['auth']);
 
         // link to verify hash
         Route::get('verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -116,5 +115,5 @@ Route::prefix('email')
             $request->user()->sendEmailVerificationNotification();
 
             return back()->with('success', 'Email de verificação enviado novamente!');
-        })->middleware(['throttle:6,1'])->name('send');
+        })->middleware(['throttle:6,1'])->middleware(['auth'])->name('send');
     });

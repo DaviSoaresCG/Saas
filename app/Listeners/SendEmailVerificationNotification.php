@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Listeners\Illuminate\Auth\Listeners;
+// app/Listeners/SendEmailVerificationNotification.php
+
+namespace App\Listeners; // <-- ESTE É O NAMESPACE CORRETO
 
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,13 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class SendEmailVerificationNotification implements ShouldQueue
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
+    use InteractsWithQueue;
 
     /**
      * Handle the event.
