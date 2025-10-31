@@ -27,6 +27,9 @@ class AdminController extends Controller
 
     public function planSelected($id)
     {
+        // check if user is logged
+        if(!Auth::check())
+
         // check if ID is valid
         $plan = Crypt::decryptString($id);
         if (!$plan) {

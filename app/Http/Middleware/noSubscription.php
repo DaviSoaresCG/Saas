@@ -21,6 +21,8 @@ class noSubscription
         // check if the user has no subscription
         if(Auth::check() && Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))){
             return redirect()->away('http://' .$user->slug. env('APP_DOMAIN'));
+        }else{
+            return redirect()->route('register');
         }
 
         return $next($request);
