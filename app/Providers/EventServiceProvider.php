@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-// Importe o evento e o listener
-use Illuminate\Auth\Events\Registered;
+// 1. IMPORTE APENAS O 'Registered'
+
 use App\Listeners\SendEmailVerificationNotification;
+use Illuminate\Auth\Events\Registered;
+// NÃO importe o SendEmailVerificationNotification aqui
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -17,8 +19,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Registered::class => [ // <-- Adicione este bloco
-            SendEmailVerificationNotification::class,
+        // 2. O ARRAY DEVE ESTAR VAZIO.
+        Registered::class => [
+            SendEmailVerificationNotification::class
+            // Isso garante que NENHUM listener deste arquivo
+            // será disparado quando 'Registered' acontecer.
+            // O Breeze/Fortify vai pegar o evento internamente.
         ],
     ];
 
@@ -32,7 +38,7 @@ class EventServiceProvider extends ServiceProvider
 
     /**
      * Determine se os eventos e listeners devem ser descobertos automaticamente.
-     * * Vamos desativar para forçar o Laravel a usar nosso array $listen.
+     * 3. ISSO DEVE SER 'false'
      */
     public function shouldDiscoverEvents(): bool
     {
