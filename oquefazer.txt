@@ -7,7 +7,7 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Adicionar campos para registrar (BREEZE)
+- Verificação de email para fazer a assinatura
 - Fazer o tratamento dos dados(formatação da moeda e datas)
 - Envio de Emails
     - Boas vindas (com o link do dashboard) ✅

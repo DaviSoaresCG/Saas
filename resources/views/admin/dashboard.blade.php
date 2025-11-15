@@ -1,11 +1,31 @@
-@extends('layouts.admin')
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+
+
+
+{{-- <x-app-layout>
     <div class="d-flex justify-content-between p-3 bg-black">
         <div>
             <p class="text-warning">Laravel Cashier (Stripe)</p>
         </div>
         <div>
-            <span>{{ Auth::user()->name }}</span>
+            <span class="text-white">{{ Auth::user()->name }}</span>
             <span class="px-3">|</span>
             <form action="{{ route('logout') }}" method="post">
                 @csrf
@@ -15,14 +35,14 @@
     </div>
 
     <div class="text-center mt-5">
-        <p class="display-6">Dashboard!</p>
+        <p class="display-6 text-white">Dashboard!</p>
 
     </div>
 
     <hr>
 
     <div class="text-center">
-        <p>Subsctiption termina em <strong>{{ $subscription_end }}</strong></p>
+        <p class="text-white">Subsctiption termina em <strong>{{ $subscription_end }}</strong></p>
         <a href="{{ route('products.index', ['slug' => $user->slug]) }}"
             class="inline-block bg-gray-600 p-2 text-white rounded">Acessar página da loja</a>
         <a href="{{ route('products.create', ['slug' => $user->slug]) }}"
@@ -53,4 +73,4 @@
             @endif
         </div>
     @endforeach
-@endsection
+</x-app-layout> --}}

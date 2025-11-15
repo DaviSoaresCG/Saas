@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Tenant;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResolveTenant
@@ -22,7 +20,7 @@ class ResolveTenant
         $slug = explode('.', $request->getHost())[0];
 
         if ($slug === 'www' || $slug === env('APP_DOMAIN')) {
-            return redirect()->away('http://' . env('APP_DOMAIN'));
+            return redirect()->away('http://'.env('APP_DOMAIN'));
 
             // return redirect()->away('http://127.0.0.1:8000');
         }
@@ -30,9 +28,11 @@ class ResolveTenant
         $user = User::where('slug', $slug)->firstOrFail();
         // dd($slug, $user);
 
-        if (!$user->subscribed(env('STRIPE_PRODUCT_ID'))) {
-            return redirect()->away('http://' . env('APP_DOMAIN'));
+        if (! $user->subscribed(env('STRIPE_PRODUCT_ID'))) {
+            return redirect()->away('http://'.env('APP_DOMAIN'));
             // return redirect()->away('http://127.0.0.1:8000');
+        } elseif (! $user->hasVerifiedEmail()) {
+            return redirect()->away('http://'.env('APP_DOMAIN'));
         }
 
         app()->instance(User::class, $user);

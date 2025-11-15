@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -76,18 +75,17 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
             // Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
             // outras rotas de adm...
         });
-    });
-
+});
 
 Route::get('/', [AdminController::class, 'plans'])->name('home');
 
 Route::middleware([noSubscription::class])->group(function () {
     Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
 
-    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected');
+    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware(['auth', 'verified']);
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
     Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
     Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
@@ -108,7 +106,3 @@ Route::get('/api/subscription/status', function () {
 // Route::get('/forgot-password', function () {
 //     return view('auth.');
 // });
-
-Route::get('/verify', function(){
-    return view('auth.passwords.email');
-});

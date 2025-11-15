@@ -3,36 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\EmailJob;
-use App\Mail\WelcomeEmail;
 use App\Models\Products;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
-
     public function plans()
     {
         $prices = [
-            "monthly" => Crypt::encryptString(env('STRIPE_PRODUCT_ID') . "|" . env('STRIPE_MONTHLY_PRICE_ID')),
-            "yearly" => Crypt::encryptString(env('STRIPE_PRODUCT_ID') . "|" . env('STRIPE_YEARLY_PRICE_ID')),
-            "longest" => Crypt::encryptString(env('STRIPE_PRODUCT_ID') . "|" . env('STRIPE_LONGEST_PRICE_ID'))
+            'monthly' => Crypt::encryptString(env('STRIPE_PRODUCT_ID').'|'.env('STRIPE_MONTHLY_PRICE_ID')),
+            'yearly' => Crypt::encryptString(env('STRIPE_PRODUCT_ID').'|'.env('STRIPE_YEARLY_PRICE_ID')),
+            'longest' => Crypt::encryptString(env('STRIPE_PRODUCT_ID').'|'.env('STRIPE_LONGEST_PRICE_ID')),
         ];
+
         return view('plans', compact('prices'));
     }
 
     public function planSelected($id)
     {
-        // check if user is logged
-        if(!Auth::check())
-
         // check if ID is valid
         $plan = Crypt::decryptString($id);
-        if (!$plan) {
+        if (! $plan) {
             return redirect()->route('home');
         }
 
@@ -45,27 +39,28 @@ class AdminController extends Controller
             ->checkout([
                 'locale' => 'pt-BR',
                 'success_url' => route('subscription.pending'),
-                'cancel_url' => route('erro')
+                'cancel_url' => route('erro'),
             ]);
     }
 
     public function subscriptionSuccess()
     {
-        // echo "AAA";
-        if (!Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))) {
-            return view('subscription_pending');
-        }
-
         $user = Auth::user();
-        $user->slug = Str::slug(fake()->unique()->words(2, true));
+        // echo "AAA";
+        if (! Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))) {
+            return view('subscription_pending');
+        } elseif (empty(Auth::user()->slug)) {
 
-        $user->updateStripeCustomer([
-            'preferred_locales' => ['pt-BR'],
-        ]);
-        $user->save();
+            $user->slug = Str::slug(fake()->unique()->words(2, true));
 
-        //sending email on queue
-        EmailJob::dispatch($user);
+            $user->updateStripeCustomer([
+                'preferred_locales' => ['pt-BR'],
+            ]);
+            $user->save();
+
+            // sending email on queue
+            EmailJob::dispatch($user);
+        }
 
         return view('subscription_success', ['slug' => $user->slug]);
     }
@@ -90,6 +85,7 @@ class AdminController extends Controller
         $invoices = Auth::user()->subscription(env('STRIPE_PRODUCT_ID'))->invoices();
 
         $user = app(User::class);
+
         return view('admin.dashboard', compact('subscription_end', 'invoices', 'user'));
     }
 
@@ -112,6 +108,7 @@ class AdminController extends Controller
     public function getAllProducts()
     {
         $products = Products::paginate(10);
+
         return view('admin.products', compact('products'));
     }
 }
