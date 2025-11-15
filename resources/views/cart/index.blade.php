@@ -1,5 +1,4 @@
-@extends('layouts.app')
-@section('content')
+<x-app-layout>
 <h1>Meu Carrinho</h1>
 
 <div class="overflow-x-auto">
@@ -52,4 +51,4 @@
 <a href="{{route('whatsapp', ['slug' => $user->slug])}}" class="bg-yellow-500 p-4 rounded">Finalizar pedido</a>
 <a class="bg-blue-600 p-4 rounded text-white" href="{{ route('cart.clear', ['slug' => $user->slug]) }}">Esvaziar carrinho</a>
 
-@endsection
+</x-app-layout>

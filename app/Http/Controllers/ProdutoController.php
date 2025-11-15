@@ -36,7 +36,7 @@ class ProdutoController extends Controller
             'name' => 'required|min:3|max:255',
             'value' => 'required',
             'description' => 'required|min:3|max:255',
-            'path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:16384'
+            'path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:50000'
         ]);
 
         $path = null;
