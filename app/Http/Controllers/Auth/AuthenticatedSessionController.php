@@ -27,12 +27,18 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        $slug = explode('.', $request->getHost())[0];       
         $user = Auth::user();
+        
         if(!$user->hasVerifiedEmail() || !$user->subscribed()){
             return redirect()->route('plans');
         }
-        return redirect()->intended(route('dashboard', ['slug' => $user->slug]));
+        //se o usuario estiver dentro do da pagina da loja
+         if($slug !== 'saas'){
+             return redirect()->route('dashboard');
+         }
+
+        return redirect()->intended();
     }
 
     /**

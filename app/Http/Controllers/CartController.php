@@ -15,7 +15,7 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
         $user = app(User::class);
 
-        return view('cart.index', compact('cart', 'user'));
+        return view('cart.exemplo', compact('cart', 'user'));
     }
 
     public function add($slug, $id)

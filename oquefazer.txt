@@ -5,16 +5,19 @@ Melhorar as rotas plmds
 Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio)
 Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
+-----PRECISO FAZER A ROTA DO LOGIN, INTENDEND E TALS-----
+FINALIZAR O CARRINHO
+
 
 --FUNIONALIDADES
-- Verificação de email para fazer a assinatura
+- Envio de mensagem com os itens do pedido e o nome do cliente
+- Colocar os botões de voltar nas páginas
 - Fazer o tratamento dos dados(formatação da moeda e datas)
 - Envio de Emails
-    - Boas vindas (com o link do dashboard) ✅
-    - Confirmação de email
+    - Boas vindas (com o link do dashboard)
+    - Confirmação de email ✅
     - Recuperação de senha
 
 
-preciso redirecionar para onde estava indo nos logins e registrers
 preciso fazer testes finais
 
