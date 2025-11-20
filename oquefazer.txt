@@ -6,7 +6,7 @@ Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio
 Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 -----PRECISO FAZER A ROTA DO LOGIN, INTENDEND E TALS-----
-FINALIZAR O CARRINHO
+FINALIZAR O CARRINHO(nao esta salvando na session)
 
 
 --FUNIONALIDADES

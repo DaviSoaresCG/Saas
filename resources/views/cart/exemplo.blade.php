@@ -8,49 +8,65 @@
             <div class="lg:col-span-2">
                 <div class="bg-gray-800 rounded-lg shadow-lg p-6 space-y-6">
 
-                    <div class="product-item flex flex-col md:flex-row gap-6 items-center border-b pb-6"
-                        data-price="18.50">
+                    {{-- 
+  MUDANÇA 1: O loop deve ser @foreach ($cart as $id => $item) 
+  para funcionar com a estrutura de sessão que recomendamos.
+--}}
+                    @foreach ($cart as $id => $item)
+                        {{-- 
+      MUDANÇA 2: Adicionado 'data-product-id' ao 'div' principal 
+      para podermos remover o item inteiro do DOM.
+    --}}
+                        <div class="product-item flex flex-col md:flex-row gap-6 items-center border-b pb-6"
+                            data-price="{{ $item['value'] }}" data-product-id="{{ $id }}">
 
-                        <div class="w-32 h-32 md:w-28 md:h-28 flex-shrink-0">
-                            <img class="w-full h-full object-cover rounded-lg shadow-md"
-                                src="https://readymadeui.com/images/sunscreen-img-1.webp" alt="Produto 1">
+                            <div class="w-32 h-32 md:w-28 md:h-28 flex-shrink-0">
+                                {{-- MUDANÇA 3: Acessando como array ($item['path']) --}}
+                                <img class="w-full h-full object-cover rounded-lg shadow-md"
+                                    src="{{ asset('storage/' . $item['path']) }}" alt="{{ $item['name'] }}">
+                            </div>
+
+                            <div class="flex-1 w-full md:w-auto">
+                                <h3 class="text-xl font-semibold text-white">{{ $item['name'] }}</h3>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                {{-- MUDANÇA 4: O 'data-product-id' agora é '$id' --}}
+                                <button data-action="decrement" data-product-id="{{ $id }}"
+                                    class="flex btn-update-cart bg-red-600 hover:bg-red-700 px-2 rounded text-white">
+                                    -
+                                </button>
+
+                                <span class="item-quantity text-lg font-semibold text-white"
+                                    id="quantity-{{ $id }}"> {{ $item['quantity'] }} </span>
+
+                                <button data-action="increment" data-product-id="{{ $id }}"
+                                    class="flex btn-update-cart bg-blue-600 hover:bg-blue-700 px-2 rounded text-white">
+                                    +
+                                </button>
+                            </div>
+
+                            <div class="flex flex-col items-end">
+                                {{-- 
+              MUDANÇA 5: O subtotal deve ser calculado dinamicamente
+              e ter um 'id' para o JS poder atualizá-lo.
+            --}}
+                                <span class="item-subtotal text-xl font-bold text-white mb-2"
+                                    id="item-subtotal-{{ $id }}">
+                                    R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
+                                </span>
+
+                                {{-- 
+              MUDANÇA 6: Adicionado 'data-product-id' e uma classe 'btn-remove-item'
+              para o botão de remover.
+            --}}
+                                <button data-action="remove" data-product-id="{{ $id }}"
+                                    class="btn-remove-item text-red-500 hover:text-red-700 transition-colors text-sm font-medium flex items-center gap-1">
+                                    Remover
+                                </button>
+                            </div>
                         </div>
-
-                        <div class="flex-1 w-full md:w-auto">
-                            <h3 class="text-xl font-semibold text-white">Protetor Solar FPS 50</h3>
-                        </div>
-
-                        <div class="flex items-center gap-3">
-                            <button data-action="decrement"
-                                class="flex items-center justify-center w-8 h-8 bg-red-600 rounded-full text-white hover:bg-red-700 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4">
-                                    </path>
-                                </svg>
-                            </button>
-
-                            <span class="item-quantity text-lg font-semibold text-white">1</span>
-
-                            <button data-action="increment"
-                                class="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full text-white hover:bg-blue-700 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="flex flex-col items-end">
-                            <span class="item-subtotal text-xl font-bold text-white mb-2">$18.50</span>
-
-                            <button data-action="remove"
-                                class="text-red-500 hover:text-red-700 transition-colors text-sm font-medium flex items-center gap-1">
-                                Remover
-                            </button>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -58,17 +74,12 @@
                 <div class="bg-gray-800 rounded-lg shadow-lg p-6 lg:sticky lg:top-8">
                     <h2 class="text-2xl font-bold text-white border-b pb-4 mb-6">Resumo do Pedido</h2>
 
-                    <div class="space-y-4">
-                        <div class="flex justify-between text-white">
-                            <span>Subtotal</span>
-                            <span class="font-medium" id="summary-subtotal">$36.50</span>
-                        </div>
-                    </div>
-
-                    <div class="border-t mt-6 pt-6">
+                    <div class="mt-6 pt-6">
                         <div class="flex justify-between text-white text-xl font-bold">
                             <span>Total</span>
-                            <span id="summary-total">$42.50</span>
+                            <span id="summary-total">
+                                R$ {{ number_format($total, 2, ',', '.') }}
+                            </span>
                         </div>
                     </div>
                     <form action="#" method="post">
@@ -86,97 +97,114 @@
         </div>
     </div>
     <script>
-        // Espera o documento carregar antes de rodar o script
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener('DOMContentLoaded', function() {
 
-            // Seleciona a área que contém TODOS os produtos
-            // Usamos isso para "Event Delegation" - é mais eficiente
-            const cartContainer = document.querySelector(".lg\\:col-span-2");
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            // Listener para botões +/- (O que você já tinha)
+            document.querySelectorAll('.btn-update-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    console.log("deu certo");
+                    const productId = this.dataset.productId;
+                    const action = this.dataset.action;
+                    const quantityElement = document.getElementById('quantity-' + productId);
+                    let currentQuantity = parseInt(quantityElement.innerText);
 
-            // Seleciona os campos do resumo que vamos atualizar
-            const summarySubtotal = document.getElementById("summary-subtotal");
-            const summaryTotal = document.getElementById("summary-total");
-
-            // Taxas fixas (exemplo)
-            const shippingFee = 4.00;
-            const taxFee = 2.00;
-
-            // --- O "CÉREBRO": A FUNÇÃO QUE RECALCULA TUDO ---
-            function updateCartTotal() {
-                // Pega TODOS os 'product-item' que estão no carrinho
-                const productItems = document.querySelectorAll(".product-item");
-
-                let subtotal = 0;
-
-                // Loop por cada item do carrinho
-                productItems.forEach(item => {
-                    // 1. Pega os valores do item
-                    const price = parseFloat(item.dataset.price); // Pega o 'data-price' (ex: 18.50)
-                    const quantityElement = item.querySelector(
-                        ".item-quantity"); // Pega o <span> da quantidade
-                    const quantity = parseInt(quantityElement
-                        .textContent); // Pega o texto (ex: "1") e transforma em número
-
-                    // 2. Calcula o subtotal *deste item*
-                    const itemSubtotal = price * quantity;
-
-                    // 3. Atualiza o subtotal *deste item* na tela
-                    const itemSubtotalElement = item.querySelector(".item-subtotal");
-                    itemSubtotalElement.textContent = "$" + itemSubtotal.toFixed(2); // Formata para $0.00
-
-                    // 4. Adiciona o subtotal deste item ao total geral
-                    subtotal += itemSubtotal;
-                });
-
-                // --- Atualiza o Resumo do Pedido ---
-                const total = subtotal;
-
-                summarySubtotal.textContent = "$" + subtotal.toFixed(2);
-                summaryTotal.textContent = "$" + total.toFixed(2);
-            }
-
-            // --- OS "GATILHOS": OUVINTE DE CLIQUES ---
-            cartContainer.addEventListener("click", (event) => {
-                // Acha o botão que foi clicado, mesmo que o clique tenha sido no ícone (SVG)
-                const button = event.target.closest("button");
-
-                // Se não clicou em um botão, não faz nada
-                if (!button) return;
-
-                // Pega a ação do botão (ex: 'increment', 'decrement', 'remove')
-                const action = button.dataset.action;
-
-                // Pega o 'product-item' pai deste botão
-                const productItem = button.closest(".product-item");
-
-                // Pega o <span> da quantidade deste item
-                const quantityElement = productItem.querySelector(".item-quantity");
-                let quantity = parseInt(quantityElement.textContent);
-
-                // Executa a ação
-                if (action === "increment") {
-                    quantity++;
-                    quantityElement.textContent = quantity;
-                }
-
-                if (action === "decrement") {
-                    if (quantity > 1) { // Não deixa a quantidade ser menor que 1
-                        quantity--;
-                        quantityElement.textContent = quantity;
+                    if (action === 'increment') {
+                        currentQuantity++;
+                    } else if (action === 'decrement') {
+                        currentQuantity--;
+                        // Não deixa a quantidade ser menor que 1 (use "remover" para isso)
+                        if (currentQuantity < 1) {
+                            currentQuantity = 1;
+                            // Ou, se quiser que 0 remova:
+                            // if (currentQuantity < 0) currentQuantity = 0;
+                        }
                     }
-                }
 
-                if (action === "remove") {
-                    productItem.remove(); // Remove o item do HTML
-                }
+                    // Atualiza visualmente ANTES de enviar (Otimista)
+                    // Se der erro, a resposta do AJAX deve reverter isso
+                    quantityElement.innerText = currentQuantity;
 
-                // **A MÁGICA ACONTECE AQUI**
-                // Depois de qualquer ação, recalcula o carrinho inteiro
-                updateCartTotal();
+                    updateCartOnServer(productId, currentQuantity);
+                });
             });
 
-            // Roda a função uma vez no início para garantir que os totais estejam corretos
-            updateCartTotal();
+            // NOVO: Listener para botões "Remover"
+            document.querySelectorAll('.btn-remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.dataset.productId;
+
+                    // Enviar quantidade 0 para o servidor significa "remover"
+                    updateCartOnServer(productId, 0);
+                });
+            });
+
+            /**
+             * Função que envia os dados para o servidor via AJAX (fetch)
+             */
+            async function updateCartOnServer(productId, quantity) {
+
+                // Pega o elemento principal do item
+                const itemElement = document.querySelector(`.product-item[data-product-id="${productId}"]`);
+
+                try {
+                    const response = await fetch("{{ route('cart.update', ['slug' => $slug]) }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: quantity
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Erro na resposta do servidor.');
+                    }
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        console.log(data.message);
+
+                        // --- ATUALIZAÇÕES DO DOM ---
+
+                        // 1. Atualiza o Resumo do Pedido (Subtotal e Total Geral)
+                        document.getElementById('summary-total').innerText = 'R$ ' + data.new_total;
+
+                        if (itemElement) {
+                            if (quantity <= 0) {
+                                // 2a. Remove o item do DOM com um "fade out"
+                                itemElement.style.transition = 'opacity 0.3s ease-out';
+                                itemElement.style.opacity = '0';
+                                setTimeout(() => itemElement.remove(), 300);
+                            } else {
+                                // 2b. Atualiza o subtotal do item específico
+                                const itemSubtotalEl = document.getElementById('item-subtotal-' + productId);
+                                if (itemSubtotalEl) {
+                                    itemSubtotalEl.innerText = 'R$ ' + data.item_subtotal;
+                                }
+                                // Confirma a quantidade (caso a lógica do servidor mude, ex: estoque)
+                                const quantityEl = document.getElementById('quantity-' + productId);
+                                if (quantityEl) {
+                                    quantityEl.innerText = data.quantity;
+                                }
+                            }
+                        }
+
+                    } else {
+                        console.error('Falha ao atualizar o carrinho (resposta do servidor).');
+                        // Aqui você reverteria a mudança visual, ex: recarregando a página
+                        location.reload();
+                    }
+
+                } catch (error) {
+                    console.error(error);
+                    // Reverte a mudança visual em caso de erro de rede
+                }
+            }
         });
     </script>
 </x-app-layout>
