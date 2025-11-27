@@ -2,20 +2,17 @@ LEMBRAR SEMPRE DE LIGAR O WEBHOOK
 CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
 Falta configurar as rotas, controllers e fazer as páginas
 Melhorar as rotas plmds
-Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio)
 Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
-
------PRECISO FAZER A ROTA DO LOGIN, INTENDEND E TALS-----
 
 
 --FUNIONALIDADES
-- Permitir do Tenant alterar o slug
+- Permitir o Tenant alterar o slug
 - Colocar os botões de voltar nas páginas
 - Fazer o tratamento dos dados(formatação da moeda e datas)
 - Envio de Emails
     - Boas vindas (com o link do dashboard)
     - Confirmação de email ✅
-    - Recuperação de senha
+    - Recuperação de senha ✅
 
 
 preciso fazer testes finais

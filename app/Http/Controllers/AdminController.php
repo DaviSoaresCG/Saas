@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\EmailJob;
 use App\Models\Products;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
@@ -72,13 +73,33 @@ class AdminController extends Controller
         return view('subscription_pending');
     }
 
-    public function generateUniqueSlug($name)
+    public function generateUniqueSlug($slug)
     {
-        $slug = Str::slug($name);
-        $count = User::where('slug', 'LIKE', "{$slug}")->count();
+        $count = User::where('slug', 'LIKE', "{$slug}%")->count();
 
         //se count retornar um numero, $slug-n
         return $count ? "{$slug}-{$count}" : $slug;
+    }
+
+    public function gerarSlugUnicoPost(Request $request)
+    {
+        $request->validate([
+            'slug_request' => 'required|min:2|string|unique:users,slug'
+        ],
+        [
+        'required' => 'Preencha',
+        'min' => 'Minimo de 2 caracteres',
+        'string' => 'Digite letras',
+        'unique' => 'Ja existe esse dominio'
+        ]
+    );
+        $user = Auth::user();
+        $slug = $this->generateUniqueSlug($request->slug_request);
+        $user->slug = $slug;
+        $user->save();
+        
+        return redirect()->away('http://'.$slug.'.'.env("APP_DOMAIN").'/profile');
+
     }
 
     public function dashboard()

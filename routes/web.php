@@ -68,6 +68,9 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
                 return $request->user()->redirectToBillingPortal();
             })->name('billing');
 
+            //atualizar o slug
+            Route::patch('/update-slug', [AdminController::class, 'gerarSlugUnicoPost'])->name('slug.update');
+
             // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
             // Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
