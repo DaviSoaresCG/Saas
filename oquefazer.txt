@@ -6,11 +6,10 @@ Verificar se tem algum erro de acesso(se um adm logar dentro de outro subdominio
 Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 -----PRECISO FAZER A ROTA DO LOGIN, INTENDEND E TALS-----
-FINALIZAR O CARRINHO(nao esta salvando na session)
 
 
 --FUNIONALIDADES
-- Envio de mensagem com os itens do pedido e o nome do cliente
+- Permitir do Tenant alterar o slug
 - Colocar os botões de voltar nas páginas
 - Fazer o tratamento dos dados(formatação da moeda e datas)
 - Envio de Emails
@@ -21,3 +20,8 @@ FINALIZAR O CARRINHO(nao esta salvando na session)
 
 preciso fazer testes finais
 
+
+VERSAO 2.0
+- Salvar no banco de dados as informações na hora do pedido (dinheiro, pix, entrega)
+- Mostrar na tabela de pedidos o status do pedido, podendo ser aberto ou concluido.
+- Categorias do produto

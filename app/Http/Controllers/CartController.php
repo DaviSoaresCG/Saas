@@ -19,7 +19,7 @@ class CartController extends Controller
         }
 
 
-        return view('cart.exemplo', compact('cart', 'slug', 'total'));
+        return view('cart.index', compact('cart', 'slug', 'total'));
     }
 
     public function add($slug, $id)

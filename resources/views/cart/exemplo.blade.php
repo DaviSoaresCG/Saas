@@ -5,14 +5,15 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <div class="lg:col-span-2">
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6 space-y-6">
+            <div class="lg:col-span-2 space-y-3">
+                @foreach ($cart as $id => $item)
+
+                <div class="bg-gray-800 rounded-lg shadow-lg p-6">
 
                     {{-- 
   MUDANÇA 1: O loop deve ser @foreach ($cart as $id => $item) 
   para funcionar com a estrutura de sessão que recomendamos.
 --}}
-                    @foreach ($cart as $id => $item)
                         {{-- 
       MUDANÇA 2: Adicionado 'data-product-id' ao 'div' principal 
       para podermos remover o item inteiro do DOM.
@@ -66,8 +67,9 @@
                                 </button>
                             </div>
                         </div>
-                    @endforeach
                 </div>
+                @endforeach
+
             </div>
 
             <div class="lg:col-span-1">

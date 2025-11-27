@@ -51,7 +51,9 @@ class AdminController extends Controller
             return view('subscription_pending');
         } elseif (empty(Auth::user()->slug)) {
 
-            $user->slug = Str::slug(fake()->unique()->words(2, true));
+            $slug = Str::slug(fake()->unique()->words(2, true));
+            $unique_slug = $this->generateUniqueSlug($slug);
+            $user->slug = $unique_slug;
 
             $user->updateStripeCustomer([
                 'preferred_locales' => ['pt-BR'],
@@ -68,6 +70,15 @@ class AdminController extends Controller
     public function subscriptionPending()
     {
         return view('subscription_pending');
+    }
+
+    public function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = User::where('slug', 'LIKE', "{$slug}")->count();
+
+        //se count retornar um numero, $slug-n
+        return $count ? "{$slug}-{$count}" : $slug;
     }
 
     public function dashboard()

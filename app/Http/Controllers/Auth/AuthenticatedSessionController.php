@@ -27,15 +27,28 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        $slug = explode('.', $request->getHost())[0];       
+        $host = $request->getHost();
+        $baseDomain = env('APP_DOMAIN');      
+        
+        //tira o saas.test
+        $currentSlug = str_replace('.' . $baseDomain, '', $host);
+
+        if($currentSlug === $host){
+            return redirect()->route('home');
+        }
         $user = Auth::user();
         
-        if(!$user->hasVerifiedEmail() || !$user->subscribed()){
-            return redirect()->route('plans');
-        }
-        //se o usuario estiver dentro do da pagina da loja
-         if($slug !== 'saas'){
-             return redirect()->route('dashboard');
+        if($user->subscribed(env('STRIPE_PRODUCT_ID'))){
+            //se o slug do site for diferente do slug do usuario autenticado
+            if($user->slug !== $currentSlug){
+                Auth::logout();
+                return redirect()->back()->withErrors(['email' => 'Voce nao tem acesso à esse dominio']);
+            }else{
+                return redirect()->intended(route('dashboard', ['slug' => $user->slug]));
+            }
+         }else{
+            Auth::logout();
+            return redirect()->back()->withErrors(['email' => 'Sua inscrição expirou']);
          }
 
         return redirect()->intended();

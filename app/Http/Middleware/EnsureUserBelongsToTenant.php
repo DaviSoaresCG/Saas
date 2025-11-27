@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserBelongsToTenant
@@ -15,17 +16,31 @@ class EnsureUserBelongsToTenant
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $tenantSlug = $request->route('slug'); // slug do domínio
-        $user = auth()->user();
+        $user = Auth::user();
+
+        // 1. Se não estiver logado, deixa passar (o middleware 'auth' cuida disso depois)
+        if (! $user) {
+            return $next($request);
+        }
+
+        //Subdomínio Atual
+        $host = $request->getHost();
+        $baseDomain = env('APP_DOMAIN'); // ex: saas.test
+        $currentSlug = str_replace('.' . $baseDomain, '', $host);
+
+
+        //se estiver dentro do app principal
+        if ($currentSlug === $host || $currentSlug === 'www') {
+             return $next($request);
+        }
 
         //verifica se o usuario est
-        if ($user && $user->slug !== $tenantSlug) {
-            // Opcional: deslogar o usuário
-            auth()->logout();
+        if ($user->slug !== $currentSlug) {
 
+            Auth::guard('web')->logout();
             // Redirecionar para login do tenant correto
-            return redirect()->route('login', ['slug' => $tenantSlug])
-                ->withErrors(['email' => 'Você não tem acesso a este painel.']);
+            return redirect()->route('login')
+                ->withErrors(['email' => 'Você não acesso este painel.(middleware)']);
         }
 
         return $next($request);
