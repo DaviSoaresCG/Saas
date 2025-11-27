@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -84,7 +85,7 @@ class AdminController extends Controller
     public function gerarSlugUnicoPost(Request $request)
     {
         $request->validate([
-            'slug_request' => 'required|min:2|string|unique:users,slug'
+            'slug_request' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())]
         ],
         [
         'required' => 'Preencha',
@@ -94,6 +95,9 @@ class AdminController extends Controller
         ]
     );
         $user = Auth::user();
+        if($request->slug == $user->slug){
+            return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo']);
+        }
         $slug = $this->generateUniqueSlug($request->slug_request);
         $user->slug = $slug;
         $user->save();
