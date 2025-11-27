@@ -5,33 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-
     public function index($slug)
     {
-        $cart = session()->get('cart', []);
-        $user = app(User::class);
 
-        return view('cart.index', compact('cart', 'user'));
+        $cart = session()->get('cart', []);
+        $slug = app(User::class)->slug;
+        $total = 0;
+        foreach($cart as $item){
+            $total+= $item['value'] * $item['quantity'];
+        }
+
+
+        return view('cart.index', compact('cart', 'slug', 'total'));
     }
 
     public function add($slug, $id)
-    {   
+    {
         $product = Products::findOrFail($id);
 
         $cart = session()->get('cart', []);
 
-        if(isset($cart[$id])){
+        if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
-        }else{
+        } else {
             $cart[$id] = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'value' => $product->value,
-                'quantity' => 1
+                'path' => $product->path,
+                'quantity' => 1,
             ];
         }
 
@@ -44,7 +49,7 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
 
-        if(isset($cart[$id])){
+        if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
         }
@@ -54,14 +59,64 @@ class CartController extends Controller
 
     public function update(Request $request)
     {
-        $cart = session()->get('cart', []);
-        if(isset($cart[$request->id])){
-            $cart[$request->id]['quantity'] = $request->quantity;
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:0',
+        ]);
+        
+        $produto_id = $request->product_id;
+        $quantidade = $request->quantity;
 
-            session()->put('cart', $cart);
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$produto_id])) {
+            if ($quantidade > 0) {
+                $cart[$produto_id]['quantity'] = $quantidade;
+                $total = 0;
+                foreach($cart as $item){
+                    $total+= $item['value'] * $item['quantity'];
+                }
+                //formata o total do carrinho
+                $total_formatado = number_format($total, 2, ',', '.');
+
+                //pega o total do item no carrinho
+                $item_total = $cart[$produto_id]['value'] * $quantidade;
+                $item_subtotal_formatado = number_format($item_total, 2, ',', '.');
+
+                session()->put('cart', $cart);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'atualizado',
+                    'new_total' => $total_formatado,
+                    'item_subtotal' => $item_subtotal_formatado,
+                    'quantity' => $quantidade,
+                    'cartCounter' => count($cart)
+                ]);
+            } else {
+                unset($cart[$produto_id]);
+
+                $total = 0.00;
+                if(count($cart) > 0){
+                    foreach($cart as $item){
+                        $total+= $item['value'] * $item['quantity'];
+                    }
+                }
+                
+                //formata o total do carrinho
+                $total_formatado = number_format($total, 2, ',', '.');
+
+                session()->put('cart', $cart);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'removido',
+                    'new_total' => $total_formatado,
+                    'cartCounter' => count($cart)
+                ]);
+            }
         }
 
-        return redirect()->route('cart.index', ['slug' => app(User::class)->slug]);
     }
 
     public function clear($slug)
@@ -70,7 +125,4 @@ class CartController extends Controller
 
         return redirect()->route('cart.index', ['slug' => app(User::class)->slug]);
     }
-
-
-    
 }

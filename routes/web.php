@@ -1,5 +1,16 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PedidoController;
@@ -11,7 +22,6 @@ use App\Http\Middleware\ResolveTenant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 
 Route::domain('{slug}.'.env('APP_DOMAIN'))
     ->middleware([ResolveTenant::class])
@@ -58,6 +68,9 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
                 return $request->user()->redirectToBillingPortal();
             })->name('billing');
 
+            //atualizar o slug
+            Route::patch('/update-slug', [AdminController::class, 'gerarSlugUnicoPost'])->name('slug.update');
+
             // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
             // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
             // Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
@@ -65,19 +78,17 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
             // Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
             // outras rotas de adm...
         });
-    });
-
-Auth::routes();
+});
 
 Route::get('/', [AdminController::class, 'plans'])->name('home');
 
 Route::middleware([noSubscription::class])->group(function () {
     Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
 
-    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware('auth');
+    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware(['auth', 'verified']);
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
     Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
     Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
@@ -98,7 +109,3 @@ Route::get('/api/subscription/status', function () {
 // Route::get('/forgot-password', function () {
 //     return view('auth.');
 // });
-
-Route::get('/verify', function(){
-    return view('auth.passwords.email');
-});
