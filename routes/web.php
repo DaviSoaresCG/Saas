@@ -44,7 +44,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
         Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
         // pedido
-        Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('whatsapp');
+        Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('pedido.finalizar');
         Route::get('/pedido', [PedidoController::class, 'index'])->name('falarWhatsapp');
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');

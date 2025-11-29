@@ -37,7 +37,7 @@ class PedidoController extends Controller
             return redirect()->back()->with('error', 'Carrinho nao encontrado');
         }
 
-        $total = 0;
+        $total = 0.0;
         foreach ($cart as $product) {
             $total += $product['value'] * $product['quantity'];
         }
@@ -49,18 +49,25 @@ class PedidoController extends Controller
             'total' => $total,
         ]);
 
+        $produtos = "";
+        $itensParaInserir = [];
         foreach ($cart as $product) {
-            $itens_pedido = ItemPedido::create([
+            $itensParaInserir[] =[
                 'pedido_id' => $pedido->id,
                 'product_id' => $product['id'],
                 'value' => $product['value'],
                 'quantidade' => $product['quantity'],
-            ]);
+                'created_at' => now(),
+                'updated_at' => now()
+        ];
+            $produtos .= "\n*Produto: ".$product['name']. "#".$product['id']."*"."\nValor: ".$product['value']."\nQuantidade: ".$product['quantity'];
         }
+        //uma so ida no banco
+        ItemPedido::insert($itensParaInserir);
 
         $whatsapp = Pedido::with('user')->findorFail($pedido->id);
         $tenantPhone = $whatsapp->user->whatsapp; // campo no banco
-        $mensagem = "Olá, acabei de finalizar o pedido #{$pedido->id}. Total: R$ {$pedido->total}";
+        $mensagem = "Olá, acabei de finalizar o pedido *#{$pedido->id}*.\nTotal: R$ {$total}".$produtos;
 
         // Monta a URL do WhatsApp
         $url = "https://wa.me/{$tenantPhone}?text=".urlencode($mensagem);

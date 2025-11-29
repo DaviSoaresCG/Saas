@@ -88,7 +88,7 @@
                             </span>
                         </div>
                     </div>
-                    <form action="#" method="post">
+                    <form action="{{ route('pedido.finalizar', ['slug' => $slug]) }}" method="get">
                         @csrf
                         <input type="number" hidden id="summary-total" value="">
                         <button

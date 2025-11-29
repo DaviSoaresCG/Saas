@@ -6,7 +6,8 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Permitir o Tenant alterar o slug
+- Finalizar o pedido
+- Permitir o Tenant alterar o slug ✅
 - Colocar os botões de voltar nas páginas
 - Fazer o tratamento dos dados(formatação da moeda e datas)
 - Envio de Emails
