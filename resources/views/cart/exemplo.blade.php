@@ -150,7 +150,7 @@
                 const itemElement = document.querySelector(`.product-item[data-product-id="${productId}"]`);
 
                 try {
-                    const response = await fetch("{{ route('cart.update', ['slug' => $slug]) }}", {
+                    const response = await fetch("{{ route('cart.update') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

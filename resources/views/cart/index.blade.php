@@ -88,7 +88,7 @@
                             </span>
                         </div>
                     </div>
-                    <form action="{{ route('pedido.finalizar', ['slug' => $slug]) }}" method="get">
+                    <form action="{{ route('pedido.finalizar') }}" method="get">
                         @csrf
                         <input type="number" hidden id="summary-total" value="">
                         <button
@@ -154,7 +154,7 @@
                 const itemElement = document.querySelector(`.product-item[data-product-id="${productId}"]`);
 
                 try {
-                    const response = await fetch("{{ route('cart.update', ['slug' => $slug]) }}", {
+                    const response = await fetch("{{ route('cart.update') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

@@ -21,7 +21,7 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @auth()
-            @include('layouts.navigation', ['slug' => auth()->user()->slug])
+            @include('layouts.navigation')
         @endauth
         <!-- Page Heading -->
         @isset($header)

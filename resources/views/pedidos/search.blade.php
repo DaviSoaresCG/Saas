@@ -136,7 +136,7 @@
                                 <p class="p-3 bg-red-600 text-white rounded">Pedido nao encontrado</p>
                             @else
                                 <tr class="border-b dark:border-gray-700 hover:bg-gray-700 transition-all duration-50 ease-in-out cursor-pointer"
-                                    onclick="window.location='{{ route('pedidos.show', ['slug' => $user->slug, 'id' => $pedido->id]) }}'">
+                                    onclick="window.location='{{ route('pedidos.show',['id' => $pedido->id]) }}'">
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $pedido->id }}</td>
                                     <td class="px-4 py-3">{{ $pedido->total }}</td>

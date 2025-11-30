@@ -7,9 +7,9 @@
                     <div class="text-left space-y-2">
                         <a href="#"
                             class="inline-block bg-gray-600 p-2 text-white rounded">Personalizar Loja</a>
-                        <a href="{{ route('products.create', ['slug' => $user->slug]) }}"
+                        <a href="{{ route('products.create') }}"
                             class="inline-block bg-blue-700 p-2 text-white rounded">Criar um produto</a>
-                        <a href="{{ route('billing', ['slug' => $user->slug]) }}"
+                        <a href="{{ route('billing') }}"
                             class="bg-white inline-block text-gray-900 p-2 rounded">Opções de assinatura</a>
                     </div>
                 </div>

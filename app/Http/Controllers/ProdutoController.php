@@ -27,11 +27,10 @@ class ProdutoController extends Controller
     public function search(request $request)
     {
         $request->validate([
-            'search' => ['required', 'min:3', 'max:255']
+            'search' => ['required', 'max:255']
         ],
         [
             'required' => 'Esse campo é requirido',
-            'min' => 'Digite no minimo 3 caracteres',
             'max' => 'Tamanho maximo de caraceteres excedido'
         ]
     );

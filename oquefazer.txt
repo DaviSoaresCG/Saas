@@ -6,13 +6,13 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Pesquisar produto
+- Agora eu consigo usar o $slug em todas as views e nao preciso passar como parametro nas rotas
+- Pesquisar produto✅
 - Finalizar o pedido ✅
 - Permitir o Tenant alterar o slug ✅
 - Colocar os botões de voltar nas páginas
 - Fazer o tratamento dos dados(formatação da moeda e datas)
 - Envio de Emails
-    - Boas vindas (com o link do dashboard)
     - Confirmação de email ✅
     - Recuperação de senha ✅
 
@@ -24,3 +24,4 @@ VERSAO 2.0
 - Salvar no banco de dados as informações na hora do pedido (dinheiro, pix, entrega)
 - Mostrar na tabela de pedidos o status do pedido, podendo ser aberto ou concluido.
 - Categorias do produto
+- Boas vindas (com o link do dashboard)
