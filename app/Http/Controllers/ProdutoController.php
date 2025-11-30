@@ -24,6 +24,23 @@ class ProdutoController extends Controller
         return view('products.show', compact('product'));
     }
 
+    public function search(request $request)
+    {
+        $request->validate([
+            'search' => ['required', 'min:3', 'max:255']
+        ],
+        [
+            'required' => 'Esse campo é requirido',
+            'min' => 'Digite no minimo 3 caracteres',
+            'max' => 'Tamanho maximo de caraceteres excedido'
+        ]
+    );
+
+    $produto = Products::where('name', 'LIKE', "%{$request->search}%")->get();
+
+    return view('admin.products', ['products' => $produto, 'link' => false]);
+    }
+
     public function create($slug)
     {
         // $categorias = Categoria::all()

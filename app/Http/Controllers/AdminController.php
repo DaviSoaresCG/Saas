@@ -144,7 +144,8 @@ class AdminController extends Controller
     public function getAllProducts()
     {
         $products = Products::paginate(10);
+        $link = true;
 
-        return view('admin.products', compact('products'));
+        return view('admin.products', compact('products', 'link'));
     }
 }

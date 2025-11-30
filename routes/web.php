@@ -49,6 +49,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
 
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{product}', [ProdutoController::class, 'show'])->name('products.show');
+        Route::post('/produtos/search', [ProdutoController::class, 'search'])->name('products.search');
 
         Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
             // admin.dashboard
