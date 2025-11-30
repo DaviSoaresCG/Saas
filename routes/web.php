@@ -3,11 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 require __DIR__.'/auth.php';
 
@@ -52,6 +47,9 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
         Route::post('/produtos/search', [ProdutoController::class, 'search'])->name('products.search');
 
         Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
             // admin.dashboard
             Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
@@ -69,7 +67,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
                 return $request->user()->redirectToBillingPortal();
             })->name('billing');
 
-            //atualizar o slug
+            // atualizar o slug
             Route::patch('/update-slug', [AdminController::class, 'gerarSlugUnicoPost'])->name('slug.update');
 
             // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
@@ -79,7 +77,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
             // Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
             // outras rotas de adm...
         });
-});
+    });
 
 Route::get('/', [AdminController::class, 'plans'])->name('home');
 

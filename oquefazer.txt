@@ -6,7 +6,7 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Agora eu consigo usar o $slug em todas as views e nao preciso passar como parametro nas rotas
+- Agora eu consigo usar o $slug em todas as views e nao preciso passar como parametro nas rotas ✅
 - Pesquisar produto✅
 - Finalizar o pedido ✅
 - Permitir o Tenant alterar o slug ✅

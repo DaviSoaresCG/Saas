@@ -48,9 +48,16 @@
 --}}
 
 <x-app-layout>
+<nav class="text-sm text-gray-300 mb-4 ml-2">
+    <a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a>
+    <span class="mx-2">/</span>
+    <a href="{{ route('admin.products') }}" class="hover:underline">Lista de produtos</a>
+    <span class="mx-2">/</span>
+    <span class="text-white">Editar Produto {{$product->name}}</span>
+</nav>
     <section class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add a new product</h2>
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Editando</h2>
             <form action="{{ route('products.update',['product' => $product->id]) }}"
                 method="POST" enctype="multipart/form-data">
                 @method('PATCH')
@@ -101,7 +108,7 @@
                     </div>
                     <div>
 
-                        <label for="imagem">Imagem do Produto:</label>
+                        <label for="imagem" class="text-white mb-2 text-sm font-medium">Imagem do Produto:</label>
                         <input type="file" id="image" name="image" value="{{ asset('storage/' . $product->path) }}"
                             class="border-2 rounded-lg p-2 bg-gray-400">
                         <input type="text" name="path" id="path" value="{{ asset('storage/' . $product->path) }}"

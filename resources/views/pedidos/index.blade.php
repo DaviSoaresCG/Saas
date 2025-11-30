@@ -1,4 +1,9 @@
 <x-app-layout>
+<nav class="text-sm text-gray-300 mb-4 ml-2">
+    <a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a>
+    <span class="mx-2">/</span>
+    <span class="text-white">Lista de pedidos</span>
+</nav>
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
             @if (session('error'))
