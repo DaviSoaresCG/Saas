@@ -1,61 +1,34 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SaaS Multi-tenant Platform (Laravel & Stripe)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-Payment-008CDD?style=for-the-badge&logo=stripe&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-## About Laravel
+## 📖 Sobre o Projeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este projeto é uma plataforma **SaaS (Software as a Service) Multi-tenant** desenvolvida para simular um ambiente real de gestão empresarial B2B. A aplicação permite que cada cliente tenha seu próprio subdomínio isolado (ex: `clienteA.plataforma.com`), garantindo a segurança e separação dos dados.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+O foco principal deste projeto foi a implementação de uma arquitetura robusta de Backend, lidando com desafios de **Tenant Isolation**, **Pagamentos Recorrentes** e **Roteamento Dinâmico**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🏗️ Arquitetura e Decisões Técnicas
 
-## Learning Laravel
+### 1. Multi-tenancy (Single Database)
+Optei pela estratégia de **Single Database com Tenant Isolation** via `tenant_id`.
+* **Isolamento:** Utilizei `Global Scopes` do Eloquent para garantir que queries como `Product::all()` retornem apenas os dados do inquilino atual automaticamente.
+* **Identificação:** Um Middleware personalizado intercepta a requisição, extrai o subdomínio (`cliente.app.com`), valida no banco e injeta o contexto do Tenant na aplicação.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Fluxo de Pagamento (Stripe)
+Integração completa com **Laravel Cashier**.
+* Assinaturas mensais/anuais.
+* Processamento de **Webhooks** do Stripe para renovação automática e tratamento de falhas de cartão.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. Autenticação e Segurança
+* **Laravel Breeze** personalizado para redirecionamento inteligente.
+* **Middleware de Proteção:** Impede que um usuário logado no `tenant A` acesse o painel do `tenant B` manipulando a URL (proteção contra IDOR e Session Fixation).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚡ Stack Tecnológica
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* **Backend:** PHP 8.3, Laravel 12
+* **Banco de Dados:** MySQL 8
+* **Pagamentos:** Stripe API (Laravel Cashier)
+* **Frontend:** Blade, TailwindCSS, Alpine.js
