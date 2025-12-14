@@ -24,7 +24,7 @@
               </div>
               <div>
                 <label for="imagem" class="text-white">Imagem do Produto:</label>
-                <input type="file" id="image" name="image" class="border-2 rounded-lg p-2 w-1/2 sm:w-full bg-gray-400">
+                <input type="file" id="image" name="image" class="border-2 rounded-lg p-2 w-1/2 sm:w-full bg-gray-200" >
               </div>
           </div>
           <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">

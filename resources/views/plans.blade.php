@@ -32,7 +32,7 @@
                                 @if (auth()->user()->subscribed(env('STRIPE_PRODUCT_ID')))
                                     <br>
                                     Voce ja tem uma inscrição <a
-                                        href="{{ route('products.index') }}"
+                                        href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}"
                                         class="text-white">clique aqui para acessar</a>
                                 @endif
                                 <br>

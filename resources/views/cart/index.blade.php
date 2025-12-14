@@ -9,20 +9,10 @@
                 @foreach ($cart as $id => $item)
 
                 <div class="bg-gray-800 rounded-lg shadow-lg p-6">
-
-                    {{-- 
-  MUDANÇA 1: O loop deve ser @foreach ($cart as $id => $item) 
-  para funcionar com a estrutura de sessão que recomendamos.
---}}
-                        {{-- 
-      MUDANÇA 2: Adicionado 'data-product-id' ao 'div' principal 
-      para podermos remover o item inteiro do DOM.
-    --}}
                         <div class="product-item flex flex-col md:flex-row gap-6 items-center border-b pb-6"
                             data-price="{{ $item['value'] }}" data-product-id="{{ $id }}">
 
                             <div class="w-32 h-32 md:w-28 md:h-28 flex-shrink-0">
-                                {{-- MUDANÇA 3: Acessando como array ($item['path']) --}}
                                 <img class="w-full h-full object-cover rounded-lg shadow-md"
                                     src="{{ asset('storage/' . $item['path']) }}" alt="{{ $item['name'] }}">
                             </div>
@@ -32,7 +22,6 @@
                             </div>
 
                             <div class="flex items-center gap-3">
-                                {{-- MUDANÇA 4: O 'data-product-id' agora é '$id' --}}
                                 <button data-action="decrement" data-product-id="{{ $id }}"
                                     class="flex btn-update-cart bg-red-600 hover:bg-red-700 px-2 rounded text-white">
                                     -
@@ -48,11 +37,6 @@
                             </div>
 
                             <div class="flex flex-col items-end">
-                                {{-- 
-              MUDANÇA 5: O subtotal deve ser calculado dinamicamente
-              e ter um 'id' para o JS poder atualizá-lo.
-                                
-            --}}    
                                 <p class="text-white font-bold">
                                     Valor Unitário: {{ number_format($item['value'], 2, ',', '.') }}
                                 </p>
@@ -60,11 +44,6 @@
                                     id="item-subtotal-{{ $id }}">
                                     R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
                                 </span>
-
-                                {{-- 
-              MUDANÇA 6: Adicionado 'data-product-id' e uma classe 'btn-remove-item'
-              para o botão de remover.
-            --}}
                                 <button data-action="remove" data-product-id="{{ $id }}"
                                     class="btn-remove-item text-red-500 hover:text-red-700 transition-colors text-sm font-medium flex items-center gap-1">
                                     Remover
@@ -106,7 +85,6 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            // Listener para botões +/- (O que você já tinha)
             document.querySelectorAll('.btn-update-cart').forEach(button => {
                 button.addEventListener('click', function() {
                     console.log("deu certo");
@@ -119,35 +97,27 @@
                         currentQuantity++;
                     } else if (action === 'decrement') {
                         currentQuantity--;
-                        // Não deixa a quantidade ser menor que 1 (use "remover" para isso)
                         if (currentQuantity < 1) {
                             currentQuantity = 1;
-                            // Ou, se quiser que 0 remova:
-                            // if (currentQuantity < 0) currentQuantity = 0;
                         }
                     }
 
-                    // Atualiza visualmente ANTES de enviar (Otimista)
-                    // Se der erro, a resposta do AJAX deve reverter isso
                     quantityElement.innerText = currentQuantity;
 
                     updateCartOnServer(productId, currentQuantity);
                 });
             });
 
-            // NOVO: Listener para botões "Remover"
             document.querySelectorAll('.btn-remove-item').forEach(button => {
                 button.addEventListener('click', function() {
                     const productId = this.dataset.productId;
 
-                    // Enviar quantidade 0 para o servidor significa "remover"
+                    // Enviar quantidade 0, significa "remover"
                     updateCartOnServer(productId, 0);
                 });
             });
 
-            /**
-             * Função que envia os dados para o servidor via AJAX (fetch)
-             */
+            // ajax
             async function updateCartOnServer(productId, quantity) {
 
                 // Pega o elemento principal do item
@@ -175,8 +145,6 @@
                     if (data.success) {
                         console.log(data.message);
 
-                        // --- ATUALIZAÇÕES DO DOM ---
-
                         // 1. Atualiza o Resumo do Pedido (Subtotal e Total Geral)
                         document.getElementById('summary-total').innerText = 'R$ ' + data.new_total;
 
@@ -202,13 +170,11 @@
 
                     } else {
                         console.error('Falha ao atualizar o carrinho (resposta do servidor).');
-                        // Aqui você reverteria a mudança visual, ex: recarregando a página
                         location.reload();
                     }
 
                 } catch (error) {
                     console.error(error);
-                    // Reverte a mudança visual em caso de erro de rede
                 }
             }
         });

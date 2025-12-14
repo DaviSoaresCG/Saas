@@ -16,9 +16,9 @@ class AdminController extends Controller
     public function plans()
     {
         $prices = [
-            'monthly' => Crypt::encryptString(env('STRIPE_PRODUCT_ID').'|'.env('STRIPE_MONTHLY_PRICE_ID')),
-            'yearly' => Crypt::encryptString(env('STRIPE_PRODUCT_ID').'|'.env('STRIPE_YEARLY_PRICE_ID')),
-            'longest' => Crypt::encryptString(env('STRIPE_PRODUCT_ID').'|'.env('STRIPE_LONGEST_PRICE_ID')),
+            'monthly' => Crypt::encryptString('default|'.config('services.stripe.monthly')),
+            'yearly' => Crypt::encryptString('default|'.config('services.stripe.yearly')),
+            'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
         ];
 
         return view('plans', compact('prices'));
@@ -78,31 +78,31 @@ class AdminController extends Controller
     {
         $count = User::where('slug', 'LIKE', "{$slug}%")->count();
 
-        //se count retornar um numero, $slug-n
+        // se count retornar um numero, $slug-n
         return $count ? "{$slug}-{$count}" : $slug;
     }
 
     public function gerarSlugUnicoPost(Request $request)
     {
         $request->validate([
-            'slug_request' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())]
+            'slug_request' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())],
         ],
-        [
-        'required' => 'Preencha',
-        'min' => 'Minimo de 2 caracteres',
-        'string' => 'Digite letras',
-        'unique' => 'Ja existe esse dominio'
-        ]
-    );
+            [
+                'required' => 'Preencha',
+                'min' => 'Minimo de 2 caracteres',
+                'string' => 'Digite letras',
+                'unique' => 'Ja existe esse dominio',
+            ]
+        );
         $user = Auth::user();
-        if($request->slug == $user->slug){
+        if ($request->slug == $user->slug) {
             return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo']);
         }
         $slug = $this->generateUniqueSlug($request->slug_request);
         $user->slug = $slug;
         $user->save();
-        
-        return redirect()->away('http://'.$slug.'.'.env("APP_DOMAIN").'/profile');
+
+        return redirect()->away('http://'.$slug.'.'.env('APP_DOMAIN').'/profile');
 
     }
 
