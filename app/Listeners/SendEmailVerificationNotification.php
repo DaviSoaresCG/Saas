@@ -8,7 +8,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendEmailVerificationNotification implements ShouldQueue
+class SendEmailVerificationNotification
 {
     use InteractsWithQueue;
 

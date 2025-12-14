@@ -27,16 +27,32 @@
             </div>
         </div>
     </div>
+    {{-- Garanta que o Vite está carregando o JS. O Echo vive dentro do app.js --}}
+    @vite(['resources/js/app.js'])
+
     <script>
-        setInterval(function() {
-            fetch("{{ route('api.subscription.status') }}")
-                .then(response => response.json())
-                .then(data => {
-                    if (data.subscribed) {
-                        window.location.href = "{{ route('subscription.success') }}";
-                    }
-                });
-        }, 3000); // verifica a cada 3 segundos
+        // 1. Passamos o ID do usuário logado para o JavaScript
+        // Isso é necessário para saber QUAL canal privado escutar
+        const currentUserId = {{ auth()->id() }};
+    </script>
+
+    <script type="module">
+        // Espera o Echo carregar
+        // "Echo" é configurado automaticamente no resources/js/bootstrap.js
+
+        console.log('Iniciando escuta do WebSocket...');
+
+        Echo.private(`App.Models.User.${currentUserId}`)
+            .listen('InscricaoConfirmada', (e) => {
+
+                console.log('⚡ Evento recebido via WebSocket!', e);
+
+                // Feedback visual antes de redirecionar (opcional)
+                alert('Pagamento confirmado! Redirecionando...');
+
+                // Redireciona para a página de sucesso
+                window.location.href = "{{ route('subscription.success') }}";
+            });
     </script>
 </body>
 

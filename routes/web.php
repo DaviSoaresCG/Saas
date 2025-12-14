@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Middleware\EnsureUserBelongsToTenant;
 use App\Http\Middleware\hasSubscription;
 use App\Http\Middleware\noSubscription;
@@ -17,6 +18,9 @@ use App\Http\Middleware\ResolveTenant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+//stripe
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('cashier.webhook');
 
 Route::domain('{slug}.'.env('APP_DOMAIN'))
     ->middleware([ResolveTenant::class])
@@ -89,6 +93,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // API
 Route::get('/api/subscription/status', function () {
-    return ['subscribed' => auth()->user()->subscribed(env('STRIPE_PRODUCT_ID'))];
+    return ['subscribed' => auth()->user()->subscribed()];
 })->name('api.subscription.status')->middleware('auth');
 
+Route::get('/erro', function(){
+    return "Deu erro no stripe";
+})->name('erro');

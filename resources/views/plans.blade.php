@@ -29,7 +29,7 @@
                             <p class="text-white">
                                 {{ auth()->user()->name }}
 
-                                @if (auth()->user()->subscribed(env('STRIPE_PRODUCT_ID')))
+                                @if (auth()->user()->subscribed())
                                     <br>
                                     Voce ja tem uma inscrição <a
                                         href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}"
@@ -39,7 +39,7 @@
                                 @if (!auth()->user()->hasVerifiedEmail())
                                     Você não verificou o email ainda <a href="{{ route('verification.notice') }}"
                                         class="text-blue-400">saber mais</a>
-                                @elseif(auth()->user()->hasVerifiedEmail() && !auth()->user()->subscribed(env('STRIPE_PRODUCT_ID')))
+                                @elseif(auth()->user()->hasVerifiedEmail() && !auth()->user()->subscribed())
                                     Voce verificou o email! Mas ainda não escolheu um plano
                                 @endif
 

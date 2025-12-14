@@ -49,7 +49,7 @@ class AdminController extends Controller
     {
         $user = Auth::user();
         // echo "AAA";
-        if (! Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))) {
+        if (! Auth::user()->subscribed()) {
             return view('subscription_pending');
         } elseif (empty(Auth::user()->slug)) {
 
@@ -63,7 +63,6 @@ class AdminController extends Controller
             $user->save();
 
             // sending email on queue
-            EmailJob::dispatch($user);
         }
 
         return view('subscription_success', ['slug' => $user->slug]);

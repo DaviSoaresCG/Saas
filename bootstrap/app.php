@@ -12,11 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__ . '/../routes/web.php',
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
+
+        channels: __DIR__.'/../routes/channels.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // alias para middleware
         $middleware->alias([EnsureUserBelongsToTenant::class]);
         $middleware->alias([ResolveTenant::class]);
+
+        $middleware->validateCsrfTokens(except: [
+            'stripe/*',
+            'cashier/*'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
