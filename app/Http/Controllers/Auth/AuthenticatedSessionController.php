@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         $host = $request->getHost();
-        $baseDomain = env('APP_DOMAIN');      
+        $baseDomain = env('APP_DOMAIN');
         
         //tira o saas.test
         $currentSlug = str_replace('.' . $baseDomain, '', $host);

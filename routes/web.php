@@ -42,6 +42,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
         Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('pedido.finalizar');
         Route::get('/pedido', [PedidoController::class, 'index'])->name('falarWhatsapp');
 
+        //produtos
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
         Route::get('/produtos/{product}', [ProdutoController::class, 'show'])->name('products.show');
         Route::post('/produtos/search', [ProdutoController::class, 'search'])->name('products.search');
@@ -69,13 +70,6 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
 
             // atualizar o slug
             Route::patch('/update-slug', [AdminController::class, 'gerarSlugUnicoPost'])->name('slug.update');
-
-            // Route::get('/products/create', [ProdutoController::class, 'create'])->name('products.create');
-            // Route::post('/produtos/create_post', [ProdutoController::class, 'store'])->name('products.store');
-            // Route::get('/produtos/edit/{id}', [ProdutoController::class, 'edit'])->name('products.edit');
-            // Route::post('/produtos/update', [ProdutoController::class, 'update'])->name('products.update');
-            // Route::delete('/produtos/delete', [ProdutoController::class, 'destroy'])->name('products.destroy');
-            // outras rotas de adm...
         });
     });
 
@@ -93,18 +87,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
 });
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/n', function () {
-    echo 'NAO DEU CERTO';
-})->name('erro');
-
 // API
 Route::get('/api/subscription/status', function () {
     return ['subscribed' => auth()->user()->subscribed(env('STRIPE_PRODUCT_ID'))];
 })->name('api.subscription.status')->middleware('auth');
 
-// forgot password
-// Route::get('/forgot-password', function () {
-//     return view('auth.');
-// });

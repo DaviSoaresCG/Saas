@@ -34,5 +34,10 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'stripe' => [
+        'monthly' => env('STRIPE_MONTHLY_PRICE_ID'),
+        'yearly'  => env('STRIPE_YEARLY_PRICE_ID'),
+        'longest' => env('STRIPE_LONGEST_PRICE_ID'),
+    ]
 
 ];
