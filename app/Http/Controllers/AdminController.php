@@ -62,7 +62,6 @@ class AdminController extends Controller
             ]);
             $user->save();
 
-            // sending email on queue
         }
 
         return view('subscription_success', ['slug' => $user->slug]);

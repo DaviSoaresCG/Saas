@@ -6,7 +6,7 @@ Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
-- Envio somente de Imagens
+- Envio somente de Imagens e testar o tamanho
 - Agora eu consigo usar o $slug em todas as views e nao preciso passar como parametro nas rotas ✅
 - Pesquisar produto✅
 - Finalizar o pedido ✅
@@ -26,3 +26,9 @@ VERSAO 2.0
 - Mostrar na tabela de pedidos o status do pedido, podendo ser aberto ou concluido.
 - Categorias do produto
 - Boas vindas (com o link do dashboard)
+
+
+
+-websocket
+php artisan reverb:start
+php artisan queue:listen
