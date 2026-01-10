@@ -109,14 +109,14 @@ class AdminController extends Controller
 
         // check the experation
         $timestamp = Auth::user()
-            ->subscription(env('STRIPE_PRODUCT_ID'))
+            ->subscription()
             ->asStripeSubscription()
             ->current_period_end;
 
         $subscription_end = date('d/m/y H:i:s', $timestamp);
 
         // get invoices da assinatura(especifiquei o produto)
-        $invoices = Auth::user()->subscription(env('STRIPE_PRODUCT_ID'))->invoices();
+        $invoices = Auth::user()->subscription()->invoices();
 
         $user = app(User::class);
 

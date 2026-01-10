@@ -2,7 +2,7 @@
 <div class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
     <div class="h-56 w-full">
         <a href="{{ route('products.show', ['product' => $produto->id, 'slug' => $user->slug]) }}">
-            <img class="mx-auto hidden h-full rounded-2xl object-cover dark:block" src="{{ asset('storage/' . $produto->path) }}"
+            <img class="mx-auto hidden h-full rounded-2xl object-fill dark:block" src="{{ asset('storage/' . $produto->path) }}"
                 alt="" width="200" />
         </a>
     </div>
