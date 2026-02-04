@@ -71,12 +71,11 @@ class ProdutoController extends Controller
             echo "Nao enviou a imagem";
         }
 
-        $valor_pro_banco = str_replace(',', '.', $request->value);
 
         //Cria o produto no banco de dados
         Products::create([
             'name' => $request->name,
-            'value' => $valor_pro_banco,
+            'value' => $request->value,
             'description' => $request->description,
             'path' => $path,
             'user_id' => app(User::class)->id

@@ -1,13 +1,11 @@
 LEMBRAR SEMPRE DE LIGAR O WEBHOOK
 CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
-Falta configurar as rotas, controllers e fazer as páginas
 Melhorar as rotas plmds
-Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
 --FUNIONALIDADES
 - Trocar os inputs pelo input do component
-- Envio somente de Imagens e testar o tamanho
+- Envio somente de Imagens e testar o tamanho ✅
 - Agora eu consigo usar o $slug em todas as views e nao preciso passar como parametro nas rotas ✅
 - Pesquisar produto✅
 - Finalizar o pedido ✅
