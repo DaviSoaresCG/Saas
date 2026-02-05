@@ -3,22 +3,8 @@ CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
 Melhorar as rotas plmds
 
 
---FUNIONALIDADES
-- Trocar os inputs pelo input do component
-- Envio somente de Imagens e testar o tamanho ✅
-- Agora eu consigo usar o $slug em todas as views e nao preciso passar como parametro nas rotas ✅
-- Pesquisar produto✅
-- Finalizar o pedido ✅
-- Permitir o Tenant alterar o slug ✅
-- Colocar os botões de voltar nas páginas
-- Fazer o tratamento dos dados(formatação da moeda e datas)
-- Envio de Emails
-    - Confirmação de email ✅
-    - Recuperação de senha ✅
 
-
-preciso fazer testes finais
-
+Nao esta salvando o valor do produto
 
 VERSAO 2.0
 - Salvar no banco de dados as informações na hora do pedido (dinheiro, pix, entrega)

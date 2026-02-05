@@ -72,6 +72,7 @@ class ProdutoController extends Controller
         }
 
 
+
         //Cria o produto no banco de dados
         Products::create([
             'name' => $request->name,

@@ -15,7 +15,7 @@ class Products extends Model
     protected function value(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => str_replace(['.', ','], '.', '.'),
+            set: fn ($value) => str_replace(['.', ','], ['', '.'], $value),
 
             get: fn ($value) => number_format($value, 2, ',', '.')
         );
