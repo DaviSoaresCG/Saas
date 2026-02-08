@@ -40,7 +40,6 @@ class ResolveTenant
 
             if (! $user->subscribed()) {
                 return redirect()->away('http://'.env('APP_DOMAIN'));
-                // return redirect()->away('http://127.0.0.1:8000');
             } elseif (! $user->hasVerifiedEmail()) {
                 return redirect()->away('http://'.env('APP_DOMAIN'));
             }

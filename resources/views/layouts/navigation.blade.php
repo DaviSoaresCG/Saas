@@ -22,7 +22,7 @@
                         <x-nav-link :href="route('admin.products')" :active="request()->routeIs('admin.products')">
                             Lista de Produtos
                         </x-nav-link>
-                        <x-nav-link :href="route('pedidos.index')" :active="request()->routeIs('pedidos.index')">
+                        <x-nav-link :href="route('order.index')" :active="request()->routeIs('order.index')">
                             Lista de Pedidos
                         </x-nav-link>
                     @endauth
@@ -109,7 +109,7 @@
                 <x-responsive-nav-link :href="route('admin.products')" :active="request()->routeIs('admin.products')">
                     {{ __('Lista de produtos') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('pedidos.index')" :active="request()->routeIs('pedidos.index')">
+                <x-responsive-nav-link :href="route('order.index')" :active="request()->routeIs('order.index')">
                     {{ __('Lista de pedidos') }}
                 </x-responsive-nav-link>
             @endauth

@@ -2,7 +2,7 @@
     <nav class="text-sm text-gray-300 mb-4 ml-2">
         <a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a>
         <span class="mx-2">/</span>
-        <a href="{{ route('pedidos.index') }}" class="hover:underline">Lista de pedidos</a>
+        <a href="{{ route('order.index') }}" class="hover:underline">Lista de pedidos</a>
         <span class="mx-2">/</span>
         <span class="text-white">Pedido</span>
     </nav>

@@ -64,8 +64,7 @@
                 @csrf
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
                     <div class="sm:col-span-2">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
-                            Name</label>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome do Produto</label>
                         <input type="text" name="name" value="{{ old('name', $product->name) }}" id="name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Type product name" required="">
@@ -86,41 +85,32 @@
                     @enderror
                     <div class="w-full">
                         <label for="price"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Value</label>
-                        <input type="number" name="value" value="{{ old('value', $product->value) }}" id="value"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="$2999" required="">
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Valor R$:</label>
+                        <x-text-input id="value" class="block mt-2 w-full" type="tel" name="value" old="{{ old('value')}}"
+                            :value="old('value', $product->value)" required placeholder="R$: 0,00" autocomplete="value" x-data
+                            x-mask:dynamic="$money($input, ',', '.')" />
                     </div>
                     @error('value')
                         <p class="text-red-600 text-sm">{{ $message }}</p>
                     @enderror
-                    <div>
-                        <label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-                        <select id="category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected="">Select category</option>
-                            <option value="TV">TV/Monitors</option>
-                            <option value="PC">PC</option>
-                            <option value="GA">Gaming/Console</option>
-                            <option value="PH">Phones</option>
-                        </select>
-                    </div>
-                    <div>
+                    <div class="grid grid-cols-1">
 
                         <label for="imagem" class="text-white mb-2 text-sm font-medium">Imagem do Produto:</label>
                         <input type="file" id="image" name="image" value="{{ asset('storage/' . $product->path) }}"
                             class="border-2 rounded-lg p-2 bg-gray-400">
                         <input type="text" name="path" id="path" value="{{ asset('storage/' . $product->path) }}"
                             hidden>
+                        
+                    </div>
+                    <div class="grid grid-cols-1">
                         <a href="{{ asset('storage/' . $product->path) }}" download="imagem.jpg"
-                            class="p-2 bg-blue-600 text-white rounded-lg inline-block">
+                            class="p-2 h-10 bg-blue-600 w-32  text-white rounded-lg justify-center m-auto  flex items-center">
                             Baixar Imagem
                         </a>
                     </div>
                     <button type="submit"
                         class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                        Add product
+                        Editar produto
                     </button>
             </form>
         </div>

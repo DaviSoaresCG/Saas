@@ -4,7 +4,9 @@ Melhorar as rotas plmds
 
 
 
-Nao esta salvando o valor do produto
+Melhorar as rotas
+criar uma pagina apenas com os planos
+
 
 VERSAO 2.0
 - Salvar no banco de dados as informações na hora do pedido (dinheiro, pix, entrega)

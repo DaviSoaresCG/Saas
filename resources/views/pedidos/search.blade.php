@@ -5,7 +5,7 @@
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <form action="{{ route('pedido.pesquisar', ['slug' => $user->slug]) }}" class="flex items-center"
+                        <form action="{{ route('order.search', ['slug' => $user->slug]) }}" class="flex items-center"
                             method="GET">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
@@ -136,7 +136,7 @@
                                 <p class="p-3 bg-red-600 text-white rounded">Pedido nao encontrado</p>
                             @else
                                 <tr class="border-b dark:border-gray-700 hover:bg-gray-700 transition-all duration-50 ease-in-out cursor-pointer"
-                                    onclick="window.location='{{ route('pedidos.show',['id' => $pedido->id]) }}'">
+                                    onclick="window.location='{{ route('order.show',['id' => $pedido->id]) }}'">
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $pedido->id }}</td>
                                     <td class="px-4 py-3">{{ $pedido->total }}</td>

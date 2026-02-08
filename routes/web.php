@@ -22,18 +22,10 @@ use Illuminate\Support\Facades\Auth;
 //stripe
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('cashier.webhook');
 
-Route::domain('{slug}.'.env('APP_DOMAIN'))
-    ->middleware([ResolveTenant::class])
-    ->group(function () {
-
-        // redireciona para dashboard se for admin
+Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->group(function () {
         Route::get('/', function () {
-            $user = app(User::class);
-
-            return redirect()->route('products.index', ['slug' => $user->slug]);
+            return redirect()->route('products.index');
         });
-
-        //
 
         // cart
         Route::get('/cart/index', [CartController::class, 'index'])->name('cart.index');
@@ -43,8 +35,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
         Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
         // pedido
-        Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('pedido.finalizar');
-        Route::get('/pedido', [PedidoController::class, 'index'])->name('falarWhatsapp');
+        Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('order.finished');
 
         //produtos
         Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
@@ -63,9 +54,9 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
             Route::resource('products', ProdutoController::class)->except(['index', 'show']);
 
             // pedidos routes
-            Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
-            Route::get('/pedidos/show/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
-            Route::get('/pedido/seach', [PedidoController::class, 'pesquisar'])->name('pedido.pesquisar');
+            Route::get('/pedidos', [PedidoController::class, 'index'])->name('order.index');
+            Route::get('/pedidos/show/{id}', [PedidoController::class, 'show'])->name('order.show');
+            Route::get('/pedido/seach', [PedidoController::class, 'search'])->name('order.search');
 
             // assinatura
             Route::get('/billing', function (Request $request) {
@@ -78,6 +69,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))
     });
 
 Route::get('/', [AdminController::class, 'plans'])->name('home');
+//tenho que criar uma pagina para somente os planos
 
 Route::middleware([noSubscription::class])->group(function () {
     Route::get('/plans', [AdminController::class, 'plans'])->name('plans');

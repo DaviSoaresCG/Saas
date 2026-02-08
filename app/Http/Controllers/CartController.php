@@ -12,14 +12,12 @@ class CartController extends Controller
     {
 
         $cart = session()->get('cart', []);
-        $slug = app(User::class)->slug;
         $total = 0;
         foreach($cart as $item){
             $total+= $item['value'] * $item['quantity'];
         }
 
-
-        return view('cart.index', compact('cart', 'slug', 'total'));
+        return view('cart.index', compact('cart', 'total'));
     }
 
     public function add($slug, $id)
@@ -28,13 +26,15 @@ class CartController extends Controller
 
         $cart = session()->get('cart', []);
 
+        (float) $value = str_replace(['.', ','], ['', '.'], $product['value']);
+
         if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
         } else {
             $cart[$id] = [
                 'id' => $product->id,
                 'name' => $product->name,
-                'value' => $product->value,
+                'value' => $value,
                 'path' => $product->path,
                 'quantity' => 1,
             ];
