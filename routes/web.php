@@ -1,93 +1,134 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
-
-require __DIR__.'/auth.php';
-
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\PedidoController;
-use App\Http\Controllers\ProdutoController;
-use App\Http\Controllers\StripeWebhookController;
-use App\Http\Middleware\EnsureUserBelongsToTenant;
-use App\Http\Middleware\hasSubscription;
-use App\Http\Middleware\noSubscription;
-use App\Http\Middleware\ResolveTenant;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-//stripe
+// Importação dos Controllers
+use App\Http\Controllers\{
+    AdminController,
+    CartController,
+    HomeController,
+    PedidoController,
+    ProdutoController,
+    ProfileController,
+    StripeWebhookController
+};
+
+// Importação dos Middlewares
+use App\Http\Middleware\{
+    EnsureUserBelongsToTenant,
+    hasSubscription,
+    noSubscription,
+    ResolveTenant
+};
+
+
+
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('cashier.webhook');
 
-Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->group(function () {
-        Route::get('/', function () {
-            return redirect()->route('products.index');
-        });
+Route::get('/erro', fn() => "Deu erro no stripe")->name('erro');
 
-        // cart
-        Route::get('/cart/index', [CartController::class, 'index'])->name('cart.index');
-        Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-        Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-        Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-        Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
-        // pedido
-        Route::get('/pedido-finaliar', [PedidoController::class, 'finalizar'])->name('order.finished');
+/*
+|--------------------------------------------------------------------------
+| Grupo de Subdomínios (Tenant)
+|--------------------------------------------------------------------------
+*/
 
-        //produtos
-        Route::get('/produtos', [ProdutoController::class, 'index'])->name('products.index');
-        Route::get('/produtos/{product}', [ProdutoController::class, 'show'])->name('products.show');
-        Route::post('/produtos/search', [ProdutoController::class, 'search'])->name('products.search');
+Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware([ResolveTenant::class])->group(function () {
 
-        Route::middleware('auth', EnsureUserBelongsToTenant::class)->group(function () {
-            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-            // admin.dashboard
-            Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/', fn() => redirect()->route('products.index'));
 
-            // products routes
-            Route::get('/dashboard/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
-            Route::resource('products', ProdutoController::class)->except(['index', 'show']);
+    // --- ProdutoController (Catálogo Público) ---
+    Route::controller(ProdutoController::class)->group(function () {
+        Route::get('/produtos', 'index')->name('products.index');
+        Route::get('/produtos/{product}', 'show')->name('products.show');
+        Route::post('/produtos/search', 'search')->name('products.search');
+        Route::get('/pedido-finalizar', 'finalizar')->name('order.finished');
 
-            // pedidos routes
-            Route::get('/pedidos', [PedidoController::class, 'index'])->name('order.index');
-            Route::get('/pedidos/show/{id}', [PedidoController::class, 'show'])->name('order.show');
-            Route::get('/pedido/seach', [PedidoController::class, 'search'])->name('order.search');
-
-            // assinatura
-            Route::get('/billing', function (Request $request) {
-                return $request->user()->redirectToBillingPortal();
-            })->name('billing');
-
-            // atualizar o slug
-            Route::patch('/update-slug', [AdminController::class, 'gerarSlugUnicoPost'])->name('slug.update');
-        });
     });
 
-Route::get('/', [AdminController::class, 'plans'])->name('home');
-//tenho que criar uma pagina para somente os planos
+    // --- CartController (Carrinho) ---
+    Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
+        Route::get('/index', 'index')->name('index');
+        Route::get('/add/{id}', 'add')->name('add');
+        Route::get('/remove/{id}', 'remove')->name('remove');
+        Route::post('/update', 'update')->name('update');
+        Route::get('/clear', 'clear')->name('clear');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rotas Autenticadas do Tenant (Dashboard / Admin)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['auth', EnsureUserBelongsToTenant::class])->group(function () {
+
+        // --- AdminController (Gestão do Painel) ---
+        Route::controller(AdminController::class)->group(function () {
+            Route::get('/dashboard', 'dashboard')->name('dashboard');
+            Route::get('/dashboard/products', 'getAllProducts')->name('admin.products');
+            Route::patch('/update-slug', 'gerarSlugUnicoPost')->name('slug.update');
+        });
+
+        // --- ProdutoController (CRUD Administrativo) ---
+        Route::resource('products', ProdutoController::class)->except(['index', 'show']);
+
+        // --- PedidoController (Gestão de Pedidos) ---
+        Route::controller(PedidoController::class)->group(function () {
+            Route::get('/pedidos', 'index')->name('order.index');
+            Route::get('/pedidos/show/{id}', 'show')->name('order.show');
+            Route::get('/pedido/search', 'search')->name('order.search');
+        });
+
+        // --- ProfileController (Conta do Usuário) ---
+        Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', 'edit')->name('edit');
+            Route::patch('/', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
+
+        // --- Billing (Stripe Portal) ---
+        Route::get('/billing', fn(Request $request) => $request->user()->redirectToBillingPortal())->name('billing');
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Fluxo de Assinatura e Planos
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware([noSubscription::class])->group(function () {
-    Route::get('/plans', [AdminController::class, 'plans'])->name('plans');
-
-    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])->name('plans.selected')->middleware(['auth', 'verified']);
+    Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
+    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])
+        ->middleware(['auth', 'verified'])
+        ->name('plans.selected');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
-    Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
-    Route::get('/invoice/{id}', [AdminController::class, 'invoiceDownload'])->name('invoice.download')->middleware([hasSubscription::class]);
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/subscription/success', 'subscriptionSuccess')->name('subscription.success');
+        Route::get('/subscription/pending', 'subscriptionPending')->name('subscription.pending');
+        Route::get('/invoice/{id}', 'invoiceDownload')
+            ->middleware([hasSubscription::class])
+            ->name('invoice.download');
+    });
 });
 
-// API
-Route::get('/api/subscription/status', function () {
-    return ['subscribed' => auth()->user()->subscribed()];
-})->name('api.subscription.status')->middleware('auth');
+Route::get('/', [HomeController::class, 'home'])->name('home');
 
-Route::get('/erro', function(){
-    return "Deu erro no stripe";
-})->name('erro');
+
+
+
+/*
+|--------------------------------------------------------------------------
+| API e Auth Interno
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/api/subscription/status', fn() => ['subscribed' => auth()->user()->subscribed()])
+    ->middleware('auth')
+    ->name('api.subscription.status');
+
+require __DIR__ . '/auth.php';

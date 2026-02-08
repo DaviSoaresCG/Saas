@@ -4,7 +4,6 @@ Melhorar as rotas plmds
 
 
 
-Melhorar as rotas
 criar uma pagina apenas com os planos
 
 
