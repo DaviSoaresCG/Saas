@@ -44,7 +44,6 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware([ResolveTenant::class])
         Route::get('/produtos', 'index')->name('products.index');
         Route::get('/produtos/{product}', 'show')->name('products.show');
         Route::post('/produtos/search', 'search')->name('products.search');
-        Route::get('/pedido-finalizar', 'finalizar')->name('order.finished');
 
     });
 
@@ -56,6 +55,9 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware([ResolveTenant::class])
         Route::post('/update', 'update')->name('update');
         Route::get('/clear', 'clear')->name('clear');
     });
+
+    //finalzar o pedido
+    Route::get('/pedido-finalizar', [PedidoController::class, 'finalizar'])->name('order.finished');
 
     /*
     |--------------------------------------------------------------------------
