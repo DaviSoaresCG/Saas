@@ -16,11 +16,17 @@ class HomeController extends Controller
             'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
         ];
 
-        return view('plans', compact('prices'));
+        return view('home', compact('prices'));
     }
 
     public function plans()
     {
-        return 'PAGINA DOS PLANOS';
+        $prices = [
+            'monthly' => Crypt::encryptString('default|'.config('services.stripe.monthly')),
+            'yearly' => Crypt::encryptString('default|'.config('services.stripe.yearly')),
+            'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
+        ];
+
+        return view('home', compact('prices'));
     }
 }

@@ -1,8 +1,8 @@
 <x-app-layout>
-    <section class="py-8 bg-white md:py-16 dark:bg-gray-900 antialiased">
+    <section class="py-8  md:py-16 dark:bg-gray-900 antialiased">
         <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0">
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
-                <div class="shrink-0 max-w-md lg:max-w-lg mx-auto">
+                <div class="shrink-0 max-w-md rounded lg:max-w-lg mx-auto">
                     <img class="h-2/3 object-cover block rounded-2xl" src="{{ asset('storage/' . $product->path) }}" alt="" />
                 </div>
 
@@ -26,11 +26,11 @@
                                     stroke-width="2"
                                     d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6" />
                             </svg>
-                            Add to cart
+                            Adicionar ao carrinho
                         </a>
                     </div>
 
-                    <hr class="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
+                    <hr class="my-6 md:my-8 border-gray-400 dark:border-gray-800" />
 
                     <p class="mb-6 text-gray-500 dark:text-gray-400">
                         {{ $product->description }}

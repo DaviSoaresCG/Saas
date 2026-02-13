@@ -5,6 +5,7 @@ Melhorar as rotas plmds
 
 
 criar uma pagina apenas com os planos
+On delete cascade
 
 
 VERSAO 2.0

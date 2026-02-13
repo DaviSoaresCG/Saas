@@ -74,7 +74,8 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware([ResolveTenant::class])
         });
 
         // --- ProdutoController (CRUD Administrativo) ---
-        Route::resource('products', ProdutoController::class)->except(['index', 'show']);
+        Route::resource('products', ProdutoController::class)->except(['index', 'show', 'destroy']);
+        Route::delete('/products/delete/{product}', [ProdutoController::class, 'destroy'])->name('products.destroy');
 
         // --- PedidoController (Gestão de Pedidos) ---
         Route::controller(PedidoController::class)->group(function () {

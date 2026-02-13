@@ -134,7 +134,7 @@ class ProdutoController extends Controller
      */
     public function destroy(Request $request)
     {
-        $product = Products::findOrFail($request->id);
+        $product = Products::findOrFail($request->product);
 
         $product->delete();
 

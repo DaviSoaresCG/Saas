@@ -21,7 +21,7 @@ class AdminController extends Controller
             'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
         ];
 
-        return view('plans', compact('prices'));
+        return view('home', compact('prices'));
     }
 
     public function planSelected($id)
