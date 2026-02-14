@@ -19,7 +19,7 @@
 
     @foreach ($invoices as $invoice)
         <div class="text-center mb-2">
-            <p class="text-2xl font-bold text-white">Faturas</p>
+            <p class="text-2xl font-bold dark:text-white">Faturas</p>
             @if ($invoice->status == 'open')
                 <a href="{{ $invoice->hosted_invoice_url }}" class="p-2 bg-yellow-500 rounded inline-block">
                     Fatura Aberta {{ $invoice->date()->format('d/m/y') }} - {{ $invoice->total() }}
