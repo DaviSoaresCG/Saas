@@ -27,6 +27,6 @@ class HomeController extends Controller
             'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
         ];
 
-        return view('home', compact('prices'));
+        return view('plans', compact('prices'));
     }
 }

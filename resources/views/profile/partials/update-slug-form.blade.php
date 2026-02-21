@@ -16,7 +16,7 @@
 
         <div>
             <x-input-label for="slug" :value="__('Slug')" />
-            <x-text-input id="slug" name="slug_request" type="text" class="mt-1 block w-full" :value="$user->slug" required autofocus autocomplete="slug" />
+            <x-text-input id="slug" name="slug" type="text" class="mt-1 block w-full" :value="$user->slug" required autofocus autocomplete="slug" />
             <x-input-error class="mt-2" :messages="$errors->get('slug_request')" />
         </div>
 

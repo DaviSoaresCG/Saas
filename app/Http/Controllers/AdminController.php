@@ -83,7 +83,7 @@ class AdminController extends Controller
     public function gerarSlugUnicoPost(Request $request)
     {
         $request->validate([
-            'slug_request' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())],
+            'slug' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())],
         ],
             [
                 'required' => 'Preencha',
@@ -92,11 +92,20 @@ class AdminController extends Controller
                 'unique' => 'Ja existe esse dominio',
             ]
         );
+
+        //verifica se ele digitou o mesmo subdominio
         $user = Auth::user();
         if ($request->slug == $user->slug) {
             return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo']);
         }
-        $slug = $this->generateUniqueSlug($request->slug_request);
+
+        $slug = $request->slug;
+        $original_slug = $request->slug;
+        $count = 1;
+        while($user->where('slug', $slug)->exists()){
+            $slug = $original_slug.'-'.$count++;
+        }
+
         $user->slug = $slug;
         $user->save();
 

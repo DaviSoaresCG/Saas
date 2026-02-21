@@ -1,15 +1,15 @@
 <x-app-layout>
-    <nav class="text-sm text-gray-300 mb-4 ml-2">
+    <nav class="text-sm dark:text-gray-300 mb-4 ml-2">
         <a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a>
         <span class="mx-2">/</span>
         <a href="{{ route('order.index') }}" class="hover:underline">Lista de pedidos</a>
         <span class="mx-2">/</span>
-        <span class="text-white">Pedido</span>
+        <span class="dark:text-white">Pedido</span>
     </nav>
-    <section class="bg-gray-50 min-h-screen dark:bg-gray-900 p-3 sm:p-5">
+    <section class=" min-h-screen dark:bg-gray-900 p-3 sm:p-5">
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
             <div>
-                <h1 class="text-2xl text-white font-bold">Lista de produtos do pedido</h1>
+                <h1 class="text-2xl dark:text-white font-bold">Lista de produtos do pedido</h1>
             </div>
             <!-- Start coding here -->
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg">
@@ -20,7 +20,7 @@
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-4 py-3">Nome</th>
+                                <th scope="col" class="px-4 py-3">Nome Produto</th>
                                 {{-- <th scope="col" class="px-4 py-3">Category</th> --}}
                                 <th scope="col" class="px-4 py-3">Preço</th>
                                 <th scope="col" class="px-4 py-3">Quantidade</th>
