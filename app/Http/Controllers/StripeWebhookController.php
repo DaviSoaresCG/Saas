@@ -45,14 +45,14 @@ class StripeWebhookController extends CashierController
     public function handleInvoicePaymentFailed(array $payload)
     {
         $stripeId = $payload['data']['object']['customer'];
-        $user = User::where('email', 'davi82@gmail.com')->first();
+        $user = User::where('stripe_id', $stripeId)->first();
 
         if ($user) {
             Log::warning("Pagamento falhou para o usuário: {$user->email}");
 
             // Aqui você dispara seu Job de e-mail ou WhatsApp
             // Exemplo enviando o Job que você já possui:
-            Mail::to($user->email)->queue(new PaymentFailedMail($user));
+            Mail::to($user->email)->queue(new PaymentFailedMail($user));            
             // Se for usar WhatsApp via API, você chamaria seu service aqui:
             // WhatsAppService::sendMessage($user->whatsapp, "Ops! Seu pagamento falhou...");
         }
