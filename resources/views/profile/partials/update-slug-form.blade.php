@@ -16,12 +16,12 @@
 
         <div>
             <x-input-label for="slug" :value="__('Slug')" />
-            <x-text-input id="slug" name="slug_request" type="text" class="mt-1 block w-full" :value="$user->slug" required autofocus autocomplete="slug" />
+            <x-text-input id="slug" name="slug" type="text" class="mt-1 block w-full" :value="$user->slug" required autofocus autocomplete="slug" />
             <x-input-error class="mt-2" :messages="$errors->get('slug_request')" />
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Salvar') }}</x-primary-button>
 
             @if (session('status') === 'slug-updated')
                 <p

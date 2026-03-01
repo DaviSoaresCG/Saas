@@ -34,11 +34,11 @@ class AuthenticatedSessionController extends Controller
         $currentSlug = str_replace('.' . $baseDomain, '', $host);
 
         if($currentSlug === $host){
-            return redirect()->route('home');
+            return redirect()->intended();
         }
         $user = Auth::user();
         
-        if($user->subscribed(env('STRIPE_PRODUCT_ID'))){
+        if($user->subscribed()){
             //se o slug do site for diferente do slug do usuario autenticado
             if($user->slug !== $currentSlug){
                 Auth::logout();

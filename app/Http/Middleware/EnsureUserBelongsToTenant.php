@@ -18,7 +18,6 @@ class EnsureUserBelongsToTenant
     {
         $user = Auth::user();
 
-        // 1. Se não estiver logado, deixa passar (o middleware 'auth' cuida disso depois)
         if (! $user) {
             return $next($request);
         }
@@ -34,7 +33,7 @@ class EnsureUserBelongsToTenant
              return $next($request);
         }
 
-        //verifica se o usuario est
+        //verifica se o tenant está dentro do app dele
         if ($user->slug !== $currentSlug) {
 
             Auth::guard('web')->logout();

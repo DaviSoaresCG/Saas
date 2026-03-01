@@ -18,7 +18,7 @@ class hasSubscription
     {
         // check if user has subscription
         if(Auth::check()){
-            if(!Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))){
+            if(!Auth::user()->subscribed()){
                 return redirect()->away('http://' . env('APP_DOMAIN'));
             }else{
                 return $next($request);

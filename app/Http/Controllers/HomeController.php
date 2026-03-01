@@ -3,28 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+
+    public function home()
     {
-        $this->middleware('auth');
+        $prices = [
+            'monthly' => Crypt::encryptString('default|'.config('services.stripe.monthly')),
+            'yearly' => Crypt::encryptString('default|'.config('services.stripe.yearly')),
+            'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
+        ];
+
+        return view('home', compact('prices'));
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
+    public function plans()
     {
-        return view('home');
-        $var = User::class();
-        
+        $prices = [
+            'monthly' => Crypt::encryptString('default|'.config('services.stripe.monthly')),
+            'yearly' => Crypt::encryptString('default|'.config('services.stripe.yearly')),
+            'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
+        ];
+
+        return view('plans', compact('prices'));
     }
 }

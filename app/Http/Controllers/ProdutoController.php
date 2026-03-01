@@ -52,7 +52,11 @@ class ProdutoController extends Controller
             'name' => 'required|min:3|max:255',
             'value' => 'required',
             'description' => 'required|min:3|max:255',
-            'path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:50000'
+            'image' => 'image|mimes:jpeg,png,jpg,webp|max:10240'
+        ], [
+            'image.image' => 'Arquivo nao suportado',
+            'image.mimes' => 'Tipo de imagem nao suportado',
+            'image.max' => 'Tamanho da imagem excedido (10MB)'
         ]);
 
         $path = null;
@@ -66,6 +70,8 @@ class ProdutoController extends Controller
         } else {
             echo "Nao enviou a imagem";
         }
+
+
 
         //Cria o produto no banco de dados
         Products::create([
@@ -128,7 +134,7 @@ class ProdutoController extends Controller
      */
     public function destroy(Request $request)
     {
-        $product = Products::findOrFail($request->id);
+        $product = Products::findOrFail($request->product);
 
         $product->delete();
 

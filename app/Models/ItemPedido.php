@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class ItemPedido extends Model
@@ -16,5 +17,14 @@ class ItemPedido extends Model
     public function product()
     {
         return $this->belongsTo(Products::class);
+    }
+
+    protected function value(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => str_replace(['.', ','], ['', '.'], $value),
+
+            get: fn ($value) => number_format($value, 2, ',', '.')
+        );
     }
 }

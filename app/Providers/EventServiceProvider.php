@@ -19,13 +19,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        // 2. O ARRAY DEVE ESTAR VAZIO.
-        Registered::class => [
-            SendEmailVerificationNotification::class
-            // Isso garante que NENHUM listener deste arquivo
-            // será disparado quando 'Registered' acontecer.
-            // O Breeze/Fortify vai pegar o evento internamente.
-        ],
+        
     ];
 
     /**

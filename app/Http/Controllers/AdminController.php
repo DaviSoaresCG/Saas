@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\EmailJob;
+use App\Mail\WelcomeEmail;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -21,7 +23,7 @@ class AdminController extends Controller
             'longest' => Crypt::encryptString('default|'.config('services.stripe.longest')),
         ];
 
-        return view('plans', compact('prices'));
+        return view('home', compact('prices'));
     }
 
     public function planSelected($id)
@@ -49,7 +51,7 @@ class AdminController extends Controller
     {
         $user = Auth::user();
         // echo "AAA";
-        if (! Auth::user()->subscribed(env('STRIPE_PRODUCT_ID'))) {
+        if (! Auth::user()->subscribed()) {
             return view('subscription_pending');
         } elseif (empty(Auth::user()->slug)) {
 
@@ -62,9 +64,11 @@ class AdminController extends Controller
             ]);
             $user->save();
 
-            // sending email on queue
-            EmailJob::dispatch($user);
         }
+
+        //email de boas vindas
+        Mail::to($user->email)->queue(new WelcomeEmail($user));
+
 
         return view('subscription_success', ['slug' => $user->slug]);
     }
@@ -85,7 +89,7 @@ class AdminController extends Controller
     public function gerarSlugUnicoPost(Request $request)
     {
         $request->validate([
-            'slug_request' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())],
+            'slug' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())],
         ],
             [
                 'required' => 'Preencha',
@@ -94,11 +98,20 @@ class AdminController extends Controller
                 'unique' => 'Ja existe esse dominio',
             ]
         );
+
+        //verifica se ele digitou o mesmo subdominio
         $user = Auth::user();
         if ($request->slug == $user->slug) {
             return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo']);
         }
-        $slug = $this->generateUniqueSlug($request->slug_request);
+
+        $slug = $request->slug;
+        $original_slug = $request->slug;
+        $count = 1;
+        while($user->where('slug', $slug)->exists()){
+            $slug = $original_slug.'-'.$count++;
+        }
+
         $user->slug = $slug;
         $user->save();
 
@@ -108,21 +121,23 @@ class AdminController extends Controller
 
     public function dashboard()
     {
+        $user = Auth::user();
 
         // check the experation
         $timestamp = Auth::user()
-            ->subscription(env('STRIPE_PRODUCT_ID'))
+            ->subscription()
             ->asStripeSubscription()
             ->current_period_end;
 
         $subscription_end = date('d/m/y H:i:s', $timestamp);
 
-        // get invoices da assinatura(especifiquei o produto)
-        $invoices = Auth::user()->subscription(env('STRIPE_PRODUCT_ID'))->invoices();
+        $invoice_upcoming = $user->upcomingInvoice();
+
+        $invoices = Auth::user()->subscription()->invoices();
 
         $user = app(User::class);
 
-        return view('admin.dashboard', compact('subscription_end', 'invoices', 'user'));
+        return view('admin.dashboard', compact('subscription_end', 'invoices', 'user', 'invoice_upcoming'));
     }
 
     public function invoiceDownload($id)

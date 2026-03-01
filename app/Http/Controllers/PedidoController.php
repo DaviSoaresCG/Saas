@@ -77,16 +77,17 @@ class PedidoController extends Controller
 
     }
 
-    public function pesquisar(Request $request)
+    public function search(Request $request)
     {
-        $pedido = Pedido::find($request->id);
+        $pedidos = Pedido::where('id', '=', $request->id)->get();
 
-        if (empty($pedidos)) {
-            //            return redirect()->back()->with('error', 'Pedido nao encontrado');
+        if ($pedidos->isEmpty()) {
+            return redirect()->back()->with('error', 'Pedido nao encontrado');
         }
 
         $user = app(User::class);
+        // dd($pedidos);
 
-        return view('pedidos.search', compact('pedido', 'user'));
+        return view('pedidos.index', compact('pedidos', 'user'));
     }
 }

@@ -1,23 +1,11 @@
 LEMBRAR SEMPRE DE LIGAR O WEBHOOK
 CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
-Falta configurar as rotas, controllers e fazer as páginas
 Melhorar as rotas plmds
-Tenho que usar $user->slug nas rotas em que nao estou logado. app(User::clas)
 
 
---FUNIONALIDADES
-- Agora eu consigo usar o $slug em todas as views e nao preciso passar como parametro nas rotas ✅
-- Pesquisar produto✅
-- Finalizar o pedido ✅
-- Permitir o Tenant alterar o slug ✅
-- Colocar os botões de voltar nas páginas
-- Fazer o tratamento dos dados(formatação da moeda e datas)
-- Envio de Emails
-    - Confirmação de email ✅
-    - Recuperação de senha ✅
 
-
-preciso fazer testes finais
+criar uma pagina apenas com os planos
+On delete cascade
 
 
 VERSAO 2.0
@@ -25,3 +13,9 @@ VERSAO 2.0
 - Mostrar na tabela de pedidos o status do pedido, podendo ser aberto ou concluido.
 - Categorias do produto
 - Boas vindas (com o link do dashboard)
+
+
+
+-websocket
+php artisan reverb:start
+php artisan queue:listen
