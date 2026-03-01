@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\EmailJob;
+use App\Mail\WelcomeEmail;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -63,6 +65,10 @@ class AdminController extends Controller
             $user->save();
 
         }
+
+        //email de boas vindas
+        Mail::to($user->email)->queue(new WelcomeEmail($user));
+
 
         return view('subscription_success', ['slug' => $user->slug]);
     }
