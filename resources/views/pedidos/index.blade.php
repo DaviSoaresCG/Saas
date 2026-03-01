@@ -48,7 +48,7 @@
                         </thead>
                         <tbody>
                             @foreach ($pedidos as $pedido)
-                                <tr class="border-b dark:border-gray-700 hover:bg-gray-700 transition-all duration-50 ease-in-out cursor-pointer"
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-200 text-gray-700 dark:hover:bg-gray-700 transition-all duration-50 ease-in-out cursor-pointer"
                                     onclick="window.location='{{ route('order.show',['id' => $pedido->id]) }}'">
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $pedido->id }}</td>

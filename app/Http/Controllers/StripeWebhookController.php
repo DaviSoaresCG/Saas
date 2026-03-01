@@ -39,4 +39,23 @@ class StripeWebhookController extends CashierController
         // Retorna sucesso para o Stripe parar de reenviar o webhook
         return new Response('Webhook Handled', 200);
     }
+
+    public function handleInvoicePaymentFailed(array $payload)
+    {
+        $stripeId = $payload['data']['object']['customer'];
+        $user = User::where('stripe_id', $stripeId)->first();
+
+        if ($user) {
+            Log::warning("Pagamento falhou para o usuário: {$user->email}");
+
+            // Aqui você dispara seu Job de e-mail ou WhatsApp
+            // Exemplo enviando o Job que você já possui:
+            //dispatch(new EmailJob($user, 'falha_pagamento'));
+            
+            // Se for usar WhatsApp via API, você chamaria seu service aqui:
+            // WhatsAppService::sendMessage($user->whatsapp, "Ops! Seu pagamento falhou...");
+        }
+
+        return $this->successMethod();
+    }
 }

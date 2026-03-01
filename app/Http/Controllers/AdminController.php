@@ -115,6 +115,7 @@ class AdminController extends Controller
 
     public function dashboard()
     {
+        $user = Auth::user();
 
         // check the experation
         $timestamp = Auth::user()
@@ -124,12 +125,13 @@ class AdminController extends Controller
 
         $subscription_end = date('d/m/y H:i:s', $timestamp);
 
-        // get invoices da assinatura(especifiquei o produto)
+        $invoice_upcoming = $user->upcomingInvoice();
+
         $invoices = Auth::user()->subscription()->invoices();
 
         $user = app(User::class);
 
-        return view('admin.dashboard', compact('subscription_end', 'invoices', 'user'));
+        return view('admin.dashboard', compact('subscription_end', 'invoices', 'user', 'invoice_upcoming'));
     }
 
     public function invoiceDownload($id)

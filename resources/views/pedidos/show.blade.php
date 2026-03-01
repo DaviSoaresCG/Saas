@@ -28,12 +28,19 @@
                         </thead>
                         <tbody>
                             @foreach ($itens_pedido as $item)
-                                <tr class="border-b dark:border-gray-700">
+                                {{-- <tr class="border-b dark:border-gray-700">
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <a
                                             href="{{ route('products.show', ['slug' => Auth::user()->slug, 'product' => $item->product->id]) }}">{{ $item->product->name }}</a>
                                     </td>
                                     <td class="px-4 py-3">R$ {{ $item->value }}</td>
+                                    <td class="px-4 py-3">{{ $item->quantidade }}</td>
+                                </tr> --}}
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 transition-all duration-50 ease-in-out cursor-pointer"
+                                    onclick="window.location='{{ route('products.show',['product' => $item->product->id]) }}'">
+                                    <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ $item->product->name }}</td>
+                                    <td class="px-4 py-3">{{ $item->value }}</td>
                                     <td class="px-4 py-3">{{ $item->quantidade }}</td>
                                 </tr>
                             @endforeach

@@ -31,6 +31,10 @@
                     Fatura Paga - {{ $invoice->date()->format('d/m/y') }} - {{ $invoice->total() }}
                 </a>
             @endif
+            <p
+                    class="p-2 bg-red-700 text-white rounded inline-block">
+                    Faturas a Por vir - {{ $invoice_upcoming->date()->format('d/m/y') }} - {{ $invoice_upcoming->total() }}
+            </p>
         </div>
     @endforeach
 </x-app-layout>

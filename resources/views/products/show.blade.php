@@ -32,7 +32,7 @@
 
                     <hr class="my-6 md:my-8 border-gray-400 dark:border-gray-800" />
 
-                    <p class="mb-6 text-gray-500 dark:text-gray-400">
+                    <p class="mb-6 text-gray-600 dark:text-gray-400">
                         {{ $product->description }}
                     </p>
                 </div>
