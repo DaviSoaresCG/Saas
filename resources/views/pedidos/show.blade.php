@@ -40,7 +40,7 @@
                                     onclick="window.location='{{ route('products.show',['product' => $item->product->id]) }}'">
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $item->product->name }}</td>
-                                    <td class="px-4 py-3">{{ $item->value }}</td>
+                                    <td class="px-4 py-3">R$ {{ $item->value }}</td>
                                     <td class="px-4 py-3">{{ $item->quantidade }}</td>
                                 </tr>
                             @endforeach

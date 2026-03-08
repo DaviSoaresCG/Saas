@@ -326,12 +326,12 @@
                   </div>
                   <div class="flex-1 w-full max-w-sm">
                       <!-- Mock Phone -->
-                      <div class="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
+                      <div class="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[500px] w-[260px] sm:w-[300px] shadow-xl">
                           <div class="h-[32px] w-[3px] bg-gray-800 absolute -left-[17px] top-[72px] rounded-l-lg"></div>
                           <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[124px] rounded-l-lg"></div>
                           <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[178px] rounded-l-lg"></div>
                           <div class="h-[64px] w-[3px] bg-gray-800 absolute -right-[17px] top-[142px] rounded-r-lg"></div>
-                          <div class="rounded-[2rem] overflow-hidden w-[272px] h-[572px] bg-slate-100 relative">
+                          <div class="rounded-[2rem] overflow-hidden w-[230px] sm:w-[270px] h-[472px] bg-slate-100 relative">
                               <img src="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-90" alt="App Screen" />
                               <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-40 bg-green-500 text-white text-center py-2 rounded-full shadow-lg font-bold text-sm cursor-pointer hover:bg-green-600 transition-colors">
                                   Enviar Pedido
@@ -354,15 +354,6 @@
             <p class="text-gray-400 max-w-2xl mx-auto text-lg mb-8">
               Focamos em mercados onde tecnologia, inovação e capital podem desbloquear valor a longo prazo.
             </p>
-            
-            <div class="inline-flex bg-slate-800 p-1 rounded-lg border border-slate-700">
-              <button class="px-6 py-2 bg-slate-200 text-slate-900 rounded-md text-sm font-bold shadow-sm">
-                MENSAL
-              </button>
-              <button class="px-6 py-2 text-gray-400 hover:text-white rounded-md text-sm font-medium transition-colors">
-                ANUAL (2 Meses Off)
-              </button>
-            </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -374,7 +365,7 @@
               </div>
 
               <div class="flex items-baseline mb-8">
-                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 29</span>
+                <span class="text-4xl font-extrabold text-white tracking-tight">R$ 49,99</span>
                 <span class="text-gray-400 ml-2">/mês</span>
               </div>
 
@@ -422,8 +413,8 @@
               </div>
 
               <div class="flex items-baseline mb-8">
-                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 79</span>
-                <span class="text-gray-400 ml-2">/mês</span>
+                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 499,99</span>
+                <span class="text-gray-400 ml-2">/ano</span>
               </div>
 
               <ul class="space-y-4 mb-8 flex-1">
@@ -466,8 +457,8 @@
               </div>
 
               <div class="flex items-baseline mb-8">
-                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 199</span>
-                <span class="text-gray-400 ml-2">/mês</span>
+                <span class="text-4xl font-extrabold text-white tracking-tight">R$ 1499,99</span>
+                <span class="text-gray-400 ml-2">/tri-anual</span>
               </div>
 
               <ul class="space-y-4 mb-8 flex-1">

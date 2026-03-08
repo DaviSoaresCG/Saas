@@ -42,7 +42,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect()->route('products.index', ['slug' => app(User::class)->slug])->with('success', 'Produto Adicionado');
+        return redirect()->route('products.index')->with('success', 'Produto Adicionado');
     }
 
     public function remove($slug, $id)

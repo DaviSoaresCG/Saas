@@ -13,8 +13,9 @@ class PedidoController extends Controller
     {
         $user = app(User::class);
         $pedidos = Pedido::with('iten_pedido')->paginate(10);
+        $search = false;
 
-        return view('pedidos.index', compact('pedidos', 'user'));
+        return view('pedidos.index', compact('pedidos', 'user', 'search'));
     }
 
     public function show($slug, $id)
@@ -37,12 +38,11 @@ class PedidoController extends Controller
             return redirect()->back()->with('error', 'Carrinho nao encontrado');
         }
 
-        $total = 0.0;
+        $total = 0;
         foreach ($cart as $product) {
             $total += $product['value'] * $product['quantity'];
         }
-
-        // return $total;
+        
 
         $pedido = Pedido::create([
             'user_id' => app(User::class)->id,
@@ -86,8 +86,9 @@ class PedidoController extends Controller
         }
 
         $user = app(User::class);
+        $search = true;
         // dd($pedidos);
 
-        return view('pedidos.index', compact('pedidos', 'user'));
+        return view('pedidos.index', compact('pedidos', 'user', 'search'));
     }
 }

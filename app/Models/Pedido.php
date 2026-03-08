@@ -25,7 +25,7 @@ class Pedido extends Model
     protected function total(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => str_replace(['.', ','], ['', '.'], $value),
+            set: fn ($value) => str_replace(',', '.', $value),
 
             get: fn ($value) => number_format($value, 2, ',', '.')
         );

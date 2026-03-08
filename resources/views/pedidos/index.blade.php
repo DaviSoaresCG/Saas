@@ -61,6 +61,9 @@
                 </div>
                 
             </div>
+            @if(!$search)
+                    {{ $pedidos->links() }}
+                @endif
         </div>
     </section>
 </x-app-layout>
