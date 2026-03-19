@@ -103,7 +103,6 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware([ResolveTenant::class])
 */
 
 Route::middleware([noSubscription::class])->group(function () {
-    Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
     Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])
         ->middleware(['auth', 'verified'])
         ->name('plans.selected');
@@ -120,6 +119,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
 
 
 
