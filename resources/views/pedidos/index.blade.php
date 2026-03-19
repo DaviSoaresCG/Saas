@@ -53,7 +53,7 @@
                                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $pedido->id }}</td>
                                     <td class="px-4 py-3">{{ $pedido->total }}</td>
-                                    <td class="px-4 py-3">{{ $pedido->created_at }}</td>
+                                    <td class="px-4 py-3">{{ $pedido->created_at->format('d/m/y H:i') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
