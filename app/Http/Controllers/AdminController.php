@@ -6,7 +6,6 @@ use App\Jobs\EmailJob;
 use App\Mail\WelcomeEmail;
 use App\Models\Products;
 use App\Models\User;
-use Faker\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
