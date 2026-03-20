@@ -6,6 +6,7 @@ use App\Jobs\EmailJob;
 use App\Mail\WelcomeEmail;
 use App\Models\Products;
 use App\Models\User;
+use Faker\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -55,7 +56,8 @@ class AdminController extends Controller
             return view('subscription_pending');
         } elseif (empty(Auth::user()->slug)) {
 
-            $slug = Str::slug(fake()->unique()->words(2, true));
+
+            $slug = Str::slug($user->name);
             $unique_slug = $this->generateUniqueSlug($slug);
             $user->slug = $unique_slug;
 
