@@ -56,6 +56,7 @@ class AdminController extends Controller
         } elseif (empty(Auth::user()->slug)) {
 
 
+            //teste
             $slug = Str::slug($user->name);
             $unique_slug = $this->generateUniqueSlug($slug);
             $user->slug = $unique_slug;
