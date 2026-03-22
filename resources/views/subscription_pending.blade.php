@@ -14,7 +14,7 @@
         <div class="row justify-content-center">
             <div class="col-4 col-sm-8">
 
-                <p class="display-6 text-center my-5">Laravel Cashier (Stripe)</p>
+                <p class="display-6 text-center my-5">Laravel Cashier (Stripe) {{auth()->user()->id}}</p>
 
                 <div class="card p-4 text-center">
                     <p class="display-6 text-success">Aguarde enquanto estamos processando sua inscrição!</p>

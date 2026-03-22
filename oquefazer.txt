@@ -4,8 +4,7 @@ Melhorar as rotas plmds
 
 
 
-criar uma pagina apenas com os planos
-On delete cascade
+Alterar a verificação de email para poder verificar sem estar logado
 
 
 VERSAO 2.0
