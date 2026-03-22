@@ -36,8 +36,8 @@ class StripeWebhookController extends CashierController
                 InscricaoConfirmada::dispatch($user);
 
                 // O Laravel avisa a Cloudflare para criar o subdomínio com a Nuvem Laranja
-                $response = Http::withToken(env('CLOUDFIRE_API_TOKEN'))
-                ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFIRE_ZONE_ID') . '/dns_records', [
+                $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
+                ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE_ID') . '/dns_records', [
                     'type' => 'A',
                     'name' => $user->slug, // ex: 'joao'
                     'content' => env('SERVER_IP'),  // O IP da sua VPS

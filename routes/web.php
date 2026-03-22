@@ -135,3 +135,34 @@ Route::get('/api/subscription/status', fn() => ['subscribed' => auth()->user()->
     ->name('api.subscription.status');
 
 require __DIR__ . '/auth.php';
+
+
+//teste cloudfire
+use Illuminate\Support\Facades\Http;
+
+Route::get('/teste-cloudflare', function () {
+    $zoneId = env('CLOUDFLARE_ZONE_ID');
+    $token = env('CLOUDFLARE_API_TOKEN');
+    $ip = env('SERVER_IP');
+
+    // 1. Primeiro verificamos se o Laravel está lendo o .env
+    if (!$zoneId || !$token || !$ip) {
+        return response()->json([
+            'erro' => 'Falta configuração no .env!',
+            'zone_id' => $zoneId ? 'OK' : 'FALTANDO',
+            'token' => $token ? 'OK' : 'FALTANDO',
+            'ip' => $ip ? 'OK' : 'FALTANDO'
+        ]);
+    }
+
+    // 2. Se leu o .env, tentamos criar um subdomínio fixo chamado "loja-teste-vps"
+    $response = Http::withToken($token)
+        ->post("https://api.cloudflare.com/client/v4/zones/{$zoneId}/dns_records", [
+            'type' => 'A',
+            'name' => 'loja-teste-vps', // NOME FIXO E VÁLIDO PARA TESTE
+            'content' => $ip,
+            'proxied' => true,
+        ]);
+
+    return $response->json();
+});
