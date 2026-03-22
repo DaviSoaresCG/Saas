@@ -8,6 +8,7 @@ use App\Events\SubscriptionApproved;
 use App\Mail\PaymentFailedMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -33,6 +34,23 @@ class StripeWebhookController extends CashierController
             if ($user) {
                 Log::info("Pagamento confirmado para o usuário ID: {$user->id}. Disparando WebSocket...");
                 InscricaoConfirmada::dispatch($user);
+                
+                // O Laravel avisa a Cloudflare para criar o subdomínio com a Nuvem Laranja
+                $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
+                ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE_ID') . '/dns_records', [
+                    'type' => 'A',
+                    'name' => $user->slug, // ex: 'joao'
+                    'content' => env('SERVER_IP'),  // O IP da sua VPS
+                    'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA! ☁️🟧
+                ]);
+
+                if($response->successful()){
+                    Log::info("Subdominio " .$user->slug. ".zapcatalago.com.br Criado com sucesso");
+                }else{
+                    Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());         
+                    }
+
+
             } else {
                 Log::warning("Usuário não encontrado para o Stripe ID: {$stripeId}");
             }
