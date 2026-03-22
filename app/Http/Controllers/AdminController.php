@@ -63,23 +63,6 @@ class AdminController extends Controller
             $unique_slug = $this->generateUniqueSlug($slug);
             $user->slug = $unique_slug;
 
-
-            // O Laravel avisa a Cloudflare para criar o subdomínio com a Nuvem Laranja
-                $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
-                ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE_ID') . '/dns_records', [
-                    'type' => 'A',
-                    'name' => $user->slug, // ex: 'joao'
-                    'content' => env('SERVER_IP'),  // O IP da sua VPS
-                    'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA! ☁️🟧
-                ]);
-
-                if($response->successful()){
-                    Log::info("Subdominio " .$user->slug. ".zapcatalago.com.br Criado com sucesso");
-                }else{
-                    Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());         
-                    }
-
-
             $user->updateStripeCustomer([
                 'preferred_locales' => ['pt-BR'],
             ]);
@@ -89,6 +72,22 @@ class AdminController extends Controller
 
         //email de boas vindas
         Mail::to($user->email)->queue(new WelcomeEmail($user));
+
+
+            // O Laravel avisa a Cloudflare para criar o subdomínio com a Nuvem Laranja
+            $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
+            ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE_ID') . '/dns_records', [
+                'type' => 'A',
+                'name' => $user->slug, // ex: 'joao'
+                'content' => env('SERVER_IP'),  // O IP da sua VPS
+                'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA! ☁️🟧
+            ]);
+
+            if($response->successful()){
+                Log::info("Subdominio " .$user->slug. ".zapcatalago.com.br Criado com sucesso");
+            }else{
+                Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());         
+                }
 
 
         return view('subscription_success', ['slug' => $user->slug]);
