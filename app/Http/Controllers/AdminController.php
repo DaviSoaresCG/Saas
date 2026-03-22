@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -64,13 +65,19 @@ class AdminController extends Controller
 
 
             // O Laravel avisa a Cloudflare para criar o subdomínio com a Nuvem Laranja
-            $resposta = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
+            $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
                 ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE_ID') . '/dns_records', [
                     'type' => 'A',
                     'name' => $user->slug, // ex: 'joao'
                     'content' => env('SERVER_IP'),  // O IP da sua VPS
                     'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA! ☁️🟧
                 ]);
+
+            if($response->successful()){
+                Log::info("Subdominio " .$user->slug. ".zapcatalago.com.br Criado com sucesso");
+            }else{
+                Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());         
+                }
 
             $user->updateStripeCustomer([
                 'preferred_locales' => ['pt-BR'],
