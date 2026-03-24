@@ -5,6 +5,7 @@ Melhorar as rotas plmds
 
 
 Alterar a verificação de email para poder verificar sem estar logado
+Perguntar pro cloudflare se o subdominio ja exite antes de criar
 
 
 VERSAO 2.0
