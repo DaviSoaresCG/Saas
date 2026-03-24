@@ -59,7 +59,8 @@ class AdminController extends Controller
 
 
             //teste
-            $slug = Str::slug($user->name);
+            $name = str_replace(" ", "", $user->name);
+            $slug = Str::slug($name);
             $unique_slug = $this->generateUniqueSlug($slug);
             $user->slug = $unique_slug;
 
