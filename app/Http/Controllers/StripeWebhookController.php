@@ -29,8 +29,8 @@ class StripeWebhookController extends CashierController
         $stripeId = $payload['data']['object']['customer'] ?? null;
 
         if ($stripeId) {
-            $user = User::where('stripe_id', $stripeId)->first();
-
+            // O latest() ordena pela data de criação (created_at) do mais novo para o mais velho
+            $user = User::where('stripe_id', $stripeId)->latest()->first();
             if ($user) {
                 Log::info("Pagamento confirmado para o usuário ID: {$user->id}. Disparando WebSocket...");
                 InscricaoConfirmada::dispatch($user);

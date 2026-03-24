@@ -20,7 +20,6 @@
                     <p class="display-6 text-success">Aguarde enquanto estamos processando sua inscrição!</p>
                     <p>Isso pode levar alguns segundos</p>
                     <div class="text-center">
-
                     </div>
                 </div>
 
