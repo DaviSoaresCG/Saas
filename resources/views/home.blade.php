@@ -127,11 +127,13 @@
                         @csrf
                         <input type="submit" value="Logout" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 hover:scale-105">
                     </form>
-                @endauth
+              @endauth
 
-                @guest
-                  <a href="{{ route('login') }}">Login</a>                                    
-                @endguest
+              @guest
+                  <a href="{{ route('login') }}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    Login
+                  </a>                                    
+              @endguest
           </div>
         </div>
       </div>

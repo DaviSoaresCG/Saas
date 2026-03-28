@@ -112,11 +112,24 @@
       <!-- Mobile Menu -->
       <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 transition-all duration-300 ease-in-out">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <a href="#pricing" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Preços</a>
+          <a href="{{ route('home') }}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
           <div class="pt-4 border-t border-slate-800 mt-4">
-            <button class="block w-full text-left text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">
-              Login
-            </button>
+            @auth()
+                    Ola  {{ auth()->user()->name }}
+                    @if(auth()->user()->subscribed())
+                        <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="text-blue-500">Sua Página</a>
+                    @endif
+                    <form action="{{ route('logout') }}" method="post">
+                        @csrf
+                        <input type="submit" value="Logout" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 hover:scale-105">
+                    </form>
+              @endauth
+
+              @guest
+                  <a href="{{ route('login') }}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    Login
+                  </a>                                    
+              @endguest
           </div>
         </div>
       </div>
