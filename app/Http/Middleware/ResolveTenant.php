@@ -16,7 +16,7 @@ class ResolveTenant
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         // pega o subdomínio
         $slug = $request->route('slug');
@@ -31,8 +31,8 @@ class ResolveTenant
         if ($slug) {
 
             $user = User::where('slug', $slug)->first();
-            return $user;
-            if (!$user->exists()) {
+
+            if ($user == null) {
                 return redirect()->route('home');
             }
 
