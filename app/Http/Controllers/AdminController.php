@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\EmailJob;
 use App\Mail\WelcomeEmail;
 use App\Models\Products;
 use App\Models\User;
@@ -57,9 +56,8 @@ class AdminController extends Controller
             return view('subscription_pending');
         } elseif (empty(Auth::user()->slug)) {
 
-
-            //teste
-            $name = str_replace(" ", "", $user->name);
+            // teste
+            $name = str_replace(' ', '', $user->name);
             $slug = Str::slug($name);
             $unique_slug = $this->generateUniqueSlug($slug);
             $user->slug = $unique_slug;
@@ -71,39 +69,39 @@ class AdminController extends Controller
 
         }
 
-        //email de boas vindas
+        // email de boas vindas
         Mail::to($user->email)->queue(new WelcomeEmail($user));
 
         // antes de cirar o subdominio, verifico se ja exite
         $checkResponse = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
             ->get("https://api.cloudflare.com/client/v4/zones/{$zoneId}/dns_records", [
                 'type' => 'A',
-                'name' => "{$user->slug}.".env("APP_DOMAIN"),
+                'name' => "{$user->slug}.".env('APP_DOMAIN'),
             ]);
-        
+
         $registros_encontrados = $checkResponse->json('result');
-        if(!empty($registros_encontrados)){
+        if (! empty($registros_encontrados)) {
             Log::info("Subdominio ja existe: {$user->slug}");
-        }else{
+        } else {
 
-        // criação do subdominio
+            // criação do subdominio
             $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
-            ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE_ID') . '/dns_records', [
-                'type' => 'A',
-                'name' => $user->slug, // ex: 'joao'
-                'content' => env('SERVER_IP'),  // O IP da sua VPS
-                'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA!
-            ]);
+                ->post('https://api.cloudflare.com/client/v4/zones/'.env('CLOUDFLARE_ZONE_ID').'/dns_records', [
+                    'type' => 'A',
+                    'name' => $user->slug, // ex: 'joao'
+                    'content' => env('SERVER_IP'),  // O IP da sua VPS
+                    'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA!
+                ]);
+
+            if ($response->successful()) {
+                Log::info('Subdominio '.$user->slug.'.zapcatalago.com.br Criado com sucesso');
+            } else {
+                Log::error('Erro ao criar subdomínio na Cloudflare: '.$response->body());
+
+                return 'Erro ao criar o subdominio, entre em contato com a equipe técnica: 63 991055232';
+            }
 
         }
-
-        if($response->successful()){
-            Log::info("Subdominio " .$user->slug. ".zapcatalago.com.br Criado com sucesso");
-        }else{
-            Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());    
-            return "Erro ao criar o subdominio, entre em contato com a equipe técnica: 63 991055232";     
-        }
-
 
         return view('subscription_success', ['slug' => $user->slug]);
     }
@@ -134,7 +132,7 @@ class AdminController extends Controller
             ]
         );
 
-        //verifica se ele digitou o mesmo subdominio
+        // verifica se ele digitou o mesmo subdominio
         $user = Auth::user();
         if ($request->slug == $user->slug) {
             return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo']);
@@ -143,13 +141,12 @@ class AdminController extends Controller
         $slug = $request->slug;
         $original_slug = $request->slug;
         $count = 1;
-        while($user->where('slug', $slug)->exists()){
+        while ($user->where('slug', $slug)->exists()) {
             $slug = $original_slug.'-'.$count++;
         }
 
         $user->slug = $slug;
         $user->save();
-
 
         return redirect()->away('http://'.$slug.'.'.env('APP_DOMAIN').'/profile');
 
