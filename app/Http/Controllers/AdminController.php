@@ -74,7 +74,7 @@ class AdminController extends Controller
 
         // antes de cirar o subdominio, verifico se ja exite
         $checkResponse = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
-            ->get("https://api.cloudflare.com/client/v4/zones/{$zoneId}/dns_records", [
+            ->get("https://api.cloudflare.com/client/v4/zones/".env("CLOUDFLARE_ZONE_ID")."/dns_records", [
                 'type' => 'A',
                 'name' => "{$user->slug}.".env('APP_DOMAIN'),
             ]);
@@ -88,9 +88,9 @@ class AdminController extends Controller
             $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
                 ->post('https://api.cloudflare.com/client/v4/zones/'.env('CLOUDFLARE_ZONE_ID').'/dns_records', [
                     'type' => 'A',
-                    'name' => $user->slug, // ex: 'joao'
-                    'content' => env('SERVER_IP'),  // O IP da sua VPS
-                    'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA!
+                    'name' => $user->slug, 
+                    'content' => env('SERVER_IP'),  
+                    'proxied' => true, 
                 ]);
 
             if ($response->successful()) {
