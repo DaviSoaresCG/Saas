@@ -1,9 +1,5 @@
-LEMBRAR SEMPRE DE LIGAR O WEBHOOK
-CONFIGURAR AS AUTENTICAÇÕES DOS SUBDOMINIOS
-Melhorar as rotas plmds
 
-
-
+trocar todos os envs para variaveis de configuração
 
 
 VERSAO 2.0

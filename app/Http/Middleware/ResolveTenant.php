@@ -29,17 +29,16 @@ class ResolveTenant
             }
         }
         if ($slug) {
-            
+
             $user = User::where('slug', $slug)->first();
 
-            if(!$user){
+            if (!$user->exists()) {
                 return redirect()->route('home');
             }
 
-            if (! $user->subscribed()) {
+            if (! $user->subscribed() || ! $user->hasVerifiedEmail()) {
                 return redirect()->away('https://'.env('APP_DOMAIN'));
-            } elseif (! $user->hasVerifiedEmail()) {
-                return redirect()->away('https://'.env('APP_DOMAIN'));
+                // retornar uma view de aviso de loja inativa
             }
 
             app()->instance(User::class, $user);
