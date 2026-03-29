@@ -29,22 +29,23 @@ class ResolveTenant
             }
         }
         if ($slug) {
+            
+            $user = User::where('slug', $slug)->firstOrFail();
+
+            
+
+            if (! $user->subscribed()) {
+                return redirect()->away('https://'.env('APP_DOMAIN'));
+            } elseif (! $user->hasVerifiedEmail()) {
+                return redirect()->away('https://'.env('APP_DOMAIN'));
+            }
+
+            app()->instance(User::class, $user);
             // disponibiliza nas rotas
             URL::defaults(['slug' => $slug]);
 
             // disponibiliza nas views
             View::share('slug', $slug);
-
-            $user = User::where('slug', $slug)->firstOrFail();
-            // dd($slug, $user);
-
-            if (! $user->subscribed()) {
-                return redirect()->away('http://'.env('APP_DOMAIN'));
-            } elseif (! $user->hasVerifiedEmail()) {
-                return redirect()->away('http://'.env('APP_DOMAIN'));
-            }
-
-            app()->instance(User::class, $user);
         }
 
         return $next($request);
