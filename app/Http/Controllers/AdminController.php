@@ -52,11 +52,10 @@ class AdminController extends Controller
     {
         $user = Auth::user();
         // echo "AAA";
-        if (! Auth::user()->subscribed()) {
+        if (! $user->subscribed()) {
             return view('subscription_pending');
-        } elseif (empty(Auth::user()->slug)) {
+        } elseif (empty($user->slug)) {
 
-            // teste
             $name = str_replace(' ', '', $user->name);
             $slug = Str::slug($name);
             $unique_slug = $this->generateUniqueSlug($slug);
@@ -66,11 +65,9 @@ class AdminController extends Controller
                 'preferred_locales' => ['pt-BR'],
             ]);
             $user->save();
-
+            // email de boas vindas
+            Mail::to($user->email)->queue(new WelcomeEmail($user));
         }
-
-        // email de boas vindas
-        Mail::to($user->email)->queue(new WelcomeEmail($user));
 
         // antes de cirar o subdominio, verifico se ja exite
         $checkResponse = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
