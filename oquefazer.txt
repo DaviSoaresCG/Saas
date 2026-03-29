@@ -4,8 +4,6 @@ Melhorar as rotas plmds
 
 
 
-o envio de verificação de email esta demorando demais
-Perguntar pro cloudflare se o subdominio ja exite antes de criar
 
 
 VERSAO 2.0

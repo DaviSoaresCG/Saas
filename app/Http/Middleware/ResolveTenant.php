@@ -30,9 +30,11 @@ class ResolveTenant
         }
         if ($slug) {
             
-            $user = User::where('slug', $slug)->firstOrFail();
+            $user = User::where('slug', $slug)->first();
 
-            
+            if(!$user){
+                return redirect()->route('home');
+            }
 
             if (! $user->subscribed()) {
                 return redirect()->away('https://'.env('APP_DOMAIN'));
