@@ -22,8 +22,6 @@ class StripeWebhookController extends CashierController
     {
         Log::info('Webhook Stripe recebido: invoice.payment_succeeded');
 
-        // REMOVIDO: $response = parent::handleInvoicePaymentSucceeded($payload);
-        // O Cashier padrão não tem esse método, por isso estava dando erro.
 
         // Lógica de WebSocket
         $stripeId = $payload['data']['object']['customer'] ?? null;
@@ -39,8 +37,6 @@ class StripeWebhookController extends CashierController
                 Log::info("2 segundos passados");
 
                 InscricaoConfirmada::dispatch($user);
-
-                
 
             } else {
                 Log::warning("Usuário não encontrado para o Stripe ID: {$stripeId}");
@@ -59,11 +55,7 @@ class StripeWebhookController extends CashierController
         if ($user) {
             Log::warning("Pagamento falhou para o usuário: {$user->email}");
 
-            // Aqui você dispara seu Job de e-mail ou WhatsApp
-            // Exemplo enviando o Job que você já possui:
             Mail::to($user->email)->queue(new PaymentFailedMail($user));            
-            // Se for usar WhatsApp via API, você chamaria seu service aqui:
-            // WhatsAppService::sendMessage($user->whatsapp, "Ops! Seu pagamento falhou...");
         }
 
         return $this->successMethod();

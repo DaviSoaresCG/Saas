@@ -74,8 +74,19 @@ class AdminController extends Controller
         //email de boas vindas
         Mail::to($user->email)->queue(new WelcomeEmail($user));
 
+        // antes de cirar o subdominio, verifico se ja exite
+        $checkResponse = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
+            ->get("https://api.cloudflare.com/client/v4/zones/{$zoneId}/dns_records", [
+                'type' => 'A',
+                'name' => "{$user->slug}.".env("APP_DOMAIN"),
+            ]);
+        
+        $registros_encontrados = $checkResponse->json('result');
+        if(!empty($registros_encontrados)){
+            Log::info("Subdominio ja existe: {$user->slug}");
+        }else{
 
-            // O Laravel avisa a Cloudflare para criar o subdomínio com a Nuvem Laranja
+        // criação do subdominio
             $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
             ->post('https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE_ID') . '/dns_records', [
                 'type' => 'A',
@@ -84,11 +95,14 @@ class AdminController extends Controller
                 'proxied' => true,              // ISSO AQUI LIGA A NUVEM LARANJA!
             ]);
 
-            if($response->successful()){
-                Log::info("Subdominio " .$user->slug. ".zapcatalago.com.br Criado com sucesso");
-            }else{
-                Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());         
-                }
+        }
+
+        if($response->successful()){
+            Log::info("Subdominio " .$user->slug. ".zapcatalago.com.br Criado com sucesso");
+        }else{
+            Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());    
+            return "Erro ao criar o subdominio, entre em contato com a equipe técnica: 63 991055232";     
+        }
 
 
         return view('subscription_success', ['slug' => $user->slug]);
