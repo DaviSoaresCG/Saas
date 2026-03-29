@@ -32,8 +32,8 @@ class ResolveTenant
 
             $user = User::where('slug', $slug)->first();
 
-            if ($user == null) {
-                return redirect()->route('home');
+            if (! $user) {
+                return redirect()->away('https://'.env("APP_DOMAIN"));
             }
 
             if (! $user->subscribed() || ! $user->hasVerifiedEmail()) {
