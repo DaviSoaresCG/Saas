@@ -73,7 +73,7 @@ class AdminController extends Controller
         $checkResponse = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
             ->get("https://api.cloudflare.com/client/v4/zones/".env("CLOUDFLARE_ZONE_ID")."/dns_records", [
                 'type' => 'A',
-                'name' => "{$user->slug}.".env('APP_DOMAIN'),
+                'name' => "{$user->slug}.".env('zapcatalago.com.br'),
             ]);
 
         $registros_encontrados = $checkResponse->json('result');

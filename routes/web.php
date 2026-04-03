@@ -140,3 +140,5 @@ require __DIR__ . '/auth.php';
 //teste cloudfire
 use Illuminate\Support\Facades\Http;
 
+Route::get('/pendding', fn() => view('subscription_pending'));
+Route::get('/success', fn() => view('subscription_success'));
