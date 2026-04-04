@@ -9,6 +9,7 @@ use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -180,8 +181,14 @@ class AdminController extends Controller
                         $subscriptionEnd = date('d/m/Y H:i', $stripeSub->current_period_end);
                     }
                 }
-                $invoiceUpcoming = $user->upcomingInvoice();
-                $recentInvoices = $user->invoicesIncludingPending()->take(8);
+                //$invoiceUpcoming = $user->upcomingInvoice();
+                //$recentInvoices = $user->invoicesIncludingPending()->take(8);
+                $invoiceUpcoming = Cache::remember("stripe_invoices_upcoming_{$user->id}", 43200, function () use ($user){
+                    return $user->upcomingInvoice();
+                });
+                $invoices = Cache::remember("stripe_invoices_{$user->id}", 43200, function () use ($user){
+                    return $user->invoicesIncludingPending()->take(8);
+                });
             }
         } catch (\Throwable $e) {
             Log::warning('Dashboard: falha ao carregar dados Stripe', [
@@ -210,7 +217,7 @@ class AdminController extends Controller
             'subscriptionStatus' => $subscriptionStatus,
             'stripeStatus' => $stripeStatus,
             'invoiceUpcoming' => $invoiceUpcoming,
-            'recentInvoices' => $recentInvoices,
+            'recentInvoices' => $invoices,
             'totalProducts' => $totalProducts,
             'totalPedidos' => $totalPedidos,
             'recentPedidos' => $recentPedidos,
