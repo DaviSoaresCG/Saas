@@ -147,7 +147,7 @@ class AdminController extends Controller
 
     }
 
-    public function dashboard()
+   public function dashboard()
     {
         $user = Auth::user();
 
@@ -155,7 +155,7 @@ class AdminController extends Controller
         $subscriptionStatus = 'inactive';
         $stripeStatus = null;
         $invoiceUpcoming = null;
-        $recentInvoices = collect();
+        $recentInvoices = collect(); // Inicializa vazio (proteção contra quebras)
 
         try {
             if ($user->subscribed()) {
@@ -174,12 +174,14 @@ class AdminController extends Controller
                         $subscriptionEnd = date('d/m/Y H:i', $stripeSub->current_period_end);
                     }
                 }
-                //$invoiceUpcoming = $user->upcomingInvoice();
-                //$recentInvoices = $user->invoicesIncludingPending()->take(8);
+                
+                // Cache da Próxima Fatura
                 $invoiceUpcoming = Cache::remember("stripe_invoices_upcoming_{$user->id}", 43200, function () use ($user){
                     return $user->upcomingInvoice();
                 });
-                $invoices = Cache::remember("stripe_invoices_{$user->id}", 43200, function () use ($user){
+                
+                // CORREÇÃO AQUI: Usar a variável $recentInvoices
+                $recentInvoices = Cache::remember("stripe_invoices_{$user->id}", 43200, function () use ($user){
                     return $user->invoicesIncludingPending()->take(8);
                 });
             }
@@ -188,6 +190,9 @@ class AdminController extends Controller
                 'user_id' => $user->id,
                 'message' => $e->getMessage(),
             ]);
+            // Opcional: Você pode forçar a limpeza do cache caso o erro do Stripe seja persistente
+            // Cache::forget("stripe_invoices_upcoming_{$user->id}");
+            // Cache::forget("stripe_invoices_{$user->id}");
         }
 
         $totalProducts = Products::count();
@@ -210,7 +215,7 @@ class AdminController extends Controller
             'subscriptionStatus' => $subscriptionStatus,
             'stripeStatus' => $stripeStatus,
             'invoiceUpcoming' => $invoiceUpcoming,
-            'recentInvoices' => $invoices,
+            'recentInvoices' => $recentInvoices, // CORREÇÃO AQUI
             'totalProducts' => $totalProducts,
             'totalPedidos' => $totalPedidos,
             'recentPedidos' => $recentPedidos,
