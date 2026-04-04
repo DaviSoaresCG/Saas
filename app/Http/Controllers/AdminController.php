@@ -124,20 +124,13 @@ class AdminController extends Controller
     public function gerarSlugUnicoPost(Request $request)
     {
         $request->validate([
-            'slug' => ['required', 'min:2', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())],
-        ],
-            [
-                'required' => 'Preencha',
-                'min' => 'Minimo de 2 caracteres',
-                'string' => 'Digite letras',
-                'unique' => 'Ja existe esse dominio',
-            ]
-        );
+            'slug' => ['required', 'min:3', 'string', Rule::unique('users', 'slug')->ignore(Auth::id())],
+        ]);
 
         // verifica se ele digitou o mesmo subdominio
         $user = Auth::user();
         if ($request->slug == $user->slug) {
-            return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo']);
+            return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo'])->with('error', 'O subdominio é o mesmo');
         }
 
         $slug = $request->slug;
