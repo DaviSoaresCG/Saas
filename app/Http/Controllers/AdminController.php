@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\WelcomeEmail;
+use App\Models\Pedido;
+use App\Models\ProductClick;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -56,8 +58,8 @@ class AdminController extends Controller
             return view('subscription_pending');
         } elseif (empty($user->slug)) {
 
-            $name = str_replace(' ', '', $user->name);
-            $slug = Str::slug($name);
+            $store_name = str_replace(' ', '', $user->store_name);
+            $slug = Str::slug($store_name);
             $unique_slug = $this->generateUniqueSlug($slug);
             $user->slug = $unique_slug;
 
@@ -71,23 +73,25 @@ class AdminController extends Controller
 
         // antes de cirar o subdominio, verifico se ja exite
         $checkResponse = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
-            ->get("https://api.cloudflare.com/client/v4/zones/".env("CLOUDFLARE_ZONE_ID")."/dns_records", [
+            ->get('https://api.cloudflare.com/client/v4/zones/'.env('CLOUDFLARE_ZONE_ID').'/dns_records', [
                 'type' => 'A',
-                'name' => "{$user->slug}.".env('APP_DOMAIN'),
+                'name' => "{$user->slug}.zapcatalago.com.br",
             ]);
+            Log::info("Check Response: {$checkResponse->body()}");
 
         $registros_encontrados = $checkResponse->json('result');
         if (! empty($registros_encontrados)) {
             Log::info("Subdominio ja existe: {$user->slug}");
         } else {
+            Log::info("Subdominio nao existe: {$user->slug}, criando...");
 
             // criação do subdominio
             $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
                 ->post('https://api.cloudflare.com/client/v4/zones/'.env('CLOUDFLARE_ZONE_ID').'/dns_records', [
                     'type' => 'A',
-                    'name' => $user->slug, 
-                    'content' => env('SERVER_IP'),  
-                    'proxied' => true, 
+                    'name' => $user->slug,
+                    'content' => env('SERVER_IP'),
+                    'proxied' => true,
                 ]);
 
             if ($response->successful()) {
@@ -153,21 +157,66 @@ class AdminController extends Controller
     {
         $user = Auth::user();
 
-        // check the experation
-        $timestamp = Auth::user()
-            ->subscription()
-            ->asStripeSubscription()
-            ->current_period_end;
+        $subscriptionEnd = null;
+        $subscriptionStatus = 'inactive';
+        $stripeStatus = null;
+        $invoiceUpcoming = null;
+        $recentInvoices = collect();
 
-        $subscription_end = date('d/m/y H:i:s', $timestamp);
+        try {
+            if ($user->subscribed()) {
+                $subscription = $user->subscription();
+                if ($subscription) {
+                    $stripeStatus = $subscription->stripe_status;
+                    $subscriptionStatus = match (true) {
+                        in_array($stripeStatus, ['canceled', 'cancelled'], true) => 'cancelled',
+                        $stripeStatus === 'active' => 'active',
+                        $stripeStatus === 'trialing' => 'trialing',
+                        $stripeStatus === 'past_due' => 'past_due',
+                        default => 'other',
+                    };
+                    $stripeSub = $subscription->asStripeSubscription();
+                    if ($stripeSub && $stripeSub->current_period_end) {
+                        $subscriptionEnd = date('d/m/Y H:i', $stripeSub->current_period_end);
+                    }
+                }
+                $invoiceUpcoming = $user->upcomingInvoice();
+                $recentInvoices = $user->invoicesIncludingPending()->take(8);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Dashboard: falha ao carregar dados Stripe', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+            ]);
+        }
 
-        $invoice_upcoming = $user->upcomingInvoice();
+        $totalProducts = Products::count();
+        $totalPedidos = Pedido::count();
 
-        $invoices = Auth::user()->subscription()->invoices();
+        $recentPedidos = Pedido::query()
+            ->with(['iten_pedido' => fn ($q) => $q->limit(3)])
+            ->latest()
+            ->limit(6)
+            ->get();
 
-        $user = app(User::class);
+        $topProductsByClicks = ProductClick::query()
+            ->with('product:id,name,user_id')
+            ->orderByDesc('clicks')
+            ->limit(6)
+            ->get();
 
-        return view('admin.dashboard', compact('subscription_end', 'invoices', 'user', 'invoice_upcoming'));
+        return view('admin.dashboard', [
+            'subscriptionEnd' => $subscriptionEnd,
+            'subscriptionStatus' => $subscriptionStatus,
+            'stripeStatus' => $stripeStatus,
+            'invoiceUpcoming' => $invoiceUpcoming,
+            'recentInvoices' => $recentInvoices,
+            'totalProducts' => $totalProducts,
+            'totalPedidos' => $totalPedidos,
+            'recentPedidos' => $recentPedidos,
+            'topProductsByClicks' => $topProductsByClicks,
+            'tenant' => app(User::class),
+        ]);
     }
 
     public function invoiceDownload($id)

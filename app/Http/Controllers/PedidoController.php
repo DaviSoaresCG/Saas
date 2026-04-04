@@ -42,27 +42,26 @@ class PedidoController extends Controller
         foreach ($cart as $product) {
             $total += $product['value'] * $product['quantity'];
         }
-        
 
         $pedido = Pedido::create([
             'user_id' => app(User::class)->id,
             'total' => $total,
         ]);
 
-        $produtos = "";
+        $produtos = '';
         $itensParaInserir = [];
         foreach ($cart as $product) {
-            $itensParaInserir[] =[
+            $itensParaInserir[] = [
                 'pedido_id' => $pedido->id,
                 'product_id' => $product['id'],
                 'value' => $product['value'],
                 'quantidade' => $product['quantity'],
                 'created_at' => now(),
-                'updated_at' => now()
-        ];
-            $produtos .= "\n*Produto: ".$product['name']. "#".$product['id']."*"."\nValor: ".$product['value']."\nQuantidade: ".$product['quantity'];
+                'updated_at' => now(),
+            ];
+            $produtos .= "\n*Produto: ".$product['name'].'#'.$product['id'].'*'."\nValor: ".$product['value']."\nQuantidade: ".$product['quantity'];
         }
-        //uma so ida no banco
+        // uma so ida no banco
         ItemPedido::insert($itensParaInserir);
 
         $whatsapp = Pedido::with('user')->findorFail($pedido->id);
@@ -77,7 +76,7 @@ class PedidoController extends Controller
 
     }
 
-    public function search(Request $request)
+    public function search(Request $request, $slug)
     {
         $pedidos = Pedido::where('id', '=', $request->id)->get();
 

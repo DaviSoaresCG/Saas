@@ -1,42 +1,41 @@
-<x-app-layout>
-    <section class="py-8  md:py-16 dark:bg-gray-900 antialiased">
-        <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
-                <div class="shrink-0 max-w-md rounded lg:max-w-lg mx-auto">
-                    <img class="h-2/3 object-cover block rounded-2xl" src="{{ asset('storage/' . $product->path) }}" alt="" />
+<x-store-layout :page-title="$product->name">
+    <div class="mb-6 flex flex-wrap items-center gap-2">
+        <button type="button"
+            onclick="(function(){try{var r=document.referrer;if(r&&new URL(r).hostname===location.hostname){history.back();return;}}catch(e){} window.location.href='{{ route('products.index') }}';})();"
+            class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800/80 px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-700/80 transition-colors">
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>
+            Voltar ao catálogo
+        </button>
+    </div>
+
+    <div class="rounded-2xl border border-slate-700/80 bg-slate-800/40 overflow-hidden shadow-xl shadow-black/20">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-0">
+            <div class="relative aspect-square sm:aspect-[4/3] lg:aspect-auto lg:min-h-[320px] bg-slate-900/50">
+                <img class="absolute inset-0 w-full h-full object-contain" src="{{ asset('storage/' . $product->path) }}"
+                    alt="{{ $product->name }}" />
+            </div>
+            <div class="p-6 sm:p-8 flex flex-col justify-center">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    {{ $product->name }}
+                </h1>
+                <p class="mt-4 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
+                    R$ {{ $product->value }}
+                </p>
+
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ route('cart.add', ['id' => $product->id]) }}"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all">
+                        <i data-lucide="shopping-cart" class="h-5 w-5"></i>
+                        Adicionar ao carrinho
+                    </a>
                 </div>
 
-                <div class="mt-6 sm:mt-8 lg:mt-0">
-                    <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
-                        {{ $product->name }}
-                    </h1>
-                    <div class="mt-4 sm:items-center sm:gap-4 sm:flex">
-                        <p class="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
-                            R$: {{ $product->value }}
-                        </p>
-                    </div>
+                <hr class="my-8 border-slate-700/80" />
 
-                    <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-                        <a href="{{ route('cart.add', ['id' => $product->id]) }}" title=""
-                            class="text-white mt-4 sm:mt-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 flex items-center justify-center"
-                            role="button">
-                            <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6" />
-                            </svg>
-                            Adicionar ao carrinho
-                        </a>
-                    </div>
-
-                    <hr class="my-6 md:my-8 border-gray-400 dark:border-gray-800" />
-
-                    <p class="mb-6 text-gray-600 dark:text-gray-400">
-                        {{ $product->description }}
-                    </p>
-                </div>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    {{ $product->description }}
+                </p>
             </div>
         </div>
-    </section>
-</x-app-layout>
+    </div>
+</x-store-layout>

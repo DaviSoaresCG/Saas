@@ -14,12 +14,13 @@ class hasSubscription
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         // check if user has subscription
         if(Auth::check()){
             if(!Auth::user()->subscribed()){
-                return redirect()->away('http://' . env('APP_DOMAIN'));
+                return "CAIU AQUI";
+                //return redirect()->away('http://' . env('APP_DOMAIN'));
             }else{
                 return $next($request);
             }
