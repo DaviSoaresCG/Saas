@@ -108,7 +108,7 @@
                 @if ($showBackBar)
                     <div class="mb-6 flex flex-wrap items-center gap-2">
                         <button type="button"
-                            onclick="(function(){var d='{{ route('dashboard') }}';try{var r=document.referrer;if(r&&new URL(r).hostname===location.hostname){history.back();return;}}catch(e){}window.location.href=d;})();"
+                            onclick="history.back()"
                             class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800/80 px-3 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-700/80">
                             <i data-lucide="arrow-left" class="h-4 w-4"></i>
                             Voltar
