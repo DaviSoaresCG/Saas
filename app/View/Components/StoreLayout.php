@@ -13,7 +13,7 @@ class StoreLayout extends Component
     public function __construct(
         public ?string $pageTitle = null,
     ) {
-        $this->storeName = app(User::class)->name ?? 'Loja';
+        $this->storeName = app(User::class)->store_name ?? 'Loja';
     }
 
     public function render(): View

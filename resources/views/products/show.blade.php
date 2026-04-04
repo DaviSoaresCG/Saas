@@ -11,7 +11,7 @@
     <div class="rounded-2xl border border-slate-700/80 bg-slate-800/40 overflow-hidden shadow-xl shadow-black/20">
         <div class="lg:grid lg:grid-cols-2 lg:gap-0">
             <div class="relative aspect-square sm:aspect-[4/3] lg:aspect-auto lg:min-h-[320px] bg-slate-900/50">
-                <img class="absolute inset-0 w-full h-full object-cover" src="{{ asset('storage/' . $product->path) }}"
+                <img class="absolute inset-0 w-full h-full object-contain" src="{{ asset('storage/' . $product->path) }}"
                     alt="{{ $product->name }}" />
             </div>
             <div class="p-6 sm:p-8 flex flex-col justify-center">
