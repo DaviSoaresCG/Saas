@@ -4,6 +4,7 @@
     <x-auth-session-status class="mb-4" :status="session('success')" />
 
     <form method="POST" action="{{ route('login') }}">
+        <h1 class="text-2xl font-bold text-center mb-4 text-white">Login</h1>
         @csrf
 
         <!-- Email Address -->
@@ -15,7 +16,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Senha')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
@@ -37,7 +38,7 @@
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Entrar') }}
             </x-primary-button>
         </div>
     </form>

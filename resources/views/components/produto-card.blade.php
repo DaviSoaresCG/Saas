@@ -1,21 +1,20 @@
 @props(['produto', 'user'])
-<div class="rounded-lg border border-gray-400 bg-white p-3 shadow-lg dark:shadow-sm dark:border-gray-700 dark:bg-gray-800">
-    <div class="h-56 w-full">
-        <a href="{{ route('products.show', ['product' => $produto->id, 'slug' => $user->slug]) }}">
-            <img class="mx-auto h-full rounded-2xl object-cover dark:block" src="{{ asset('storage/' . $produto->path) }}"
-                alt="" width="200" />
+<div class="group rounded-2xl border border-slate-700/80 bg-slate-800/40 overflow-hidden shadow-lg shadow-black/20 hover:border-blue-500/40 hover:bg-slate-800/60 transition-all duration-300">
+    <div class="aspect-[4/3] overflow-hidden bg-slate-900/50">
+        <a href="{{ route('products.show', ['product' => $produto->id, 'slug' => $user->slug]) }}" class="block h-full">
+            <img class="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                src="{{ asset('storage/' . $produto->path) }}" alt="" loading="lazy" />
         </a>
     </div>
-    <div class="pt-6 text-center">
+    <div class="p-4 sm:p-5">
         <a href="{{ route('products.show', ['product' => $produto->id, 'slug' => $user->slug]) }}"
-            class="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white">{{ $produto->name }}</a>
-        <div class="mt-4 flex flex-col items-center justify-between gap-4">
-            <p class="sm:text-2xl text-lg font-extrabold leading-tight text-gray-900 dark:text-white">R$ {{ $produto->value }}</p>
-            <a href="{{ route('cart.add', ['id' => $produto->id]) }}"
-                class="inline-flex items-center rounded-lg text-center bg-blue-700 px-5 py-2.5 text-sm sm:text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4  focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Adicionar ao carrinho
-            </a>
-        </div>
+            class="block text-base font-bold text-white hover:text-blue-400 transition-colors line-clamp-2">
+            {{ $produto->name }}
+        </a>
+        <p class="mt-3 text-xl font-extrabold text-emerald-400 tabular-nums">R$ {{ $produto->value }}</p>
+        <a href="{{ route('cart.add', ['id' => $produto->id]) }}"
+            class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-600/20 transition-colors">
+            <span>Adicionar</span>
+        </a>
     </div>
-
 </div>

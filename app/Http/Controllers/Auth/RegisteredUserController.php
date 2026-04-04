@@ -34,6 +34,7 @@ class RegisteredUserController extends Controller
             'whatsapp' => ['required', 'string', 'max:20'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'store_name' => ['required', 'string', 'max:255'],
         ]);
 
         $whatsapp_limpo = preg_replace('/\D/', '', $request->whatsapp);
@@ -42,6 +43,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,            
             'whatsapp' => $whatsapp_limpo,
             'email' => $request->email,
+            'store_name' => $request->store_name,
             'password' => Hash::make($request->password),
         ]);
 

@@ -15,28 +15,75 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
+    @stack('styles')
+    @if ($adminShell ?? false)
+        <style>
+            [x-cloak] {
+                display: none !important;
+            }
+        </style>
+    @endif
 
 </head>
+@push('styles')
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#2563eb',
+                            accentHover: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+@endpush
+
+@push('scripts')
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+    </script>
+@endpush
+
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-200 dark:bg-gray-900">        
-        @include('layouts.navigation')
-        <!-- Page Heading -->
-        @isset($header)
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
-
-
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
-    </div>
+    @if ($adminShell ?? false)
+        <div class="min-h-screen bg-slate-950 text-slate-100" x-data="{ adminMenuOpen: false }"
+            @keydown.escape.window="adminMenuOpen = false"
+            @resize.window="if (window.innerWidth >= 1024) adminMenuOpen = false">
+            @include('layouts.partials.admin-topbar')
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
+    @else
+        <div class="min-h-screen bg-gray-200 dark:bg-gray-900">
+            @isset($header)
+                <header class="bg-white dark:bg-gray-800 shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
+    @endif
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    @stack('scripts')
 
 </body>
 
