@@ -131,6 +131,21 @@
                         @endif
                     </div>
                 @endif
+                @if($errors->updatePassword->any())
+                    <div class="mb-6 rounded-xl border border-red-500/40 bg-red-600/30 px-4 py-3 text-sm text-white">
+                        Não foi possivel alterar a senha.
+                    </div>
+                @endif
+                @if($errors->any())
+                    <div class="mb-6 rounded-xl border border-red-500/40 bg-red-600/30 px-4 py-3 text-sm text-white">
+                        Ocorreu um erro
+                    </div>
+                @endif
+                @if(session('status') == 'password-updated')
+                    <div class="mb-6 rounded-xl border border-emerald-500/40 bg-emerald-600/30 px-4 py-3 text-sm text-emerald-200">
+                        Senha Alterada.
+                    </div>
+                @endif
 
                 {{ $slot }}
             </div>
