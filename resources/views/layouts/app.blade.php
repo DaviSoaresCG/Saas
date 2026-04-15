@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme='midnight'>
 
 <head>
     <meta charset="utf-8">
@@ -14,7 +14,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     @stack('styles')
     @if ($adminShell ?? false)
         <style>
@@ -58,7 +58,7 @@
 @endpush
 
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-[var(--bg-page)]">
     @if ($adminShell ?? false)
         <div class="min-h-screen bg-slate-950 text-slate-100" x-data="{ adminMenuOpen: false }"
             @keydown.escape.window="adminMenuOpen = false"
@@ -69,15 +69,15 @@
             </main>
         </div>
     @else
-        <div class="min-h-screen bg-gray-200 dark:bg-gray-900">
+        <div class="min-h-screen">
             @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
+                <header class="bg-[var(--bg-page)] shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
-            <main>
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {{ $slot }}
             </main>
         </div>

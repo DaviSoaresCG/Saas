@@ -1,3 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* app.css */
+
+/* 1. Tema Clean (Minimalista) */
+:root, [data-theme="clean"] {
+    --bg-page: oklch(98% 0 0);           /* Fundo da página: Branco gelo */
+    --bg-card: oklch(100% 0 0);          /* Fundo do Card: Branco puro (destaque) */
+    --color-primary: oklch(25% 0.02 0);  /* Preto/Cinza muito escuro */
+    --text-base: oklch(25% 0.02 0);      /* Texto principal */
+    --text-muted: oklch(55% 0 0);        /* Texto secundário */
+    --text-on-primary: oklch(100% 0 0);  /* Texto no botão */
+}
+
+/* 2. Tema Oceano (Azul Profundo) */
+[data-theme="ocean"] {
+    --bg-page: oklch(95% 0.03 245);      /* Fundo da página: Azul muito claro */
+    --bg-card: oklch(100% 0 0);          /* Fundo do Card: Branco (contraste máximo) */
+    --color-primary: oklch(55% 0.18 250);/* Azul vibrante */
+    --text-base: oklch(25% 0.08 250);    /* Azul escuro */
+    --text-muted: oklch(60% 0.08 250);   /* Azul acinzentado */
+    --text-on-primary: oklch(100% 0 0);  /* Branco */
+}
+
+/* 3. Tema Sunset (Quente / Comida / Moda) */
+[data-theme="sunset"] {
+    --bg-page: oklch(97% 0.01 45);       /* Fundo da página: Creme/Pérola */
+    --bg-card: oklch(99.5% 0.01 45);     /* Fundo do Card: Quase branco quente */
+    --color-primary: oklch(65% 0.22 35); /* Laranja pôr do sol */
+    --text-base: oklch(25% 0.06 35);     /* Marrom café */
+    --text-muted: oklch(55% 0.06 35);    /* Marrom suave */
+    --text-on-primary: oklch(100% 0 0);  /* Branco */
+}
+
+/* 4. Tema Midnight (Modo Escuro Elegante) */
+[data-theme="midnight"] {
+    --bg-page: oklch(18% 0.02 260);      /* Fundo da página: Grafite azulado */
+    --bg-card: oklch(24% 0.03 260);      /* Fundo do Card: Um tom acima para flutuar */
+    --color-primary: oklch(75% 0.16 280);/* Roxo/Ciano Neon */
+    --text-base: oklch(95% 0.01 260);    /* Texto claro */
+    --text-muted: oklch(75% 0.02 260);   /* Texto secundário */
+    --text-on-primary: oklch(15% 0.02 260);/* Texto escuro para contraste no neon */
+}

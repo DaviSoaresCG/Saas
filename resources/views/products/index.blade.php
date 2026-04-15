@@ -13,8 +13,8 @@
 
     <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-            <h2 class="text-lg font-bold text-white">Todos os produtos</h2>
-            <p class="text-sm text-slate-500 mt-1">Toque em um item para ver detalhes.</p>
+            <h2 class="text-lg font-bold text-[var(--text-base)]">Todos os produtos</h2>
+            <p class="text-sm text-[var(--text-base)] mt-1">Toque em um item para ver detalhes.</p>
         </div>
     </div>
 

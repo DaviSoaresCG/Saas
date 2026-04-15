@@ -190,9 +190,6 @@ class AdminController extends Controller
                 'user_id' => $user->id,
                 'message' => $e->getMessage(),
             ]);
-            // Opcional: Você pode forçar a limpeza do cache caso o erro do Stripe seja persistente
-            // Cache::forget("stripe_invoices_upcoming_{$user->id}");
-            // Cache::forget("stripe_invoices_{$user->id}");
         }
 
         $totalProducts = Products::count();
