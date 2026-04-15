@@ -13,9 +13,9 @@ O foco principal deste projeto foi a implementação de uma arquitetura robusta 
 ## 🏗️ Arquitetura e Decisões Técnicas
 
 ### 1. Multi-tenancy (Single Database)
-Optei pela estratégia de **Single Database com Tenant Isolation** via `tenant_id`.
+Optei pela estratégia de **Single Database com Tenant Isolation** via `user_id`.
 * **Isolamento:** Utilizei `Global Scopes` do Eloquent para garantir que queries como `Product::all()` retornem apenas os dados do inquilino atual automaticamente.
-* **Identificação:** Um Middleware personalizado intercepta a requisição, extrai o subdomínio (`cliente.app.com`), valida no banco e injeta o contexto do Tenant na aplicação.
+* **Identificação:** Um Middleware personalizado intercepta a requisição, extrai o subdomínio (`cliente.zapcatalago.com.br`), valida no banco e injeta o contexto do Tenant na aplicação.
 
 ### 2. Fluxo de Pagamento (Stripe)
 Integração completa com **Laravel Cashier**.
@@ -34,4 +34,6 @@ Integração completa com **Laravel Cashier**.
 * **Frontend:** Blade, TailwindCSS, Alpine.js
 
 ## Link para Acessar
-* http://zapcatalago.com.br/
+* Home: http://zapcatalago.com.br/
+* Página de um Lojista: https://floresdasandra.zapcatalago.com.br/produtos
+* Login para acessar o dashboard: email:davisoaresgigante@gmail.com, senha:123123123
