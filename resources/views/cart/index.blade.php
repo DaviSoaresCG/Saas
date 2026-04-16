@@ -10,15 +10,15 @@
     <div class="container mx-auto max-w-7xl p-4 md:p-8 dark:text-white">
         
         
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Meu Carrinho</h1>
+        <h1 class="text-3xl font-bold text-[var(--text-base)] mb-8">Meu Carrinho</h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             <div class="lg:col-span-2 space-y-3">
                 @foreach ($cart as $id => $item)
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
-                        <div class="product-item flex flex-col md:flex-row gap-6 items-center border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0"
+                <div class="bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl shadow-lg p-6 transition-colors duration-200">
+                        <div class="product-item flex flex-col md:flex-row gap-6 items-center  pb-6 "
                             data-price="{{ $item['value'] }}" data-product-id="{{ $id }}">
 
                             <div class="w-32 h-32 md:w-28 md:h-28 flex-shrink-0">
@@ -27,7 +27,7 @@
                             </div>
 
                             <div class="flex-1 w-full md:w-auto">
-                                <h3 class="text-xl font-semibold text-gray-800 dark:text-white">{{ $item['name'] }}</h3>
+                                <h3 class="text-xl font-semibold text-[var(--text-base)]">{{ $item['name'] }}</h3>
                             </div>
 
                             <div class="flex items-center gap-3">
@@ -36,7 +36,7 @@
                                     -
                                 </button>
 
-                                <span class="item-quantity text-lg font-semibold text-gray-800 dark:text-white"
+                                <span class="item-quantity text-lg font-semibold text-[var(--text-base)]"
                                     id="quantity-{{ $id }}"> {{ $item['quantity'] }} </span>
 
                                 <button data-action="increment" data-product-id="{{ $id }}"
@@ -46,10 +46,10 @@
                             </div>
 
                             <div class="flex flex-col items-end">
-                                <p class="text-gray-600 dark:text-gray-300 font-bold">
+                                <p class="text-[var(--text-base)] font-bold">
                                     Valor Unitário: {{ number_format($item['value'], 2, ',', '.') }}
                                 </p>
-                                <span class="item-subtotal text-xl font-bold text-gray-900 dark:text-white mb-2"
+                                <span class="item-subtotal text-xl font-bold text-[var(--text-base)] mb-2"
                                     id="item-subtotal-{{ $id }}">
                                     R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
                                 </span>
@@ -65,11 +65,11 @@
             </div>
 
             <div class="lg:col-span-1">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 lg:sticky lg:top-8 transition-colors duration-200">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-4 mb-6">Resumo do Pedido</h2>
+                <div class="bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-lg shadow-lg p-6 lg:sticky lg:top-8 transition-colors duration-200">
+                    <h2 class="text-2xl font-bold text-[var(--text-base)] border-b border-[var(--color-primary)] pb-4 mb-6">Resumo do Pedido</h2>
 
                     <div class="mt-6 pt-6">
-                        <div class="flex justify-between text-gray-900 dark:text-white text-xl font-bold">
+                        <div class="flex justify-between text-[var(--text-base)] text-xl font-bold">
                             <span>Total</span>
                             <span id="summary-total">
                                 R$ {{ number_format($total, 2, ',', '.') }}
@@ -80,7 +80,7 @@
                         @csrf
                         <input type="number" hidden id="summary-total" value="">
                         <button
-                            class="mt-8 w-full bg-blue-600 text-white text-lg font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md">
+                            class="mt-8 w-full cursor-pointer  bg-[var(--color-primary)] text-[var(--text-on-primary)] text-lg font-semibold py-3 rounded-lg shadow-md">
                             Finalizar pedido
                         </button>
                     </form>
