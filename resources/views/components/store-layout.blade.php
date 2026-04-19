@@ -21,7 +21,7 @@
         </div>
 
         <header class="sticky top-0 z-20 bg-[var(--bg-page)] backdrop-blur-md">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <div class="mx-auto h-16 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--color-primary)] shrink-0">
                         <i data-lucide="shopping-bag" class="h-5 w-5 text-[var(--text-on-primary)]"></i>

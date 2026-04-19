@@ -39,7 +39,7 @@ class EnsureUserBelongsToTenant
             Auth::guard('web')->logout();
             // Redirecionar para login do tenant correto
             return redirect()->route('login')
-                ->withErrors(['email' => 'Você não acesso este painel.(middleware)']);
+                ->withErrors(['email' => 'Você não acesso este painel.']);
         }
 
         return $next($request);

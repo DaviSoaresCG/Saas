@@ -1,12 +1,12 @@
 <x-store-layout>
     @if (session('success'))
-        <div class="mb-6 rounded-xl border border-emerald-500/40 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-200">
+        <div class="mb-6 rounded-xl border border-emerald-500/40 bg-emerald-800 px-4 py-3 text-sm text-white">
             {{ session('success') }}
         </div>
     @endif
 
     @if (session('error'))
-        <div class="mb-6 rounded-xl border border-red-500/40 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+        <div class="mb-6 rounded-xl border border-red-500/40 bg-red-800 px-4 py-3 text-sm text-white">
             {{ session('error') }}
         </div>
     @endif
