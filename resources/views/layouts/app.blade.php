@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme='midnight'>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme='cyber'>
 
 <head>
     <meta charset="utf-8">
@@ -27,25 +27,7 @@
 </head>
 @push('styles')
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            dark: '#0f172a',
-                            card: '#1e293b',
-                            accent: '#2563eb',
-                            accentHover: '#1d4ed8',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+   
 @endpush
 
 @push('scripts')
@@ -70,13 +52,6 @@
         </div>
     @else
         <div class="min-h-screen">
-            @isset($header)
-                <header class="bg-[var(--bg-page)] shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {{ $slot }}
             </main>

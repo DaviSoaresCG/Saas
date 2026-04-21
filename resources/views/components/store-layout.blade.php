@@ -15,11 +15,6 @@
 
 <x-app-layout>
     <div class="min-h-[calc(100vh-4rem)] bg-[var(--bg-page)] font-sans antialiased ">
-        <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-            <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[var(--color-primary)]/10 blur-[90px]"></div>
-            <div class="absolute bottom-0 -left-24 h-72 w-72 rounded-full bg-indigo-600/10 blur-[90px]"></div>
-        </div>
-
         <header class="sticky top-0 z-20 bg-[var(--bg-page)] backdrop-blur-md">
             <div class="mx-auto h-16 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3 min-w-0">

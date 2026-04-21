@@ -39,3 +39,53 @@
     --text-muted: oklch(75% 0.02 260);   /* Texto secundário */
     --text-on-primary: oklch(15% 0.02 260);/* Texto escuro para contraste no neon */
 }
+
+/* 5. Tema Forest (Natureza / Saúde / Eco) */
+[data-theme="forest"] {
+    --bg-page: oklch(96% 0.02 140);      /* Fundo da página: Verde água muito claro */
+    --bg-card: oklch(100% 0 0);          /* Fundo do Card: Branco puro */
+    --color-primary: oklch(45% 0.1 145); /* Verde musgo/floresta vibrante */
+    --text-base: oklch(25% 0.04 145);    /* Verde muito escuro (quase preto) */
+    --text-muted: oklch(55% 0.04 145);   /* Verde acinzentado */
+    --text-on-primary: oklch(100% 0 0);  /* Branco */
+}
+
+/* 6. Tema Premium (Luxo / Joias / Relógios - Dark Mode) */
+[data-theme="premium"] {
+    --bg-page: oklch(15% 0 0);           /* Fundo da página: Preto/Carvão */
+    --bg-card: oklch(20% 0 0);           /* Fundo do Card: Cinza chumbo escuro */
+    --color-primary: oklch(75% 0.15 85); /* Dourado / Ouro clássico */
+    --text-base: oklch(95% 0.02 85);     /* Branco com leve toque dourado */
+    --text-muted: oklch(65% 0.05 85);    /* Ouro velho / Cinza amarelado */
+    --text-on-primary: oklch(15% 0 0);   /* Texto escuro no botão dourado para leitura */
+}
+
+/* 7. Tema Lavender (Cosméticos / Infantil / Delicado) */
+[data-theme="lavender"] {
+    --bg-page: oklch(98% 0.02 320);      /* Fundo da página: Rosa/Lilás quase branco */
+    --bg-card: oklch(100% 0 0);          /* Fundo do Card: Branco puro */
+    --color-primary: oklch(65% 0.15 320);/* Lilás / Roxo suave vibrante */
+    --text-base: oklch(30% 0.08 320);    /* Roxo escuro para leitura confortável */
+    --text-muted: oklch(60% 0.06 320);   /* Roxo acinzentado */
+    --text-on-primary: oklch(100% 0 0);  /* Branco */
+}
+
+/* 8. Tema Terracotta (Rústico / Artesanato / Café) */
+[data-theme="terracotta"] {
+    --bg-page: oklch(96% 0.02 50);       /* Fundo da página: Areia claro */
+    --bg-card: oklch(99% 0.01 50);       /* Fundo do Card: Bege muito claro/Off-white */
+    --color-primary: oklch(50% 0.15 40); /* Ferrugem / Barro / Terracota */
+    --text-base: oklch(25% 0.05 40);     /* Marrom muito escuro */
+    --text-muted: oklch(55% 0.08 40);    /* Marrom médio */
+    --text-on-primary: oklch(100% 0 0);  /* Branco */
+}
+
+/* 9. Tema Cyber (Tech / Dev Tools / Neon Dark) */
+[data-theme="cyber"] {
+    --bg-page: oklch(16% 0.02 275);      /* Fundo da página: Azul marinho profundíssimo */
+    --bg-card: oklch(22% 0.02 275);      /* Fundo do Card: Azul acinzentado escuro */
+    --color-primary: oklch(80% 0.15 195);/* Ciano Neon / Azul Elétrico */
+    --text-base: oklch(98% 0 0);         /* Branco puro */
+    --text-muted: oklch(65% 0.02 275);   /* Cinza azulado */
+    --text-on-primary: oklch(16% 0.02 275);/* Texto escuro no botão neon para contraste */
+}

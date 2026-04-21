@@ -46,7 +46,6 @@ class ResolveTenant
             URL::defaults(['slug' => $slug]);
 
             // disponibiliza nas views
-            View::share('slug', $slug);
         }
 
         return $next($request);
