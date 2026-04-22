@@ -93,7 +93,7 @@
                         <i data-lucide="clock" class="h-5 w-5 text-[var(--text-on-primary)]"></i>
                         Últimos pedidos
                     </h2>
-                    <a href="{{ route('order.index') }}" class="text-sm font-semibold p-2 rounded text-[var(--text-base)] bg-[var(--bg-card)]">Ver todos</a>
+                    <a href="{{ route('order.index') }}" class="text-sm font-semibold p-2 rounded-lg text-[var(--text-base)] bg-[var(--bg-card)]">Ver todos</a>
                 </div>
                 <div class="divide-y divide-[var(--color-primary)]/60">
                     @forelse ($recentPedidos as $pedido)
@@ -161,7 +161,7 @@
             Assinatura e faturas
         </h2>
         <a href="{{ route('billing') }}"
-            class="text-sm font-semibold bg-[var(--bg-card)] text-[var(--text-base)] p-2 rounded">
+            class="text-sm font-semibold bg-[var(--bg-card)] text-[var(--text-base)] p-2 rounded-lg">
             Gerenciar assinatura
         </a>
     </div>

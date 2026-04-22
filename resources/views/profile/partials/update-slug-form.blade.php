@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        <h2 class="text-lg font-medium text-[var(--text-base)]">
             {{ __('Atualizar o Slug(Subdominio)') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p class="mt-1 text-sm text-[var(--text-muted)]">
             {{ __("Coloque um novo subdominio para seu site") }}
         </p>
     </header>
@@ -29,7 +29,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = true, 2000)"
-                    class="text-sm text-green-600 dark:text-green-400"
+                    class="text-sm text-green-600"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>

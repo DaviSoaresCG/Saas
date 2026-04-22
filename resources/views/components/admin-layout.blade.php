@@ -109,25 +109,20 @@
                     <div class="mb-6 flex flex-wrap items-center gap-2">
                         <button type="button"
                             onclick="history.back()"
-                            class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800/80 px-3 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-700/80">
+                            class="inline-flex items-center gap-2 rounded-xl bg-[var(--color-primary)]/90 px-3 py-2 text-sm font-semibold text-[var(--text-on-primary)] transition-colors hover:bg-[var(--color-primary)] cursor-pointer">
                             <i data-lucide="arrow-left" class="h-4 w-4"></i>
                             Voltar
                         </button>
-                        <a href="{{ route('dashboard') }}"
-                            class="inline-flex items-center gap-2 rounded-xl border border-blue-500/40 bg-blue-600/15 px-3 py-2 text-sm font-semibold text-blue-200 transition-colors hover:bg-blue-600/25">
-                            <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
-                            Ir ao dashboard
-                        </a>
                     </div>
                 @endif
 
                 @if ($title || $subtitle)
                     <div class="mb-8">
                         @if ($title)
-                            <h1 class="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{{ $title }}</h1>
+                            <h1 class="text-2xl font-extrabold tracking-tight text-[var(--text-base)] sm:text-3xl">{{ $title }}</h1>
                         @endif
                         @if ($subtitle)
-                            <p class="mt-1 text-sm text-slate-400 sm:text-base">{{ $subtitle }}</p>
+                            <p class="mt-1 text-sm text-[var(--text-base)] sm:text-base">{{ $subtitle }}</p>
                         @endif
                     </div>
                 @endif
