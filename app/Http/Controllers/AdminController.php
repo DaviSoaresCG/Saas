@@ -244,4 +244,5 @@ class AdminController extends Controller
 
         return view('admin.products', compact('products', 'link'));
     }
+
 }

@@ -71,6 +71,11 @@
                             <i data-lucide="home" class="h-4 w-4 shrink-0 {{ $active === 'dashboard' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Dashboard
                         </a>
+                        <a href="{{ route('theme.index') }}" {!! $navClick !!}
+                            class="{{ $active === 'theme' ? $navActive : $navIdle }}">
+                            <i data-lucide="palette" class="h-4 w-4 shrink-0 {{ $active === 'theme' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
+                            Mudar Tema
+                        </a>
                         <a href="{{ route('admin.products') }}" {!! $navClick !!}
                             class="{{ $active === 'products' ? $navActive : $navIdle }}">
                             <i data-lucide="package" class="h-4 w-4 shrink-0 {{ $active === 'products' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>

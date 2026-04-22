@@ -46,6 +46,7 @@ class ResolveTenant
             URL::defaults(['slug' => $slug]);
 
             // disponibiliza nas views
+            View::share('theme', $user->theme_name);
         }
 
         return $next($request);
