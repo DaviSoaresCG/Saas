@@ -2,14 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
-class ResolveTenant
+class ResolveRegister
 {
     /**
      * Handle an incoming request.
@@ -28,27 +26,9 @@ class ResolveTenant
                 $slug = null;
             }
         }
-        if ($slug) {
-
-            $user = User::where('slug', $slug)->first();
-
-            if (! $user) {
-                return redirect()->away('https://'.env("APP_DOMAIN"));
-            }
-
-            if (! $user->subscribed() || ! $user->hasVerifiedEmail()) {
-                return redirect()->away('https://'.env('APP_DOMAIN'));
-                // retornar uma view de aviso de loja inativa
-            }
-
-            app()->instance(User::class, $user);
-            // disponibiliza nas rotas
-            URL::defaults(['slug' => $slug]);
-
-            // disponibiliza nas views
-            View::share('theme', $user->theme_name);
+        if($slug){
+            return redirect()->route('products.index', ['slug' => $slug]);
         }
-
         return $next($request);
     }
 }

@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        <h2 class="text-lg font-medium text-[var(--text-base)]">
             {{ __('Mude sua senha') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p class="mt-1 text-sm text-[var(--text-muted)]">
             {{ __('Use uma senha forte para que seja segura') }}
         </p>
     </header>
@@ -40,7 +40,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-green-600 dark:text-green-400"
+                    class="text-sm text-green-600"
                 >{{ __('Salvo.') }}</p>
             @endif
         </div>

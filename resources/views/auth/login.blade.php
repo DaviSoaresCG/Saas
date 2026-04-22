@@ -4,7 +4,7 @@
     <x-auth-session-status class="mb-4" :status="session('success')" />
 
     <form method="POST" action="{{ route('login') }}">
-        <h1 class="text-2xl font-bold text-center mb-4 text-white">Login</h1>
+        <h1 class="text-2xl font-bold text-center mb-4 text-[var(--text-base)]">Login</h1>
         @csrf
 
         <!-- Email Address -->
@@ -28,14 +28,13 @@
 
         <div class="flex items-center gap-3  justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class=" text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
+                <a class=" text-sm text-[var(--text-muted)] hover:text-[var(--text-base)] transition-all ease-in duration-75" href="{{ route('password.request') }}">
                     {{ __('Esqueceu a senha?') }}
                 </a>
-                <a class=" text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('register') }}">
-                    {{ __('Nao possui conta?') }}
-                </a>
-                
             @endif
+            <a class=" text-sm text-[var(--text-muted)] hover:text-[var(--text-base)] transition-all ease-in duration-75" href="{{ route('register') }}">
+                {{ __('Nao possui conta?') }}
+            </a>
 
             <x-primary-button class="ms-3">
                 {{ __('Entrar') }}

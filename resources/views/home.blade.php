@@ -264,10 +264,7 @@
                 <div class="flex flex-row items-center justify-between flex-wrap">
                     <div class="inline-flex items-center justify-center p-3 bg-blue-600/20 border-2 border-blue-400 rounded-xl mb-6">
                         <i data-lucide="bar-chart-3" class="h-6 w-6 text-blue-500"></i>
-                    </div>
-                    <div class="inline-flex items-center justify-center p-3 bg-blue-600/20 border-2 border-blue-400 rounded-xl mb-6">
-                        <p>Em produção!</p>
-                    </div>      
+                    </div>   
                 </div>
               
               <h4 class="text-xl font-bold text-white mb-3">Dashboard de Vendas</h4>

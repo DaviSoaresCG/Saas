@@ -22,6 +22,7 @@ class AdminLayout extends Component
 
     public function render(): View
     {
-        return view('components.admin-layout');
+        $theme = app(User::class)->theme_name;
+        return view('components.admin-layout', compact('theme'));
     }
 }

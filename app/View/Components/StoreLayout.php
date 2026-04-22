@@ -18,6 +18,7 @@ class StoreLayout extends Component
 
     public function render(): View
     {
-        return view('components.store-layout');
+        $theme = app(User::class)->theme_name;
+        return view('components.store-layout', compact('theme'));
     }
 }

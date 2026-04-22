@@ -8,6 +8,7 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\ThemeController;
 use App\Http\Middleware\EnsureUserBelongsToTenant;
 use App\Http\Middleware\hasSubscription;
 // Importação dos Middlewares
@@ -67,7 +68,13 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->
                 Route::get('/pedidos/buscar', 'search')->name('order.search');
                 Route::get('/pedidos/{id}', 'show')->name('order.show')->whereNumber('id');
             });
+            Route::controller(ThemeController::class)->group(function(){
+                Route::get('/theme', 'index')->name('theme.index');
+                Route::post('/update-theme', 'themeUpdate')->name('theme.update');
+            });
         });
+
+        
 
         // --- ProdutoController (CRUD Administrativo) ---
         Route::resource('products', ProdutoController::class)->except(['index', 'show', 'destroy']);
