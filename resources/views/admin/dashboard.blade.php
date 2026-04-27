@@ -70,16 +70,16 @@
                     <div>
                         <p class="text-sm font-medium text-[var(--text-base)]">Catálogo público</p>
                         <div class="mt-2 mb-2 gap-2 flex flex-row item-center justify-center text-center">
-                            <p class="text-lg font-bold text-[var(--text-base)] break-all" id="meuTexto">{{ $catalogHost }}</p>
+                            <p class="text-lg font-bold text-[var(--text-base)] break-all text-nowrap" id="meuTexto">{{ $catalogHost }}</p>
                             <span class="p-1 rounded bg-[var(--color-primary)] cursor-pointer" onclick="copyToClipboard()" id="btnCopiar">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-[var(--text-on-primary)]">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-[var(--text-on-primary)]">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5A3.375 3.375 0 0 0 6.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-1.5a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 0 0-9-9Z" />
                                   </svg>
                             </span>
                         </div>
                     </div>
-                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500 border border-emerald-500/30 shrink-0">
-                        <i data-lucide="globe" class="h-5 w-5 text-emerald-100"></i>
+                    <span class="flex sm:h-11 sm:w-11 h-7 w-7 items-center justify-center rounded-xl bg-emerald-500 border border-emerald-500/30 shrink-0">
+                        <i data-lucide="globe" class="h-4 w-4 sm:h-5 sm:w-5 text-emerald-100"></i>
                     </span>
                 </div>
                 <p class="mt-2 text-xs text-[var(--text-muted)]">Compartilhe este link com seus clientes.</p>
@@ -93,7 +93,7 @@
                         <i data-lucide="clock" class="h-5 w-5 text-[var(--text-on-primary)]"></i>
                         Últimos pedidos
                     </h2>
-                    <a href="{{ route('order.index') }}" class="text-sm font-semibold p-2 rounded-lg text-[var(--text-base)] bg-[var(--bg-card)]">Ver todos</a>
+                    <a href="{{ route('order.index') }}" class="text-xs sm:text-sm text-center font-semibold p-2 rounded-lg text-[var(--text-base)] bg-[var(--bg-card)]">Ver todos</a>
                 </div>
                 <div class="divide-y divide-[var(--color-primary)]/60">
                     @forelse ($recentPedidos as $pedido)
@@ -161,7 +161,7 @@
             Assinatura e faturas
         </h2>
         <a href="{{ route('billing') }}"
-            class="text-sm font-semibold bg-[var(--bg-card)] text-[var(--text-base)] p-2 rounded-lg">
+            class="sm:text-sm text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-base)] p-2 rounded-lg">
             Gerenciar assinatura
         </a>
     </div>
