@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ThemeController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        $slug = $user->slug;
+        $theme_atual = $user->theme_name;
         $themes = [
             ['id' => 'clean', 'name' => 'Minimalista', 'primary' => '#1a1a1a', 'bg' => '#f8f8f8', 'dark' => false],
             ['id' => 'ocean', 'name' => 'Oceano', 'primary' => '#0ea5e9', 'bg' => '#f1f5f9', 'dark' => false],
@@ -20,7 +24,7 @@ class ThemeController extends Controller
             ['id' => 'terracotta', 'name' => 'Terracotta', 'primary' => '#b45309', 'bg' => '#fdf8f6', 'dark' => false],
             ['id' => 'cyber', 'name' => 'Cyber Tech', 'primary' => '#22d3ee', 'bg' => '#0f172a', 'dark' => true],
         ];
-        return view('admin.change_theme', compact('themes'));
+        return view('admin.change_theme', compact('themes', 'theme_atual'));
     }
 
     public function themeUpdate(Request $request)
@@ -33,6 +37,6 @@ class ThemeController extends Controller
         $user->theme_name = $request->theme_id;
         $user->save();
 
-        return redirect()->route('dashboard', ['slug' => $user->slug]);
+        return redirect()->route('theme.index', ['slug' => $user->slug]);
     }
 }
