@@ -17,7 +17,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($themes as $theme)
                 <label class="relative group cursor-pointer">
-                    <input type="radio" name="theme_id" value="{{ $theme['id'] }}" class="peer sr-only" {{ $loop->first ? 'checked' : '' }}>
+                    <input type="radio" name="theme_id" value="{{ $theme['id'] }}" class="peer sr-only" {{ $theme['id'] == $theme_atual ? 'checked' : '' }}>
                     
                     <div class="p-4 rounded-2xl border-2 border-transparent bg-[var(--bg-page)]/50 peer-checked:border-[var(--color-primary)] peer-checked:bg-[var(--color-primary)]/5 transition-all hover:scale-[1.02] active:scale-95 shadow-sm">
                         
@@ -38,7 +38,7 @@
                         @if($theme['dark'])
                             <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-black/20 text-[10px] font-bold uppercase tracking-wider text-white">Modo Escuro</span>
                         @else
-                            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-white/20 text-[10px] font-bold uppercase tracking-wider text-white">Modo Claro</span>
+                            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-white text-[10px] font-bold uppercase tracking-wider text-black">Modo Claro</span>
                         @endif
                     </div>
                 </label>

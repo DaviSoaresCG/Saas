@@ -2,7 +2,7 @@
 <div class="group rounded-2xl bg-[var(--bg-card)] overflow-hidden shadow-lg shadow-black/20  transition-all duration-300">
     <div class="aspect-[4/3] rounded-t-2xl overflow-hidden">
         <a href="{{ route('products.show', ['product' => $produto->id, 'slug' => $user->slug]) }}" class="block h-full">
-            <img class="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            <img class="h-full w-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
                 src="{{ asset('storage/' . $produto->path) }}" alt="" loading="lazy" />
         </a>
     </div>
