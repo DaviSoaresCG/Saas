@@ -35,5 +35,5 @@ Integração completa com **Laravel Cashier**.
 
 ## Link para Acessar
 * Home: http://zapcatalago.com.br/
-* Página de um Lojista: https://floresdasandra.zapcatalago.com.br/produtos
+* Página de um Lojista: https://davilmtd.zapcatalago.com.br/produtos
 * Login para acessar o dashboard: email:davisoaresgigante@gmail.com, senha:123123123
