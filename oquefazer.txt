@@ -1,12 +1,11 @@
 
-trocar todos os envs para variaveis de configuração
-
 
 VERSAO 2.0
 - Salvar no banco de dados as informações na hora do pedido (dinheiro, pix, entrega)
 - Mostrar na tabela de pedidos o status do pedido, podendo ser aberto ou concluido.
 - Categorias do produto
 - Colocar a feature "Promoção"
+- Colocar a feature de opções dos produtos personalizados(tamanho, cor, voltagem)
 
 
 -websocket

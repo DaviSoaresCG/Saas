@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,13 +23,14 @@ class ThemeController extends Controller
             ['id' => 'terracotta', 'name' => 'Terracotta', 'primary' => '#b45309', 'bg' => '#fdf8f6', 'dark' => false],
             ['id' => 'cyber', 'name' => 'Cyber Tech', 'primary' => '#22d3ee', 'bg' => '#0f172a', 'dark' => true],
         ];
+
         return view('admin.change_theme', compact('themes', 'theme_atual'));
     }
 
     public function themeUpdate(Request $request)
-    {  
+    {
         $request->validate([
-            'theme_id' => 'required'
+            'theme_id' => 'required',
         ]);
 
         $user = auth()->user();

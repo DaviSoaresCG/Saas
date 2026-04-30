@@ -1,5 +1,6 @@
 @props(['produto', 'user'])
-<div class="group rounded-2xl bg-[var(--bg-card)] overflow-hidden shadow-lg shadow-black/20  transition-all duration-300">
+<div
+    class="group rounded-2xl bg-[var(--bg-card)] overflow-hidden shadow-lg shadow-black/20  transition-all duration-300">
     <div class="aspect-[4/3] rounded-t-2xl overflow-hidden">
         <a href="{{ route('products.show', ['product' => $produto->id, 'slug' => $user->slug]) }}" class="block h-full">
             <img class="h-full w-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
@@ -14,7 +15,7 @@
         <p class="mt-3 text-xl font-extrabold text-emerald-600 tabular-nums">R$ {{ $produto->value }}</p>
         <a href="{{ route('cart.add', ['id' => $produto->id]) }}"
             class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors">
-            <span>Adicionar</span>
+            <span>Adicionar ao carrinho</span>
         </a>
     </div>
 </div>

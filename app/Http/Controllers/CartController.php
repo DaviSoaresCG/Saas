@@ -13,8 +13,8 @@ class CartController extends Controller
 
         $cart = session()->get('cart', []);
         $total = 0;
-        foreach($cart as $item){
-            $total+= $item['value'] * $item['quantity'];
+        foreach ($cart as $item) {
+            $total += $item['value'] * $item['quantity'];
         }
 
         return view('cart.index', compact('cart', 'total'));
@@ -42,7 +42,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect()->route('products.index')->with('success', 'Produto Adicionado');
+        return redirect()->route('products.index')->with('success', 'Produto adicionado ao carrinho com sucesso!');
     }
 
     public function remove($slug, $id)
@@ -63,7 +63,7 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:0',
         ]);
-        
+
         $produto_id = $request->product_id;
         $quantidade = $request->quantity;
 
@@ -73,13 +73,13 @@ class CartController extends Controller
             if ($quantidade > 0) {
                 $cart[$produto_id]['quantity'] = $quantidade;
                 $total = 0;
-                foreach($cart as $item){
-                    $total+= $item['value'] * $item['quantity'];
+                foreach ($cart as $item) {
+                    $total += $item['value'] * $item['quantity'];
                 }
-                //formata o total do carrinho
+                // formata o total do carrinho
                 $total_formatado = number_format($total, 2, ',', '.');
 
-                //pega o total do item no carrinho
+                // pega o total do item no carrinho
                 $item_total = $cart[$produto_id]['value'] * $quantidade;
                 $item_subtotal_formatado = number_format($item_total, 2, ',', '.');
 
@@ -91,19 +91,19 @@ class CartController extends Controller
                     'new_total' => $total_formatado,
                     'item_subtotal' => $item_subtotal_formatado,
                     'quantity' => $quantidade,
-                    'cartCounter' => count($cart)
+                    'cartCounter' => count($cart),
                 ]);
             } else {
                 unset($cart[$produto_id]);
 
                 $total = 0.00;
-                if(count($cart) > 0){
-                    foreach($cart as $item){
-                        $total+= $item['value'] * $item['quantity'];
+                if (count($cart) > 0) {
+                    foreach ($cart as $item) {
+                        $total += $item['value'] * $item['quantity'];
                     }
                 }
-                
-                //formata o total do carrinho
+
+                // formata o total do carrinho
                 $total_formatado = number_format($total, 2, ',', '.');
 
                 session()->put('cart', $cart);
@@ -112,7 +112,7 @@ class CartController extends Controller
                     'success' => true,
                     'message' => 'removido',
                     'new_total' => $total_formatado,
-                    'cartCounter' => count($cart)
+                    'cartCounter' => count($cart),
                 ]);
             }
         }
