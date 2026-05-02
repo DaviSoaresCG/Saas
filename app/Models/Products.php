@@ -17,6 +17,11 @@ class Products extends Model
         return $this->hasMany(ProductClick::class, 'product_id');
     }
 
+    public function atributos()
+    {
+        return $this->belongsToMany(Atributo::class, 'atributo_product', 'product_id', 'atributo_id');
+    }
+
     protected function value(): Attribute
     {
         return Attribute::make(

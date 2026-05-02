@@ -36,7 +36,7 @@
                         </div>
                         
                         @if($theme['dark'])
-                            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-black/20 text-[10px] font-bold uppercase tracking-wider text-white">Modo Escuro</span>
+                            <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-black/70 text-[10px] font-bold uppercase tracking-wider text-white">Modo Escuro</span>
                         @else
                             <span class="inline-block mt-2 px-2 py-0.5 rounded-md bg-white text-[10px] font-bold uppercase tracking-wider text-black">Modo Claro</span>
                         @endif

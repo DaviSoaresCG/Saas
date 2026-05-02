@@ -13,9 +13,23 @@
             {{ $produto->name }}
         </a>
         <p class="mt-3 text-xl font-extrabold text-emerald-600 tabular-nums">R$ {{ $produto->value }}</p>
-        <a href="{{ route('cart.add', ['id' => $produto->id]) }}"
-            class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors">
-            <span>Adicionar ao carrinho</span>
-        </a>
+
+        @if ($produto->atributos->isNotEmpty())
+            {{-- Produto com atributos: vai para a página do produto para o cliente escolher --}}
+            <a href="{{ route('products.show', ['product' => $produto->id, 'slug' => $user->slug]) }}"
+                class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors hover:opacity-90">
+                <i data-lucide="tag" class="h-4 w-4"></i>
+                <span>Ver opções</span>
+            </a>
+        @else
+            {{-- Produto sem atributos: adiciona direto ao carrinho --}}
+            <form action="{{ route('cart.add', ['id' => $produto->id]) }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors cursor-pointer hover:opacity-90">
+                    <span>Adicionar ao carrinho</span>
+                </button>
+            </form>
+        @endif
     </div>
 </div>

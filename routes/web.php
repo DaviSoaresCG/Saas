@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AtributoController;
 use App\Http\Controllers\CartController;
 // Importação dos Controllers
 use App\Http\Controllers\HomeController;
@@ -42,7 +43,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->
     // --- CartController (Carrinho) ---
     Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
         Route::get('/index', 'index')->name('index');
-        Route::get('/add/{id}', 'add')->name('add');
+        Route::post('/add/{id}', 'add')->name('add');
         Route::get('/remove/{id}', 'remove')->name('remove');
         Route::post('/update', 'update')->name('update');
         Route::get('/clear', 'clear')->name('clear');
@@ -68,17 +69,18 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->
                 Route::get('/pedidos/buscar', 'search')->name('order.search');
                 Route::get('/pedidos/{id}', 'show')->name('order.show')->whereNumber('id');
             });
-            Route::controller(ThemeController::class)->group(function(){
+            Route::controller(ThemeController::class)->group(function () {
                 Route::get('/theme', 'index')->name('theme.index');
                 Route::post('/update-theme', 'themeUpdate')->name('theme.update');
             });
         });
 
-        
-
         // --- ProdutoController (CRUD Administrativo) ---
         Route::resource('products', ProdutoController::class)->except(['index', 'show', 'destroy']);
         Route::delete('/products/delete/{product}', [ProdutoController::class, 'destroy'])->name('products.destroy');
+
+        // --- AtributoController (CRUD de Atributos) ---
+        Route::resource('atributos', AtributoController::class)->only(['index', 'store', 'destroy']);
 
         // --- ProfileController (Conta do Usuário) ---
         Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
@@ -128,4 +130,3 @@ Route::get('/api/subscription/status', fn () => ['subscribed' => auth()->user()-
     ->name('api.subscription.status');
 
 require __DIR__.'/auth.php';
-

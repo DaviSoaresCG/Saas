@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Atributo;
 use App\Models\ProductClick;
 use App\Models\Products;
 use App\Models\User;
@@ -12,15 +13,14 @@ class ProdutoController extends Controller
     public function index()
     {
         $user = app(User::class);
-        $products = Products::all();
+        $products = Products::with('atributos')->get();
 
         return view('products.index', compact('user', 'products'));
     }
 
     public function show($slug, $id)
     {
-
-        $product = Products::findOrFail($id);
+        $product = Products::with('atributos')->findOrFail($id);
 
         ProductClick::recordProductView($product);
 
@@ -30,7 +30,7 @@ class ProdutoController extends Controller
     public function search(request $request)
     {
         $request->validate([
-            'search' => ['required', 'max:255'],
+            'search' => ['required', 'max:255', 'min:3'],
         ],
             [
                 'required' => 'Esse campo é requirido',
@@ -45,8 +45,9 @@ class ProdutoController extends Controller
 
     public function create($slug)
     {
-        // $categorias = Categoria::all()
-        return view('admin.create_product');
+        $atributos = Atributo::all();
+
+        return view('admin.create_product', compact('atributos'));
     }
 
     public function store(Request $request)
@@ -75,7 +76,7 @@ class ProdutoController extends Controller
         }
 
         // Cria o produto no banco de dados
-        Products::create([
+        $product = Products::create([
             'name' => $request->name,
             'value' => $request->value,
             'description' => $request->description,
@@ -83,14 +84,19 @@ class ProdutoController extends Controller
             'user_id' => app(User::class)->id,
         ]);
 
+        // Associa os atributos selecionados (opcional)
+        $product->atributos()->sync($request->input('atributos', []));
+
         return redirect()->route('products.index', ['slug' => app(User::class)->slug]);
     }
 
     public function edit($slug, $id)
     {
-        $product = Products::findOrFail($id);
+        $product = Products::with('atributos')->findOrFail($id);
+        $atributos = Atributo::all();
+        $atributosVinculados = $product->atributos->pluck('id')->toArray();
 
-        return view('admin.edit_product', compact('product'));
+        return view('admin.edit_product', compact('product', 'atributos', 'atributosVinculados'));
     }
 
     /**
@@ -128,6 +134,9 @@ class ProdutoController extends Controller
                 'description' => $request->description,
             ]);
         }
+
+        // Atualiza os atributos associados
+        $product->atributos()->sync($request->input('atributos', []));
 
         return redirect()->route('admin.products', ['slug' => $request->slug]);
     }

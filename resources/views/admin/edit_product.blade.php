@@ -45,6 +45,34 @@
                 </a>
             </div>
             
+            {{-- Atributos (opcional) --}}
+            @if ($atributos->isNotEmpty())
+            <div>
+                <label class="block text-sm font-bold text-[var(--text-base)] mb-3">
+                    Atributos do produto <span class="text-[var(--text-muted)] font-normal text-xs">(opcional)</span>
+                </label>
+                <div class="flex flex-wrap gap-2">
+                    @foreach ($atributos as $atributo)
+                        <label for="atr_{{ $atributo->id }}"
+                            class="flex items-center gap-2 rounded-xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/50 px-3 py-2 text-sm text-[var(--text-base)] cursor-pointer transition-all has-[:checked]:border-[var(--color-primary)] has-[:checked]:bg-[var(--color-primary)]/10 has-[:checked]:font-semibold">
+                            <input type="checkbox" id="atr_{{ $atributo->id }}" name="atributos[]"
+                                value="{{ $atributo->id }}" class="accent-[var(--color-primary)]"
+                                {{ in_array($atributo->id, old('atributos', $atributosVinculados)) ? 'checked' : '' }}>
+                            {{ $atributo->nome }}
+                        </label>
+                    @endforeach
+                </div>
+                <p class="mt-2 text-xs text-[var(--text-muted)]">
+                    O cliente poderá escolher um ou mais atributos ao adicionar ao carrinho.
+                    <a href="{{ route('atributos.index') }}" class="text-[var(--color-primary)] hover:underline underline-offset-2">Gerenciar atributos</a>
+                </p>
+            </div>
+            @else
+            <div class="rounded-xl border border-dashed border-[var(--color-primary)]/20 px-4 py-3 text-sm text-[var(--text-muted)]">
+                Nenhum atributo cadastrado. <a href="{{ route('atributos.index') }}" class="text-[var(--color-primary)] hover:underline underline-offset-2">Criar atributos</a>
+            </div>
+            @endif
+
             <div class="flex flex-wrap gap-4 pt-4 mt-8 border-t border-[var(--color-primary)]/10">
                 <button type="submit"
                     class="inline-flex items-center justify-center gap-2.5 rounded-2xl cursor-pointer bg-[var(--color-primary)] hover:opacity-90 px-7 py-3.5 text-sm font-bold text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/25 transition-all shrink-0 active:scale-95">

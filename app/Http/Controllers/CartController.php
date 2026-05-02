@@ -20,7 +20,7 @@ class CartController extends Controller
         return view('cart.index', compact('cart', 'total'));
     }
 
-    public function add($slug, $id)
+    public function add(Request $request, $slug, $id)
     {
         $product = Products::findOrFail($id);
 
@@ -28,15 +28,29 @@ class CartController extends Controller
 
         (float) $value = str_replace(['.', ','], ['', '.'], $product['value']);
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
+        // Atributos selecionados pelo cliente (ids)
+        $atributos = $request->input('atributos', []);
+        sort($atributos);
+
+        // Chave única: produto + combinação de atributos
+        $cartKey = $id . '_' . implode('_', $atributos);
+
+        // Busca os nomes dos atributos selecionados
+        $atributoNomes = [];
+        if (!empty($atributos)) {
+            $atributoNomes = \App\Models\Atributo::whereIn('id', $atributos)->pluck('nome')->toArray();
+        }
+
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['quantity']++;
         } else {
-            $cart[$id] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'value' => $value,
-                'path' => $product->path,
-                'quantity' => 1,
+            $cart[$cartKey] = [
+                'id'        => $product->id,
+                'name'      => $product->name,
+                'value'     => $value,
+                'path'      => $product->path,
+                'quantity'  => 1,
+                'atributos' => $atributoNomes,
             ];
         }
 

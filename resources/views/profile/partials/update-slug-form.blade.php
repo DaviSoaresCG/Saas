@@ -15,22 +15,16 @@
         @method('patch')
 
         <div>
-            <x-input-label for="slug" :value="__('Slug')" />
-            <x-text-input id="slug" name="slug" type="text" class="mt-1 block w-full" :value="$user->slug" required autofocus autocomplete="slug" />
-            <x-input-error class="mt-2" :messages="$errors->get('slug_request')" />
+            <x-input-base id="slug" name="slug" type="text" icon="user" placeholder="Nome do seu site" label="Slug"
+                :value="$user->slug" required autofocus autocomplete="slug" />
         </div>
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Salvar') }}</x-primary-button>
 
             @if (session('status') === 'slug-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = true, 2000)"
-                    class="text-sm text-green-600"
-                >{{ __('Saved.') }}</p>
+                <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = true, 2000)"
+                    class="text-sm text-green-600">{{ __('Saved.') }}</p>
             @endif
         </div>
     </form>

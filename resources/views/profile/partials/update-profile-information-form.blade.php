@@ -18,28 +18,26 @@
         @method('patch')
 
         <div>
-            <x-input-label for="name" :value="__('Nome')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-        </div>
-        
-        <div>
-            <x-input-label for="name" :value="__('Nome da Loja')" />
-            <x-text-input id="name" name="store_name" type="text" class="mt-1 block w-full" :value="old('store_name', $user->store_name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('store_name')" />
+            <x-input-base name="name" type="text" icon="user" placeholder="Nome" label="Nome"
+                value="{{ old('name', $user->name) }}" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <x-input-base name="store_name" type="text" icon="store" placeholder="Nome da Loja" label="Nome da Loja"
+                value="{{ old('store_name', $user->store_name) }}" />
+        </div>
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+        <div>
+            <x-input-base name="email" type="email" icon="mail" placeholder="Email" label="Email"
+                value="{{ old('email', $user->email) }}" />
+
+            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-[var(--text-base)]">
                         {{ __('Seu Email nao foi verificado') }}
 
-                        <button form="send-verification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                        <button form="send-verification"
+                            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                             {{ __('Clique aqui para enviar o link de verificação') }}
                         </button>
                     </p>
@@ -57,13 +55,8 @@
             <x-primary-button>{{ __('Salvar') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-green-600"
-                >{{ __('Salvo') }}</p>
+                <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+                    class="text-sm text-green-600">{{ __('Salvo') }}</p>
             @endif
         </div>
     </form>

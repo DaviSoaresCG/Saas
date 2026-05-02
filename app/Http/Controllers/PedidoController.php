@@ -59,7 +59,11 @@ class PedidoController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-            $produtos .= "\n*Produto: ".$product['name'].'#'.$product['id'].'*'."\nValor: ".$product['value']."\nQuantidade: ".$product['quantity'];
+            $atributosTexto = '';
+            if (! empty($product['atributos'])) {
+                $atributosTexto = "\nAtributos: ".implode(', ', $product['atributos']);
+            }
+            $produtos .= "\n*Produto: ".$product['name'].'#'.$product['id'].'*'."\nValor: ".$product['value']."\nQuantidade: ".$product['quantity'].$atributosTexto;
         }
         // uma so ida no banco
         ItemPedido::insert($itensParaInserir);

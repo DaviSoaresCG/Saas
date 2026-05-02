@@ -5,7 +5,7 @@ VERSAO 2.0
 - Mostrar na tabela de pedidos o status do pedido, podendo ser aberto ou concluido.
 - Categorias do produto
 - Colocar a feature "Promoção"
-- Colocar a feature de opções dos produtos personalizados(tamanho, cor, voltagem)
+- Colocar o remover e adicionar o campo de gerenciar atributos no sidebar do dashboard.
 
 
 -websocket

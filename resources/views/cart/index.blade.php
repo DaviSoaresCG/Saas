@@ -28,6 +28,15 @@
 
                             <div class="flex-1 w-full md:w-auto">
                                 <h3 class="text-xl font-semibold text-[var(--text-base)]">{{ $item['name'] }}</h3>
+                                @if (!empty($item['atributos']))
+                                    <div class="mt-1.5 flex flex-wrap gap-1.5">
+                                        @foreach ($item['atributos'] as $atr)
+                                            <span class="inline-flex items-center rounded-lg border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 px-2 py-0.5 text-xs font-semibold text-[var(--text-base)]">
+                                                {{ $atr }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="flex items-center gap-3">
