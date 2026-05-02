@@ -1,10 +1,10 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    <div class="mb-4 text-sm text-[var(--text-base)]">
         {{ __('Enviamos um email de verificação para você, abra a caixa de span se não chegou ou aguarde mais um pouco. Você também pode reenviar a verificação clicando no botão abaixo') }}
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+        <div class="mb-4 font-medium text-sm text-green-600 ">
             {{ __('Um novo email de verificação foi enviado com sucesso!') }}
         </div>
     @endif
@@ -14,16 +14,18 @@
             @csrf
 
             <div>
-                <x-primary-button>
+                <button type="submit"
+                    class="cursor-pointer inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[var(--color-primary)] hover:bg-opacity-90 px-7 py-3.5 text-sm font-bold text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/25 transition-all shrink-0 active:scale-95 cursor-pointer">
                     {{ __('Reenviar o email de verificação') }}
-                </x-primary-button>
+                </button>
             </div>
         </form>
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
 
-            <button type="submit" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+            <button type="submit"
+                class="cursor-pointer inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[var(--color-primary)] hover:bg-opacity-90 px-7 py-3.5 text-sm font-bold text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/25 transition-all shrink-0 active:scale-95 cursor-pointer">
                 {{ __('Logout') }}
             </button>
         </form>
