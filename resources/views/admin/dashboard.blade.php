@@ -1,7 +1,7 @@
 @php
     $catalogHost = $tenant->slug . '.' . env('APP_DOMAIN');
     if(strlen($catalogHost) > 18) {
-        $catalogHost = substr($catalogHost, 0, 14) . '...';
+        $catalogHost = substr($catalogHost, 0, 25) . '...';
     }
     $subLabels = [
         'active' => ['label' => 'Ativa', 'class' => 'bg-emerald-500 text-white border-emerald-500/30'],
