@@ -78,6 +78,8 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->
         // --- ProdutoController (CRUD Administrativo) ---
         Route::resource('products', ProdutoController::class)->except(['index', 'show', 'destroy']);
         Route::delete('/products/delete/{product}', [ProdutoController::class, 'destroy'])->name('products.destroy');
+        Route::delete('/products/images/{image}', [ProdutoController::class, 'destroyImage'])->name('products.image.destroy');
+        Route::post('/products/{product}/reorder-images', [ProdutoController::class, 'reorderImages'])->name('products.images.reorder');
 
         // --- AtributoController (CRUD de Atributos) ---
         Route::resource('atributos', AtributoController::class)->only(['index', 'store', 'destroy']);

@@ -17,6 +17,11 @@ class Products extends Model
         return $this->hasMany(ProductClick::class, 'product_id');
     }
 
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id')->orderBy('ordem');
+    }
+
     public function atributos()
     {
         return $this->belongsToMany(Atributo::class, 'atributo_product', 'product_id', 'atributo_id');
@@ -26,7 +31,6 @@ class Products extends Model
     {
         return Attribute::make(
             set: fn ($value) => str_replace(['.', ','], ['', '.'], $value),
-
             get: fn ($value) => number_format($value, 2, ',', '.')
         );
     }

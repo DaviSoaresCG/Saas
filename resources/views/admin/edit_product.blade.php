@@ -10,42 +10,116 @@
                 <label for="name" class="block text-sm font-bold text-[var(--text-base)] mb-2">Nome</label>
                 <input type="text" name="name" value="{{ old('name', $product->name) }}" id="name" required
                     class="w-full rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/50 px-4 py-3.5 text-sm text-[var(--text-base)] outline-none transition-all focus:border-[var(--color-primary)]/50 focus:ring-4 focus:ring-[var(--color-primary)]/10 shadow-inner">
-                @error('name')
-                    <p class="mt-2 text-sm font-medium text-red-600 ml-1">{{ $message }}</p>
-                @enderror
+                @error('name') <p class="mt-2 text-sm font-medium text-red-600 ml-1">{{ $message }}</p> @enderror
             </div>
             
             <div>
                 <label for="description" class="block text-sm font-bold text-[var(--text-base)] mb-2">Descrição</label>
-                <textarea name="description" id="description" rows="4" required
+                <textarea name="description" id="description" rows="3" required
                     class="w-full rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/50 px-4 py-3.5 text-sm text-[var(--text-base)] outline-none transition-all focus:border-[var(--color-primary)]/50 focus:ring-4 focus:ring-[var(--color-primary)]/10 shadow-inner resize-y">{{ old('description', $product->description) }}</textarea>
-                @error('description')
-                    <p class="mt-2 text-sm font-medium text-red-600 ml-1">{{ $message }}</p>
-                @enderror
+                @error('description') <p class="mt-2 text-sm font-medium text-red-600 ml-1">{{ $message }}</p> @enderror
             </div>
             
             <div>
                 <label for="value" class="block text-sm font-bold text-[var(--text-base)] mb-2">Valor (R$)</label>
-                <x-text-input id="value" type="tel" name="value" old="{{ old('value') }}" :value="old('value', $product->value)" required placeholder="0,00" autocomplete="value" x-data x-mask:dynamic="$money($input, ',', '.')" 
-                    class="block w-full !rounded-2xl !border-[var(--color-primary)]/20 !bg-[var(--bg-page)]/50 !px-4 !py-3.5 !text-sm !text-[var(--text-base)] outline-none transition-all focus:!border-[var(--color-primary)]/50 focus:!ring-4 focus:!ring-[var(--color-primary)]/10 shadow-inner" />
-                @error('value')
-                    <p class="mt-2 text-sm font-medium text-red-600 ml-1">{{ $message }}</p>
-                @enderror
+                <x-text-input id="value" type="tel" name="value" :value="old('value', $product->value)" required placeholder="0,00" x-data x-mask:dynamic="$money($input, ',', '.')"
+                    class="block w-full !rounded-2xl !border-[var(--color-primary)]/20 !bg-[var(--bg-page)]/50 !px-4 !py-3.5 !text-sm !text-[var(--text-base)] outline-none transition-all" />
+                @error('value') <p class="mt-2 text-sm font-medium text-red-600 ml-1">{{ $message }}</p> @enderror
             </div>
-            
+
+            {{-- ========= IMAGENS SALVAS COM DRAG-AND-DROP ========= --}}
+            @if ($product->productImages->isNotEmpty())
             <div>
-                <label for="image" class="block text-sm font-bold text-[var(--text-base)] mb-2">Nova imagem (opcional)</label>
-                <input type="file" id="image" name="image" accept="image/png, image/jpeg, image/webp, image/jpg"
-                    class="mt-2 block w-full text-sm text-[var(--text-muted)] file:mr-4 file:rounded-xl file:border-0 file:bg-[var(--color-primary)] file:px-5 file:py-2.5 file:font-bold file:text-[var(--text-on-primary)] hover:file:opacity-90 file:cursor-pointer transition-all file:shadow-md cursor-pointer">
-                
-                <a href="{{ asset('storage/' . $product->path) }}" download
-                    class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[var(--color-primary)] hover:opacity-70 transition-opacity decoration-[var(--color-primary)]/30 hover:underline underline-offset-4">
-                    <i data-lucide="download" class="h-4 w-4"></i>
-                    Baixar imagem atual
-                </a>
+                <div class="flex items-center justify-between mb-3">
+                    <label class="text-sm font-bold text-[var(--text-base)]">
+                        Imagens atuais
+                        <span class="text-[var(--text-muted)] font-normal text-xs">(arraste para reordenar · 1ª = capa)</span>
+                    </label>
+                    {{-- Toast de feedback --}}
+                    <span id="reorder-toast"
+                        class="hidden text-xs font-semibold text-emerald-400 flex items-center gap-1 transition-opacity">
+                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        Ordem salva
+                    </span>
+                </div>
+
+                {{-- Grid sortável --}}
+                <div id="sortable-images"
+                    class="grid grid-cols-3 sm:grid-cols-4 gap-3 select-none">
+
+                    @foreach ($product->productImages as $img)
+                    <div class="sortable-item relative group rounded-xl overflow-hidden aspect-square border-2 border-[var(--color-primary)]/20 bg-[var(--bg-page)]/30 cursor-grab active:cursor-grabbing transition-all duration-200"
+                        data-id="{{ $img->id }}">
+
+                        <img src="{{ asset('storage/' . $img->path) }}"
+                            class="w-full h-full object-cover pointer-events-none"
+                            draggable="false" alt="">
+
+                        {{-- Ícone de arrastar (canto superior direito) --}}
+                        <div class="absolute top-1.5 right-1.5 rounded-lg bg-black/40 backdrop-blur-sm p-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 9h.01M8 12h.01M8 15h.01M12 9h.01M12 12h.01M12 15h.01M16 9h.01M16 12h.01M16 15h.01"/>
+                            </svg>
+                        </div>
+
+                        {{-- Badge "Capa" (sempre no 1º item, atualizado por JS) --}}
+                        <div class="capa-badge absolute top-1.5 left-1.5 hidden rounded-md bg-[var(--color-primary)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--text-on-primary)] pointer-events-none shadow">
+                            Capa
+                        </div>
+
+                        {{-- Overlay de deletar --}}
+                        <form action="{{ route('products.image.destroy', $img) }}" method="POST"
+                            class="absolute inset-0 flex items-end justify-center pb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                            onsubmit="return confirm('Remover esta imagem?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="flex items-center gap-1 rounded-lg bg-red-600/90 px-2.5 py-1 text-xs font-bold text-white cursor-pointer hover:bg-red-600 transition-colors">
+                                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                Remover
+                            </button>
+                        </form>
+                    </div>
+                    @endforeach
+
+                </div>
+
+                {{-- Hint de arrastar --}}
+                <p class="mt-2 text-xs text-[var(--text-muted)] opacity-60 flex items-center gap-1.5">
+                    <svg class="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                    </svg>
+                    Arraste as imagens para reordenar. A ordem é salva automaticamente.
+                </p>
             </div>
-            
-            {{-- Atributos (opcional) --}}
+            @endif
+
+            {{-- Adicionar novas imagens --}}
+            <div x-data="imagePreview()">
+                <label class="block text-sm font-bold text-[var(--text-base)] mb-2">
+                    Adicionar imagens
+                    <span class="text-[var(--text-muted)] font-normal text-xs">(opcional)</span>
+                </label>
+                <label for="images"
+                    class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[var(--color-primary)]/30 bg-[var(--bg-page)]/40 px-4 py-6 cursor-pointer hover:border-[var(--color-primary)]/60 hover:bg-[var(--color-primary)]/5 transition-all">
+                    <i data-lucide="image-plus" class="h-7 w-7 text-[var(--color-primary)] opacity-70"></i>
+                    <span class="text-sm text-[var(--text-muted)]">Clique para adicionar mais imagens</span>
+                    <input type="file" id="images" name="images[]" multiple accept="image/png,image/jpeg,image/webp"
+                        class="hidden" @change="previewImages($event)">
+                </label>
+                <div x-show="previews.length > 0" class="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-3">
+                    <template x-for="(src, i) in previews" :key="i">
+                        <div class="relative rounded-xl overflow-hidden aspect-square border border-[var(--color-primary)]/20">
+                            <img :src="src" class="w-full h-full object-cover">
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            {{-- Atributos --}}
             @if ($atributos->isNotEmpty())
             <div>
                 <label class="block text-sm font-bold text-[var(--text-base)] mb-3">
@@ -62,14 +136,6 @@
                         </label>
                     @endforeach
                 </div>
-                <p class="mt-2 text-xs text-[var(--text-muted)]">
-                    O cliente poderá escolher um ou mais atributos ao adicionar ao carrinho.
-                    <a href="{{ route('atributos.index') }}" class="text-[var(--color-primary)] hover:underline underline-offset-2">Gerenciar atributos</a>
-                </p>
-            </div>
-            @else
-            <div class="rounded-xl border border-dashed border-[var(--color-primary)]/20 px-4 py-3 text-sm text-[var(--text-muted)]">
-                Nenhum atributo cadastrado. <a href="{{ route('atributos.index') }}" class="text-[var(--color-primary)] hover:underline underline-offset-2">Criar atributos</a>
             </div>
             @endif
 
@@ -86,4 +152,101 @@
             </div>
         </form>
     </div>
+
+    {{-- SortableJS (CDN leve, ~45 KB) --}}
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
+
+    <script>
+        // ── Drag-and-drop de imagens salvas ──────────────────────────────
+        const grid = document.getElementById('sortable-images');
+
+        if (grid) {
+            const reorderUrl = @json(route('products.images.reorder', $product));
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const toast    = document.getElementById('reorder-toast');
+
+            // Marca o badge "Capa" sempre no 1º item visível
+            function updateCapaBadge() {
+                const items = grid.querySelectorAll('.sortable-item');
+                items.forEach((el, i) => {
+                    const badge = el.querySelector('.capa-badge');
+                    if (badge) badge.classList.toggle('hidden', i !== 0);
+                });
+            }
+            updateCapaBadge(); // Inicializa
+
+            Sortable.create(grid, {
+                animation:     180,
+                easing:        'cubic-bezier(0.25, 1, 0.5, 1)',
+                ghostClass:    'sortable-ghost',
+                chosenClass:   'sortable-chosen',
+                dragClass:     'sortable-drag',
+                delay:         80,           // Previne arraste acidental em mobile
+                delayOnTouchOnly: true,
+
+                onEnd() {
+                    updateCapaBadge();
+
+                    // Coleta nova ordem de IDs
+                    const order = [...grid.querySelectorAll('.sortable-item')]
+                        .map(el => el.dataset.id);
+
+                    fetch(reorderUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        body: JSON.stringify({ order }),
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.ok) showToast();
+                    })
+                    .catch(() => {});
+                },
+            });
+
+            function showToast() {
+                toast.classList.remove('hidden');
+                clearTimeout(toast._t);
+                toast._t = setTimeout(() => toast.classList.add('hidden'), 2500);
+            }
+        }
+
+        // ── Preview de novas imagens (Alpine) ────────────────────────────
+        function imagePreview() {
+            return {
+                previews: [],
+                previewImages(e) {
+                    this.previews = [];
+                    Array.from(e.target.files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = ev => this.previews.push(ev.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estado "fantasma" (placeholder durante arraste) */
+        .sortable-ghost {
+            opacity: 0.35;
+            border: 2px dashed var(--color-primary) !important;
+            background: transparent !important;
+        }
+        /* Item escolhido (sendo arrastado) */
+        .sortable-chosen {
+            box-shadow: 0 12px 30px rgba(0,0,0,.35);
+            transform: rotate(1.5deg) scale(1.05);
+            z-index: 50;
+            border-color: var(--color-primary) !important;
+        }
+        /* Animação de escala ao soltar */
+        .sortable-item {
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+    </style>
 </x-admin-layout>
