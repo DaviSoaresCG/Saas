@@ -80,6 +80,7 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->
         Route::delete('/products/delete/{product}', [ProdutoController::class, 'destroy'])->name('products.destroy');
         Route::delete('/products/images/{image}', [ProdutoController::class, 'destroyImage'])->name('products.image.destroy');
         Route::post('/products/{product}/reorder-images', [ProdutoController::class, 'reorderImages'])->name('products.images.reorder');
+        Route::post('/products/{product}/update-image', [ProdutoController::class, 'uploadImage'])->name('products.image.upload');
 
         // --- AtributoController (CRUD de Atributos) ---
         Route::resource('atributos', AtributoController::class)->only(['index', 'store', 'destroy']);

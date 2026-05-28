@@ -53,7 +53,7 @@ class ProdutoController extends Controller
         $request->validate([
             'name'        => 'required|min:3|max:255',
             'value'       => 'required',
-            'description' => 'required|min:3|max:255',
+            'description' => 'required|min:3',
             'images'      => 'required|array|min:1',
             'images.*'    => 'image|mimes:jpeg,png,jpg,webp|max:10240',
         ], [
@@ -72,20 +72,18 @@ class ProdutoController extends Controller
             'user_id'     => app(User::class)->id,
         ]);
 
-        // Salva todas as imagens
-        foreach ($request->file('images') as $ordem => $file) {
+        $files = $request->file('images');
+        foreach ($files as $ordem => $file) {
             $path = $file->store('path', 'public');
             ProductImage::create([
                 'product_id' => $product->id,
                 'path'       => $path,
                 'ordem'      => $ordem,
             ]);
-
-            // Primeira imagem = capa (para retrocompatibilidade)
-            if ($ordem === 0) {
-                $product->update(['path' => $path]);
-            }
         }
+
+        // Primeira imagem = capa
+        $this->syncCover($product);
 
         // Associa atributos
         $product->atributos()->sync($request->input('atributos', []));
@@ -102,12 +100,12 @@ class ProdutoController extends Controller
         return view('admin.edit_product', compact('product', 'atributos', 'atributosVinculados'));
     }
 
-    public function update(Request $request)
+    public function update($slug, Request $request)
     {
         $request->validate([
             'name'        => 'required|min:3|max:255',
             'value'       => 'required',
-            'description' => 'required|min:3|max:255',
+            'description' => 'required|min:3',
             'images'      => 'nullable|array',
             'images.*'    => 'image|mimes:jpeg,png,jpg,webp|max:10240',
         ]);
@@ -133,18 +131,19 @@ class ProdutoController extends Controller
                 ]);
             }
 
-            // Atualiza capa com a primeira imagem existente
             $this->syncCover($product);
         }
 
         $product->atributos()->sync($request->input('atributos', []));
 
-        return redirect()->route('admin.products', ['slug' => $request->slug]);
+        return redirect()->route('admin.products', ['slug' => auth()->user()->slug])
+            ->with('success', 'Produto atualizado com sucesso!');
     }
 
     /** Remove uma imagem individual do produto */
-    public function destroyImage(Request $request, ProductImage $image)
+    public function destroyImage(Request $request)
     {
+        $image = ProductImage::findOrFail($request->image);
         $product = $image->product;
         Storage::disk('public')->delete($image->path);
         $image->delete();
@@ -155,9 +154,40 @@ class ProdutoController extends Controller
         return redirect()->back()->with('success', 'Imagem removida.');
     }
 
-    /** Reordena as imagens via AJAX drag-and-drop */
-    public function reorderImages(Request $request, Products $product)
+    /** Upload instantâneo de imagem durante edição */
+    public function uploadImage($slug, $id, Request $request)
     {
+        $product = Products::findOrFail($id);
+
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
+        ]);
+
+        $file = $request->file('image');
+        $path = $file->store('path', 'public');
+
+        $proximaOrdem = $product->productImages()->max('ordem') + 1;
+
+        $image = ProductImage::create([
+            'product_id' => $product->id,
+            'path'       => $path,
+            'ordem'      => $proximaOrdem,
+        ]);
+
+        $this->syncCover($product);
+
+        return response()->json([
+            'ok' => true,
+            'id' => $image->id,
+            'path' => asset('storage/' . $image->path),
+        ]);
+    }
+
+    /** Reordena as imagens via AJAX drag-and-drop */
+    public function reorderImages($slug, $id, Request $request)
+    {
+        $product = Products::findOrFail($id);
+
         $request->validate(['order' => 'required|array']);
 
         foreach ($request->order as $ordem => $imageId) {
