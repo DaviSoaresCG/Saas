@@ -12,7 +12,7 @@ class PedidoController extends Controller
     public function index($slug)
     {
         $user = app(User::class);
-        $pedidos = Pedido::with('iten_pedido')->paginate(10);
+        $pedidos = Pedido::with('iten_pedido')->orderByDesc('id')->paginate(10);
         $search = false;
 
         return view('pedidos.index', compact('pedidos', 'user', 'search'));
@@ -50,19 +50,21 @@ class PedidoController extends Controller
 
         $produtos = '';
         $itensParaInserir = [];
+        $atributosTexto = '';
+        if (! empty($product['atributos'])) {
+            $atributosTexto = "\nAtributos: ".implode(', ', $product['atributos']);
+        }
         foreach ($cart as $product) {
             $itensParaInserir[] = [
                 'pedido_id' => $pedido->id,
                 'product_id' => $product['id'],
                 'value' => $product['value'],
                 'quantidade' => $product['quantity'],
+                'atributos' => $atributosTexto,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-            $atributosTexto = '';
-            if (! empty($product['atributos'])) {
-                $atributosTexto = "\nAtributos: ".implode(', ', $product['atributos']);
-            }
+
             $produtos .= "\n*Produto: ".$product['name'].'#'.$product['id'].'*'."\nValor: ".$product['value']."\nQuantidade: ".$product['quantity'].$atributosTexto;
         }
         // uma so ida no banco
