@@ -131,7 +131,7 @@
                 <img src="${url}" class="w-full h-full object-cover pointer-events-none" draggable="false">
                 ${i === 0 ? `<div class="capa-badge absolute top-1.5 left-1.5 rounded-md bg-[var(--color-primary)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--text-on-primary)] shadow pointer-events-none">Capa</div>` : ''}
                 <button type="button" onclick="removeFile(${i})"
-                    class="absolute top-1.5 right-1.5 flex items-center justify-center h-6 w-6 rounded-lg bg-red-600/80 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 cursor-pointer">
+                    class="absolute top-1.5 right-1.5 flex items-center justify-center h-6 w-6 rounded-lg bg-red-600/80 text-white opacity-0 opacity-100 transition-opacity bg-red-600 cursor-pointer">
                     <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
