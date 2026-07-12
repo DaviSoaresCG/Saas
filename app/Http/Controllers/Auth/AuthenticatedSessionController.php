@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
         }
         $user = Auth::user();
         
-        if($user->subscribed()){
+        if($user->isLojaAtiva()){
             //se o slug do site for diferente do slug do usuario autenticado
             if($user->slug !== $currentSlug){
                 Auth::logout();

@@ -1,4 +1,11 @@
 <x-store-layout page-title="Pedido enviado">
+    <div class="mb-6 flex flex-wrap items-center gap-2">
+        <a type="button" href="{{ Route::is('variant.*') ? route('variant.products.index', ['slug' => $slug]) : route('products.index', ['slug' => $slug]) }}"
+            class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-[var(--text-on-primary)]">
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>
+            Ir para Loja
+        </a>
+    </div>
     <div class="max-w-lg mx-auto rounded-3xl border border-[var(--color-primary)]/15 bg-[var(--bg-card)] p-6 sm:p-10 text-center shadow-2xl shadow-black/65 mt-8 sm:mt-12">
         
         <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 mb-6">

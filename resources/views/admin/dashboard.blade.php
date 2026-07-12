@@ -32,11 +32,13 @@
                     <i data-lucide="plus" class="h-4 w-4"></i>
                     Criar produto
                 </a>
-                <a href="{{ route('billing') }}"
-                    class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-4 py-2.5 text-sm font-semibold text-slate-200 transition-colors">
-                    <i data-lucide="settings" class="h-4 w-4"></i>
-                    Editar assinatura
-                </a>
+                @if (auth()->user()->tipo_cliente === 'direct')
+                    <a href="{{ route('pagamento.pending') }}"
+                        class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-4 py-2.5 text-sm font-semibold text-slate-200 transition-colors">
+                        <i data-lucide="settings" class="h-4 w-4"></i>
+                        Renovar plano / Pix
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -158,95 +160,39 @@
             </section>
         </div>
 
+        @if (auth()->user()->tipo_cliente === 'direct')
         <section id="assinatura" class="rounded-2xl border border-[var(--color-primary)]/80 bg-[var(--bg-card)] overflow-hidden shadow-xl shadow-black/15 hover:scale-[1.02] transition-all scroll-mt-24">
-    
-    <div class="flex items-center justify-between bg-[var(--color-primary)] px-5 py-4 border-b border-[var(--color-primary)]/80">
-        <h2 class="text-lg font-bold text-[var(--text-on-primary)] flex items-center gap-2">
-            <i data-lucide="credit-card" class="h-5 w-5 text-[var(--text-on-primary)]"></i>
-            Assinatura e faturas
-        </h2>
-        <a href="{{ route('billing') }}"
-            class="sm:text-sm text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-base)] p-2 rounded-lg">
-            Gerenciar assinatura
-        </a>
-    </div>
-
-    <div class="p-5 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <div class="lg:col-span-1 space-y-4">
-            <div class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 p-4">
-                <p class="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-2">Status</p>
-                <span class="inline-flex items-center rounded-lg border px-3 py-1 text-sm font-bold {{ $badge['class'] }}">
-                    {{ $badge['label'] }}
-                </span>
-                @if ($stripeStatus)
-                    <p class="text-xs text-[var(--text-muted)] mt-2 font-mono">Stripe: {{ $stripeStatus }}</p>
-                @endif
-            </div>
-            
-            <div class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 p-4">
-                <p class="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-2">Renovação / período atual</p>
-                @if ($subscriptionEnd)
-                    <p class="text-lg font-bold text-[var(--text-base)]">{{ $subscriptionEnd }}</p>
-                    <p class="text-xs text-[var(--text-muted)] mt-1">Fim do período de cobrança atual (Stripe).</p>
-                @else
-                    <p class="text-sm text-[var(--text-muted)]">Indisponível no momento.</p>
-                @endif
-            </div>
-        </div>
-
-        <div class="lg:col-span-2 space-y-4">
-            <div class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 p-4">
-                <p class="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-2">Próxima fatura</p>
-                @if ($invoiceUpcoming)
-                    <div class="flex flex-wrap items-end justify-between gap-4">
-                        <div>
-                            <p class="text-2xl font-extrabold text-[var(--text-base)]">{{ $invoiceUpcoming->total() }}</p>
-                            <p class="text-sm text-[var(--text-muted)] mt-1">
-                                Data: {{ $invoiceUpcoming->date()->format('d/m/Y') }}
-                            </p>
-                        </div>
-                    </div>
-                @else
-                    <p class="text-sm text-[var(--text-muted)]">Nenhuma fatura futura encontrada (ou dados ainda não disponíveis no Stripe).</p>
-                @endif
+            <div class="flex items-center justify-between bg-[var(--color-primary)] px-5 py-4 border-b border-[var(--color-primary)]/80">
+                <h2 class="text-lg font-bold text-[var(--text-on-primary)] flex items-center gap-2">
+                    <i data-lucide="credit-card" class="h-5 w-5 text-[var(--text-on-primary)]"></i>
+                    Sua Assinatura (Pix)
+                </h2>
+                <a href="{{ route('pagamento.pending') }}"
+                    class="sm:text-sm text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-base)] p-2 rounded-lg">
+                    Renovar plano
+                </a>
             </div>
 
-            <div>
-                <p class="text-sm font-bold text-[var(--text-base)] mb-3">Faturas recentes</p>
-                <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
-                    @forelse ($recentInvoices as $invoice)
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-lg border border-[var(--color-primary)]/30 bg-[var(--bg-card)] hover:bg-[var(--color-primary)]/10 transition-colors px-4 py-3">
-                            <div class="min-w-0">
-                                <p class="text-sm font-semibold text-[var(--text-base)]">
-                                    {{ $invoice->date()->format('d/m/Y') }}
-                                    <span class="text-[var(--text-muted)] font-normal">· {{ $invoice->total() }}</span>
-                                </p>
-                                <p class="text-xs text-[var(--text-muted)] capitalize">{{ $invoice->asStripeInvoice()->status }}</p>
-                            </div>
-                            <div class="flex flex-wrap gap-2 shrink-0">
-                                @if ($invoice->asStripeInvoice()->status === 'open' && $invoice->hosted_invoice_url)
-                                    <a href="{{ $invoice->hosted_invoice_url }}" target="_blank" rel="noopener"
-                                        class="inline-flex items-center gap-1 rounded-lg bg-amber-500/20 border border-amber-500/40 px-3 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-500/30">
-                                        Pagar
-                                    </a>
-                                @endif
-                                @if ($invoice->isPaid())
-                                    <a href="{{ route('invoice.download', ['id' => $invoice->id]) }}"
-                                        class="inline-flex items-center gap-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 px-3 py-1.5 text-xs font-bold text-emerald-600 hover:bg-emerald-500/30">
-                                        PDF
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-sm text-[var(--text-muted)] py-4">Nenhuma fatura listada.</p>
-                    @endforelse
+            <div class="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-2">Status da Loja</p>
+                    <span class="inline-flex items-center rounded-lg border px-3 py-1 text-sm font-bold {{ $badge['class'] }}">
+                        {{ $badge['label'] }}
+                    </span>
+                </div>
+                
+                <div class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-2">Plano Expira Em</p>
+                    @if ($subscriptionEnd)
+                        <p class="text-lg font-bold text-[var(--text-base)]">{{ $subscriptionEnd }}</p>
+                        <p class="text-xs text-[var(--text-muted)] mt-1">Sua loja ficará indisponível automaticamente após esta data se não for renovada.</p>
+                    @else
+                        <p class="text-sm text-[var(--text-muted)]">Nenhum pagamento registrado ainda.</p>
+                    @endif
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+        @endif
     </div>
     <script>
         function copyToClipboard() {

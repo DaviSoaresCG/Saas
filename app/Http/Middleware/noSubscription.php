@@ -19,7 +19,7 @@ class noSubscription
     {
         $user = app(User::class);
         // check if the user has no subscription
-        if(Auth::check() && Auth::user()->subscribed()){
+        if(Auth::check() && Auth::user()->isLojaAtiva()){
             return redirect()->away('http://' .$user->slug. env('APP_DOMAIN'));
         }
 

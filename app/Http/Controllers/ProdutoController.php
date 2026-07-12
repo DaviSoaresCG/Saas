@@ -25,8 +25,10 @@ class ProdutoController extends Controller
         $product = Products::with(['atributos', 'productImages'])->findOrFail($id);
 
         ProductClick::recordProductView($product);
+        $user = app(User::class);
 
-        return view('products.show', compact('product'));
+
+        return view('products.show', compact('product', 'user'));
     }
 
     public function search(Request $request)
@@ -36,7 +38,7 @@ class ProdutoController extends Controller
             ['required' => 'Esse campo é requirido', 'max' => 'Tamanho maximo de caracteres excedido']
         );
 
-        $produto = Products::where('name', 'LIKE', "%{$request->search}%")->get();
+        $produto = Products::where('nome', 'LIKE', "%{$request->search}%")->get();
 
         return view('admin.products', ['products' => $produto, 'link' => false]);
     }
@@ -65,8 +67,8 @@ class ProdutoController extends Controller
 
         // Salva o produto; path = primeira imagem (capa)
         $product = Products::create([
-            'name'        => $request->name,
-            'value'       => $request->value,
+            'nome'        => $request->name,
+            'preco_base'       => $request->value,
             'description' => $request->description,
             'path'        => null,
             'user_id'     => app(User::class)->id,
@@ -88,7 +90,7 @@ class ProdutoController extends Controller
         // Associa atributos
         $product->atributos()->sync($request->input('atributos', []));
 
-        return redirect()->route('products.index', ['slug' => app(User::class)->slug]);
+        return redirect()->to(tenant_route('products.index'));
     }
 
     public function edit($slug, $id)
@@ -113,8 +115,8 @@ class ProdutoController extends Controller
         $product = Products::findOrFail($request->product);
 
         $product->update([
-            'name'        => $request->name,
-            'value'       => $request->value,
+            'nome'        => $request->name,
+            'preco_base'       => $request->value,
             'description' => $request->description,
         ]);
 

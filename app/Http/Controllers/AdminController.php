@@ -55,7 +55,7 @@ class AdminController extends Controller
     {
         $user = Auth::user();
         // echo "AAA";
-        if (! $user->subscribed()) {
+        if (! $user->isLojaAtiva()) {
             return view('subscription_pending');
         } elseif (empty($user->slug)) {
 
@@ -147,50 +147,12 @@ class AdminController extends Controller
 
     }
 
-   public function dashboard()
+    public function dashboard()
     {
         $user = Auth::user();
 
-        $subscriptionEnd = null;
-        $subscriptionStatus = 'inactive';
-        $stripeStatus = null;
-        $invoiceUpcoming = null;
-        $recentInvoices = collect(); // Inicializa vazio (proteção contra quebras)
-
-        try {
-            if ($user->subscribed()) {
-                $subscription = $user->subscription();
-                if ($subscription) {
-                    $stripeStatus = $subscription->stripe_status;
-                    $subscriptionStatus = match (true) {
-                        in_array($stripeStatus, ['canceled', 'cancelled'], true) => 'cancelled',
-                        $stripeStatus === 'active' => 'active',
-                        $stripeStatus === 'trialing' => 'trialing',
-                        $stripeStatus === 'past_due' => 'past_due',
-                        default => 'other',
-                    };
-                    $stripeSub = $subscription->asStripeSubscription();
-                    if ($stripeSub && $stripeSub->current_period_end) {
-                        $subscriptionEnd = date('d/m/Y H:i', $stripeSub->current_period_end);
-                    }
-                }
-                
-                // Cache da Próxima Fatura
-                $invoiceUpcoming = Cache::remember("stripe_invoices_upcoming_{$user->id}", 43200, function () use ($user){
-                    return $user->upcomingInvoice();
-                });
-                
-                // CORREÇÃO AQUI: Usar a variável $recentInvoices
-                $recentInvoices = Cache::remember("stripe_invoices_{$user->id}", 43200, function () use ($user){
-                    return $user->invoicesIncludingPending()->take(8);
-                });
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Dashboard: falha ao carregar dados Stripe', [
-                'user_id' => $user->id,
-                'message' => $e->getMessage(),
-            ]);
-        }
+        $subscriptionEnd = $user->plano_expira_em ? $user->plano_expira_em->format('d/m/Y H:i') : null;
+        $subscriptionStatus = $user->isLojaAtiva() ? 'active' : 'inactive';
 
         $totalProducts = Products::count();
         $totalPedidos = Pedido::count();
@@ -202,7 +164,7 @@ class AdminController extends Controller
             ->get();
 
         $topProductsByClicks = ProductClick::query()
-            ->with('product:id,name,user_id')
+            ->with('product:id,nome,user_id')
             ->orderByDesc('clicks')
             ->limit(6)
             ->get();
@@ -210,9 +172,6 @@ class AdminController extends Controller
         return view('admin.dashboard', [
             'subscriptionEnd' => $subscriptionEnd,
             'subscriptionStatus' => $subscriptionStatus,
-            'stripeStatus' => $stripeStatus,
-            'invoiceUpcoming' => $invoiceUpcoming,
-            'recentInvoices' => $recentInvoices, // CORREÇÃO AQUI
             'totalProducts' => $totalProducts,
             'totalPedidos' => $totalPedidos,
             'recentPedidos' => $recentPedidos,

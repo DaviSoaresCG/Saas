@@ -18,9 +18,8 @@ class hasSubscription
     {
         // check if user has subscription
         if(Auth::check()){
-            if(!Auth::user()->subscribed()){
-                return "CAIU AQUI";
-                //return redirect()->away('http://' . env('APP_DOMAIN'));
+            if(!Auth::user()->isLojaAtiva()){
+                return redirect()->away('http://' . env('APP_DOMAIN'));
             }else{
                 return $next($request);
             }

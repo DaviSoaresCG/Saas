@@ -3,61 +3,68 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AtributoController;
 use App\Http\Controllers\CartController;
-// Importação dos Controllers
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\ThemeController;
-use App\Http\Middleware\EnsureUserBelongsToTenant;
-use App\Http\Middleware\hasSubscription;
-// Importação dos Middlewares
-use App\Http\Middleware\noSubscription;
-use App\Http\Middleware\ResolveTenant;
+use App\Http\Controllers\ErpApiController;
+use App\Http\Controllers\PixPaymentController;
+use App\Http\Controllers\CatalogoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('cashier.webhook');
-
-Route::get('/erro', fn () => 'Deu erro no stripe')->name('erro');
-
 /*
 |--------------------------------------------------------------------------
-| Grupo de Subdomínios (Tenant)
+| Rotas Públicas do Catálogo (Compartilhadas entre Subdomínio e Variante)
 |--------------------------------------------------------------------------
 */
 
-Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->group(function () {
+if (!function_exists('registerPublicCatalogRoutes')) {
+    function registerPublicCatalogRoutes($isVariant = false) {
+        $prefix = $isVariant ? 'variant.' : '';
 
+        Route::controller(ProdutoController::class)->group(function () use ($prefix) {
+            Route::get('/produtos', 'index')->name($prefix . 'products.index');
+            Route::get('/produtos/{product}', 'show')->name($prefix . 'products.show');
+            Route::post('/produtos/search', 'search')->name($prefix . 'products.search');
+        });
+
+        Route::controller(CartController::class)->prefix('cart')->name($prefix . 'cart.')->group(function () {
+            Route::get('/index', 'index')->name('index');
+            Route::post('/add/{id}', 'add')->name('add');
+            Route::get('/remove/{id}', 'remove')->name('remove');
+            Route::post('/update', 'update')->name('update');
+            Route::get('/clear', 'clear')->name('clear');
+        });
+
+        Route::get('/pedido-finalizar', [PedidoController::class, 'finalizar'])->name($prefix . 'order.finished');
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| 1. Rotas de Variante de Catálogo (Domínio Principal com Hash)
+|--------------------------------------------------------------------------
+*/
+Route::domain(env('APP_DOMAIN'))->prefix('{hash}')->where(['hash' => '[a-zA-Z0-9]{12}'])->middleware(['tenant'])->group(function () {
+    Route::get('/', fn ($hash) => redirect()->route('variant.products.index', ['hash' => $hash]));
+    registerPublicCatalogRoutes(true);
+});
+
+/*
+|--------------------------------------------------------------------------
+| 2. Rotas de Subdomínio do Tenant (Catálogo e Área Administrativa)
+|--------------------------------------------------------------------------
+*/
+Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware(['tenant'])->group(function () {
     Route::get('/', fn () => redirect()->route('products.index'));
 
-    // --- ProdutoController (Catálogo Público) ---
-    Route::controller(ProdutoController::class)->group(function () {
-        Route::get('/produtos', 'index')->name('products.index');
-        Route::get('/produtos/{product}', 'show')->name('products.show');
-        Route::post('/produtos/search', 'search')->name('products.search');
+    // Catálogo público no subdomínio
+    registerPublicCatalogRoutes(false);
 
-    });
-
-    // --- CartController (Carrinho) ---
-    Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
-        Route::get('/index', 'index')->name('index');
-        Route::post('/add/{id}', 'add')->name('add');
-        Route::get('/remove/{id}', 'remove')->name('remove');
-        Route::post('/update', 'update')->name('update');
-        Route::get('/clear', 'clear')->name('clear');
-    });
-
-    // finalzar o pedido
-    Route::get('/pedido-finalizar', [PedidoController::class, 'finalizar'])->name('order.finished');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Rotas Autenticadas do Tenant (Dashboard / Admin)
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['auth', EnsureUserBelongsToTenant::class])->group(function () {
+    // Área Administrativa do Lojista
+    Route::middleware(['auth', 'tenant.member', 'password.reset.forced'])->group(function () {
 
         Route::prefix('dashboard')->group(function () {
             Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -69,67 +76,69 @@ Route::domain('{slug}.'.env('APP_DOMAIN'))->middleware([ResolveTenant::class])->
                 Route::get('/pedidos/buscar', 'search')->name('order.search');
                 Route::get('/pedidos/{id}', 'show')->name('order.show')->whereNumber('id');
             });
+
             Route::controller(ThemeController::class)->group(function () {
                 Route::get('/theme', 'index')->name('theme.index');
                 Route::post('/update-theme', 'themeUpdate')->name('theme.update');
             });
         });
 
-        // --- ProdutoController (CRUD Administrativo) ---
-        Route::resource('products', ProdutoController::class)->except(['index', 'show', 'destroy']);
-        Route::delete('/products/delete/{product}', [ProdutoController::class, 'destroy'])->name('products.destroy');
-        Route::delete('/products/images/{image}', [ProdutoController::class, 'destroyImage'])->name('products.image.destroy');
-        Route::post('/products/{product}/reorder-images', [ProdutoController::class, 'reorderImages'])->name('products.images.reorder');
-        Route::post('/products/{product}/update-image', [ProdutoController::class, 'uploadImage'])->name('products.image.upload');
+        // CRUD de Produtos e Atributos (Apenas Clientes Diretos)
+        Route::middleware(['client.direct'])->group(function () {
+            Route::resource('products', ProdutoController::class)->except(['index', 'show', 'destroy']);
+            Route::delete('/products/delete/{product}', [ProdutoController::class, 'destroy'])->name('products.destroy');
+            Route::delete('/products/images/{image}', [ProdutoController::class, 'destroyImage'])->name('products.image.destroy');
+            Route::post('/products/{product}/reorder-images', [ProdutoController::class, 'reorderImages'])->name('products.images.reorder');
+            Route::post('/products/{product}/update-image', [ProdutoController::class, 'uploadImage'])->name('products.image.upload');
 
-        // --- AtributoController (CRUD de Atributos) ---
-        Route::resource('atributos', AtributoController::class)->only(['index', 'store', 'destroy']);
+            // CRUD de Atributos
+            Route::resource('atributos', AtributoController::class)->only(['index', 'store', 'destroy']);
+        });
 
-        // --- ProfileController (Conta do Usuário) ---
+        // CRUD de Catálogos Promocionais
+        Route::resource('catalogos', CatalogoController::class)->except(['show', 'create', 'edit']);
+
+        // Perfil do Usuário
         Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
             Route::get('/', 'edit')->name('edit');
             Route::patch('/', 'update')->name('update');
             Route::delete('/', 'destroy')->name('destroy');
         });
-
-        // --- Billing (Stripe Portal) ---
-        Route::get('/billing', fn (Request $request) => $request->user()->redirectToBillingPortal())->name('billing');
     });
 });
 
 /*
 |--------------------------------------------------------------------------
-| Fluxo de Assinatura e Planos
+| 3. Rotas do Domínio Principal (Pagamentos, Onboarding e Home)
 |--------------------------------------------------------------------------
 */
+Route::domain(env('APP_DOMAIN'))->group(function () {
+    Route::get('/', [HomeController::class, 'home'])->name('home');
+    Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
 
-Route::middleware([noSubscription::class])->group(function () {
-    Route::get('/plan_selected/{id}', [AdminController::class, 'planSelected'])
-        ->middleware(['auth', 'verified'])
-        ->name('plans.selected');
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::controller(AdminController::class)->group(function () {
-        Route::get('/subscription/success', 'subscriptionSuccess')->name('subscription.success')->middleware([hasSubscription::class]);
-        Route::get('/subscription/pending', 'subscriptionPending')->name('subscription.pending');
-        Route::get('/invoice/{id}', 'invoiceDownload')
-            ->middleware([hasSubscription::class])
-            ->name('invoice.download');
+    // Fluxo de pagamento Pix (Clientes Diretos)
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/pagamento/pendente', [PixPaymentController::class, 'pending'])->name('pagamento.pending');
+        Route::post('/pagamento/gerar', [PixPaymentController::class, 'generate'])->name('pagamento.generate');
+        Route::get('/pagamento/checkout', [PixPaymentController::class, 'checkout'])->name('pagamento.checkout');
+        Route::post('/pagamento/simular-sucesso', [PixPaymentController::class, 'simulateSuccess'])->name('pagamento.simulate');
     });
-});
 
-Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
+    // Erros e avisos
+    Route::get('/loja-indisponivel', fn () => view('errors.loja-indisponivel'))->name('loja-indisponivel');
+});
 
 /*
 |--------------------------------------------------------------------------
-| API e Auth Interno
+| 4. Endpoints de API (ERP Webhook Onboarding & Sincronização)
 |--------------------------------------------------------------------------
 */
+Route::post('/api/erp/onboarding', [ErpApiController::class, 'onboarding'])->name('api.erp.onboarding');
+Route::post('/api/payments/pix/webhook', [PixPaymentController::class, 'webhook'])->name('api.payments.pix.webhook');
 
-Route::get('/api/subscription/status', fn () => ['subscribed' => auth()->user()->subscribed()])
-    ->middleware('auth')
-    ->name('api.subscription.status');
+Route::middleware(['api.token'])->prefix('api')->group(function () {
+    Route::post('/products/sync', [ErpApiController::class, 'syncProducts'])->name('api.products.sync');
+    Route::delete('/products/sync/{erp_id}', [ErpApiController::class, 'deleteProduct'])->name('api.products.delete');
+});
 
 require __DIR__.'/auth.php';

@@ -16,13 +16,22 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // alias para middleware
-        $middleware->alias([EnsureUserBelongsToTenant::class]);
-        $middleware->alias([ResolveTenant::class]);
+        // Alias para middlewares
+        $middleware->alias([
+            'tenant' => \App\Http\Middleware\ResolveTenant::class,
+            'tenant.member' => \App\Http\Middleware\EnsureUserBelongsToTenant::class,
+            'subscription.active' => \App\Http\Middleware\EnsureSubscriptionActive::class,
+            'subscription.inactive' => \App\Http\Middleware\RedirectIfSubscriptionActive::class,
+            'api.token' => \App\Http\Middleware\VerifyApiToken::class,
+            'password.reset.forced' => \App\Http\Middleware\CheckForcedPasswordReset::class,
+            'client.direct' => \App\Http\Middleware\EnsureDirectClient::class,
+        ]);
 
         $middleware->validateCsrfTokens(except: [
             'stripe/*',
-            'cashier/*'
+            'cashier/*',
+            'api/*',
+            'webhook/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

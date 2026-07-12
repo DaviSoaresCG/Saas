@@ -85,6 +85,7 @@
                                 class="h-4 w-4 shrink-0 {{ $active === 'products' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Produtos
                         </a>
+                        @if (auth()->user()->tipo_cliente === 'direct')
                         <a href="{{ route('products.create') }}" {!! $navClick !!}
                             class="{{ $active === 'products-create' ? $navActive : $navIdle }}">
                             <i data-lucide="plus-circle" class="h-4 w-4 shrink-0 {{ $active === 'products-create' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
@@ -95,17 +96,25 @@
                             <i data-lucide="tag" class="h-4 w-4 shrink-0 {{ $active === 'atributos' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Atributos
                         </a>
+                        @endif
+                        <a href="{{ route('catalogos.index') }}" {!! $navClick !!}
+                            class="{{ $active === 'catalogos' ? $navActive : $navIdle }}">
+                            <i data-lucide="folder" class="h-4 w-4 shrink-0 {{ $active === 'catalogos' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
+                            Catálogos
+                        </a>
                         <a href="{{ route('order.index') }}" {!! $navClick !!}
                             class="{{ $active === 'orders' ? $navActive : $navIdle }}">
                             <i data-lucide="clipboard-list"
                                 class="h-4 w-4 shrink-0 {{ $active === 'orders' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Pedidos
                         </a>
+                        @if (auth()->user()->tipo_cliente === 'direct')
                         <a href="{{ route('dashboard') }}#assinatura" {!! $navClick !!} class="{{ $navIdle }}">
                             <i data-lucide="credit-card"
                                 class="h-4 w-4 shrink-0 {{ $active === 'credit-card' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Assinatura
                         </a>
+                        @endif
                         <a href="{{ route('profile.edit') }}" {!! $navClick !!}
                             class="{{ $active === 'profile' ? $navActive : $navIdle }}">
                             <i data-lucide="user-cog"
@@ -144,19 +153,25 @@
                     </div>
                 @endif
                 @if($errors->updatePassword->any())
-                    <div class="mb-6 rounded-xl border border-red-500/40 bg-red-600/30 px-4 py-3 text-sm text-white">
+                    <div class="mb-6 rounded-xl border border-red-500/30 bg-red-600/20 px-4 py-3 text-sm text-red-800">
                         Não foi possivel alterar a senha.
                     </div>
                 @endif
                 @if($errors->any())
-                    <div class="mb-6 rounded-xl border border-red-500/40 bg-red-600/30 px-4 py-3 text-sm text-white">
+                    <div class="mb-6 rounded-xl border border-red-500/30 bg-red-600/20 px-4 py-3 text-sm text-red-800">
                         Ocorreu um erro
                     </div>
                 @endif
                 @if(session('status') == 'password-updated')
                     <div
-                        class="mb-6 rounded-xl border border-emerald-500/40 bg-emerald-600/30 px-4 py-3 text-sm text-emerald-200">
+                        class="mb-6 rounded-xl border border-emerald-500/40 bg-emerald-600/20 px-4 py-3 text-sm text-emerald-800">
                         Senha Alterada.
+                    </div>
+                @endif
+                @if(session('warning'))
+                    <div
+                        class="mb-6 rounded-xl border border-yellow-500/40 bg-yellow-600/20 px-4 py-3 text-sm text-yellow-800">
+                        {{ session('warning') }}
                     </div>
                 @endif
 

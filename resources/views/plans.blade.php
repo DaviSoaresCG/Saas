@@ -84,7 +84,7 @@
 
                 @auth()
                     Ola  {{ auth()->user()->name }}
-                    @if(auth()->user()->subscribed())
+                    @if(auth()->user()->isLojaAtiva())
                         <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="text-blue-500">Sua Página</a>
                     @endif
                     <form action="{{ route('logout') }}" method="post">
@@ -116,7 +116,7 @@
           <div class="pt-4 border-t border-slate-800 mt-4">
             @auth()
                     Ola  {{ auth()->user()->name }}
-                    @if(auth()->user()->subscribed())
+                    @if(auth()->user()->isLojaAtiva())
                         <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="text-blue-500">Sua Página</a>
                     @endif
                     <form action="{{ route('logout') }}" method="post">
@@ -185,7 +185,7 @@
                 </li>
               </ul>
 
-              <a href="{{ route('plans.selected', ['id' => $prices['monthly']]) }}">
+              <a href="{{ route('pagamento.pending') }}">
               <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white">
                 Começar Agora
               </button>
@@ -229,7 +229,7 @@
                 </li>
               </ul>
 
-                <a href="{{ route('plans.selected', ['id' => $prices['yearly']]) }}">
+                <a href="{{ route('pagamento.pending') }}">
                     <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25">
                         Começar Agora
                     </button>
@@ -263,7 +263,7 @@
                 </li>
               </ul>
 
-              <a href="{{ route('plans.selected', ['id' => $prices['longest']]) }}">
+              <a href="{{ route('pagamento.pending') }}">
                 <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white">
                     Começar Agora
                 </button>

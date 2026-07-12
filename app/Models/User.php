@@ -6,14 +6,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Cashier\Billable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, Billable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,8 +26,14 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'slug',
         'whatsapp',
         'password',
-        'store_name',
-        'theme_name'
+        'nome_loja',
+        'theme_name',
+        'documento',
+        'tipo_cliente',
+        'plano_expira_em',
+        'status',
+        'api_token',
+        'need_change_password'
     ];
 
     /**
@@ -50,6 +56,46 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'plano_expira_em' => 'datetime',
+            'need_change_password' => 'boolean',
         ];
     }
+
+    /**
+     * Verifies if the store is active based on its client type and billing.
+     */
+    public function isLojaAtiva(): bool
+    {
+        if ($this->status === 'suspended') {
+            return false;
+        }
+
+        // Validação para clientes ERP
+        if ($this->tipo_cliente === 'erp') {
+            return $this->status === 'active';
+        }
+
+        // Validação para clientes Diretos (Pix)
+        return $this->plano_expira_em && $this->plano_expira_em->isFuture();
+    }
+
+    /**
+     * Backward compatibility mapping: store_name -> nome_loja.
+     */
+    protected function storeName(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['nome_loja'] ?? null,
+            set: fn ($value) => ['nome_loja' => $value]
+        );
+    }
+
+    /**
+     * User's catalogs.
+     */
+    public function catalogos()
+    {
+        return $this->hasMany(Catalogo::class);
+    }
 }
+

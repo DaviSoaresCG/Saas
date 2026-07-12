@@ -18,11 +18,13 @@
                 </button>
             </form>
 
+            @if (auth()->user()->tipo_cliente === 'direct')
             <a href="{{ route('products.create') }}"
                 class="inline-flex items-center justify-center gap-2 rounded-xl cursor-pointer bg-[var(--color-primary)] px-5 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-lg hover:scale-105 transition-all shrink-0">
                 <i data-lucide="plus" class="h-4 w-4"></i>
                 Novo produto
             </a>
+            @endif
         </div>
 
         <div class="overflow-x-auto">
@@ -48,20 +50,27 @@
                             </td>
                             <td class="px-4 sm:px-6 py-4">
                                 <div class="flex flex-wrap items-center justify-end gap-2">
-                                    <a href="{{ route('products.edit', ['product' => $product->id]) }}"
-                                        class="inline-flex items-center gap-1 rounded-lg border border-[var(--color-primary)]/40 bg-[var(--color-primary)]/10 px-3 py-1.5 text-xs font-semibold text-[var(--text-base)] hover:bg-[var(--color-primary)]/20 transition-colors">
-                                        Editar
-                                    </a>
-                                    <form action="{{ route('products.destroy', ['product' => $product->id]) }}"
-                                        method="post" class="inline" onsubmit="return confirm('Remover este produto?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="hidden" name="slug" value="{{ auth()->user()->slug }}">
-                                        <button type="submit"
-                                            class="inline-flex items-center gap-1 rounded-lg border border-red-500/40 bg-red-500 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer hover:bg-red-600 transition-colors">
-                                            Excluir
-                                        </button>
-                                    </form>
+                                    @if (auth()->user()->tipo_cliente === 'direct')
+                                        <a href="{{ route('products.edit', ['product' => $product->id]) }}"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-[var(--color-primary)]/40 bg-[var(--color-primary)]/10 px-3 py-1.5 text-xs font-semibold text-[var(--text-base)] hover:bg-[var(--color-primary)]/20 transition-colors">
+                                            Editar
+                                        </a>
+                                        <form action="{{ route('products.destroy', ['product' => $product->id]) }}"
+                                            method="post" class="inline" onsubmit="return confirm('Remover este produto?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="slug" value="{{ auth()->user()->slug }}">
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 rounded-lg border border-red-500/40 bg-red-500 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer hover:bg-red-600 transition-colors">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 text-xs font-bold text-indigo-400">
+                                            <i data-lucide="link" class="h-3 w-3"></i>
+                                            ERP
+                                        </span>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

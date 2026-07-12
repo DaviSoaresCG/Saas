@@ -1,7 +1,7 @@
 <x-store-layout page-title='Carrinho'>
     <div class="mb-6 flex flex-wrap items-center gap-2">
         <button type="button"
-            onclick="(function(){try{var r=document.referrer;if(r&&new URL(r).hostname===location.hostname){history.back();return;}}catch(e){} window.location.href='{{ route('products.index') }}';})();"
+            onclick="(function(){try{var r=document.referrer;if(r&&new URL(r).hostname===location.hostname){history.back();return;}}catch(e){} window.location.href='{{ tenant_route('products.index') }}';})();"
             class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-[var(--text-on-primary)] transition-colors">
             <i data-lucide="arrow-left" class="h-4 w-4"></i>
             Voltar
@@ -23,7 +23,7 @@
 
                             <div class="w-32 h-32 md:w-28 md:h-28 flex-shrink-0">
                                 <img class="w-full h-full object-cover rounded-lg shadow-md"
-                                    src="{{ asset('storage/' . $item['path']) }}" alt="{{ $item['name'] }}">
+                                    src="{{ str_starts_with($item['path'] ?? '', 'http') ? $item['path'] : asset('storage/' . $item['path']) }}" alt="{{ $item['name'] }}">
                             </div>
 
                             <div class="flex-1 w-full md:w-auto">
@@ -88,7 +88,7 @@
                             </span>
                         </div>
                     </div>
-                    <form action="{{ route('order.finished') }}" method="get">
+                    <form action="{{ tenant_route('order.finished') }}" method="get">
                         @csrf
                         <input type="number" hidden id="summary-total" value="">
                         <button
@@ -139,7 +139,7 @@
                 const itemElement = document.querySelector(`.product-item[data-product-id="${productId}"]`);
 
                 try {
-                    const response = await fetch("{{ route('cart.update') }}", {
+                    const response = await fetch("{{ tenant_route('cart.update') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

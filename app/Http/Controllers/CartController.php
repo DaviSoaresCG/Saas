@@ -28,6 +28,12 @@ class CartController extends Controller
 
         (float) $value = str_replace(['.', ','], ['', '.'], $product['value']);
 
+        // Aplica o desconto do catálogo se estiver ativo na sessão
+        $desconto = session('desconto_index');
+        if ($desconto > 0) {
+            $value = $value * (1 - $desconto / 100);
+        }
+
         // Atributos selecionados pelo cliente (ids)
         $atributos = $request->input('atributos', []);
         sort($atributos);
@@ -56,7 +62,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect()->route('products.index')->with('success', 'Produto adicionado ao carrinho com sucesso!');
+        return redirect()->to(tenant_route('products.index'))->with('success', 'Produto adicionado ao carrinho com sucesso!');
     }
 
     public function remove($slug, $id)
@@ -68,7 +74,7 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
-        return redirect()->route('cart.index', ['slug' => app(User::class)->slug]);
+        return redirect()->to(tenant_route('cart.index'));
     }
 
     public function update(Request $request)
@@ -137,6 +143,6 @@ class CartController extends Controller
     {
         session()->forget('cart');
 
-        return redirect()->route('cart.index', ['slug' => app(User::class)->slug]);
+        return redirect()->to(tenant_route('cart.index'));
     }
 }
