@@ -34,13 +34,13 @@
                 </div>
                 @if(!Route::is('variant.*'))
                 <nav class="flex items-center gap-2 sm:gap-3 shrink-0">
-                    <a href="{{ route('dashboard', ['slug' => $slug]) }}"
+                    <a href="{{ route('dashboard') }}"
                         class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] transition-colors shadow-lg shadow-[var(--color-primary)]/20">
                         <i data-lucide="layout-grid" class="h-4 w-4"></i>
                         <span class="hidden sm:inline">Dashboard</span>
                     </a>
                 @endif
-                    <a href="{{ Route::is('variant.*') ? route('variant.cart.index', ['slug' => $slug]) : route('cart.index', ['slug' => $slug]) }}"
+                    <a href="{{ Route::is('variant.*') ? route('variant.cart.index', ['slug' => $slug]) : route('cart.index') }}"
                         class="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-3 py-2 text-sm text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/20 font-medium transition-colors">
                         <i data-lucide="shopping-cart" class="h-4 w-4"></i>
                         <span class="hidden sm:inline">Carrinho</span>

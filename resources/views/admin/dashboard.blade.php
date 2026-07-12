@@ -27,12 +27,13 @@
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">
+                @if (auth()->user()->tipo_cliente === 'direct')
+
                 <a href="{{ route('products.create') }}"
                     class="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all">
                     <i data-lucide="plus" class="h-4 w-4"></i>
                     Criar produto
                 </a>
-                @if (auth()->user()->tipo_cliente === 'direct')
                     <a href="{{ route('pagamento.pending') }}"
                         class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-4 py-2.5 text-sm font-semibold text-slate-200 transition-colors">
                         <i data-lucide="settings" class="h-4 w-4"></i>

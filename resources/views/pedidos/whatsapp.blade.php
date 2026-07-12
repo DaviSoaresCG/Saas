@@ -1,6 +1,6 @@
 <x-store-layout page-title="Pedido enviado">
     <div class="mb-6 flex flex-wrap items-center gap-2">
-        <a type="button" href="{{ Route::is('variant.*') ? route('variant.products.index', ['slug' => $slug]) : route('products.index', ['slug' => $slug]) }}"
+        <a type="button" href="{{ Route::is('variant.*') ? route('variant.products.index', ['slug' => $slug]) : route('products.index') }}"
             class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-[var(--text-on-primary)]">
             <i data-lucide="arrow-left" class="h-4 w-4"></i>
             Ir para Loja
