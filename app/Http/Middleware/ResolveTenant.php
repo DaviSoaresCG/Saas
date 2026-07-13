@@ -73,6 +73,7 @@ class ResolveTenant
             app()->instance(User::class, $user);
             URL::defaults(['slug' => $slug]);
             View::share('theme', $user->theme_name);
+            session(['theme' => $user->theme_name]);
         }
 
         return $next($request);
