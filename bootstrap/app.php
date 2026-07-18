@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant.member' => \App\Http\Middleware\EnsureUserBelongsToTenant::class,
             'subscription.active' => \App\Http\Middleware\EnsureSubscriptionActive::class,
             'subscription.inactive' => \App\Http\Middleware\RedirectIfSubscriptionActive::class,
+            'payment.incomplete' => \App\Http\Middleware\RedirectIfPaymentComplete::class,
             'api.token' => \App\Http\Middleware\VerifyApiToken::class,
             'password.reset.forced' => \App\Http\Middleware\CheckForcedPasswordReset::class,
             'client.direct' => \App\Http\Middleware\EnsureDirectClient::class,

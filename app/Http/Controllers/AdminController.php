@@ -143,7 +143,7 @@ class AdminController extends Controller
         $user->slug = $slug;
         $user->save();
 
-        return redirect()->away('http://'.$slug.'.'.env('APP_DOMAIN').'/profile');
+        return redirect()->away('https://'.$slug.'.'.env('APP_DOMAIN').'/profile');
 
     }
 
