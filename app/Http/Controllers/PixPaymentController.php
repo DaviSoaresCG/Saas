@@ -40,7 +40,7 @@ class PixPaymentController extends Controller
         
         // Preços: Mensal R$ 29,90, Anual R$ 299,00
         //$amount = $plan === 'yearly' ? 299.00 : 29.90;
-        $amount = 0.01;
+        $amount = 0.02;
         $planName = $plan === 'yearly' ? 'Plano Anual' : 'Plano Mensal';
 
         // 1. Evitar gerar múltiplos Pix duplicados no Mercado Pago se já existir um pendente idêntico recente
@@ -352,4 +352,50 @@ class PixPaymentController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    /**
+     * Check current Pix payment status for frontend redirection.
+     */
+    public function checkStatus()
+    {
+        $payment = session('pending_pix');
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['status' => 'unauthenticated'], 401);
+        }
+
+        // Se não houver pagamento pendente na sessão, tentamos buscar a última transação do usuário no banco
+        if (!$payment) {
+            $lastTransaction = PaymentTransaction::where('user_id', $user->id)
+                ->latest()
+                ->first();
+            
+            if ($lastTransaction) {
+                return response()->json([
+                    'status' => $lastTransaction->status,
+                ]);
+            }
+
+            return response()->json([
+                'status' => $user->isLojaAtiva() ? 'approved' : 'none',
+            ]);
+        }
+
+        $paymentId = $payment['txid'];
+        $transaction = PaymentTransaction::where('payment_id', $paymentId)->first();
+
+        // Se não encontramos por ID de pagamento, tentamos por ID de usuário e pendência
+        if (!$transaction) {
+            $transaction = PaymentTransaction::where('user_id', $user->id)
+                ->where('status', 'pending')
+                ->latest()
+                ->first();
+        }
+
+        return response()->json([
+            'status' => $transaction ? $transaction->status : 'pending',
+        ]);
+    }
 }
+

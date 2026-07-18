@@ -182,6 +182,21 @@
     <!-- Scripts -->
     <script>
       lucide.createIcons();
+
+      // Polling para checar o status do pagamento Pix em tempo real
+      function checkPaymentStatus() {
+        fetch("{{ route('pagamento.status') }}")
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'approved') {
+              window.location.href = "{{ route('subscription.success') }}";
+            }
+          })
+          .catch(err => console.error("Erro ao verificar status do pagamento:", err));
+      }
+
+      // Inicia a verificação a cada 3 segundos
+      setInterval(checkPaymentStatus, 3000);
     </script>
   </body>
 </html>

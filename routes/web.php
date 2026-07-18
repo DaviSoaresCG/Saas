@@ -122,6 +122,11 @@ Route::domain(env('APP_DOMAIN'))->group(function () {
         Route::post('/pagamento/gerar', [PixPaymentController::class, 'generate'])->name('pagamento.generate');
         Route::get('/pagamento/checkout', [PixPaymentController::class, 'checkout'])->name('pagamento.checkout');
         Route::post('/pagamento/simular-sucesso', [PixPaymentController::class, 'simulateSuccess'])->name('pagamento.simulate');
+        Route::get('/pagamento/status', [PixPaymentController::class, 'checkStatus'])->name('pagamento.status');
+
+        // Status da Assinatura (Unificado)
+        Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
+        Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
     });
 
     // Erros e avisos
