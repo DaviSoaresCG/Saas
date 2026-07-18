@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assinatura confirmada | ZapCatalogo</title>
+    <title>Pagamento Confirmado | ZapCatalogo</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -66,10 +66,10 @@
                 </div>
 
                 <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-3">
-                    Obrigado pela sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">assinatura</span>
+                    Obrigado pelo seu <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">pagamento!</span>
                 </h1>
                 <p class="text-gray-400 text-base leading-relaxed mb-8">
-                    Sua conta está ativa. Você já pode gerenciar produtos, pedidos e seu catálogo no painel.
+                    Sua conta foi ativada. Você já pode gerenciar produtos, pedidos e seu catálogo no painel.
                 </p>
 
                 @php

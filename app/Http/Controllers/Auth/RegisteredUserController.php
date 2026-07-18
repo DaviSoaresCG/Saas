@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,            
             'whatsapp' => $whatsapp_limpo,
             'email' => $request->email,
-            'store_name' => $request->store_name,
+            'nome_loja' => $request->store_name,
             'password' => Hash::make($request->password),
         ]);
 

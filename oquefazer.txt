@@ -7,6 +7,8 @@ VERSAO 2.0
 - Colocar a feature "Promoção"
 - Colocar o remover e adicionar o campo de gerenciar atributos no sidebar do dashboard.
 
+-Edição dos catalogos dinamicos
+
 
 -websocket
 php artisan reverb:start

@@ -38,6 +38,11 @@ return [
         'monthly' => env('STRIPE_MONTHLY_PRICE_ID'),
         'yearly'  => env('STRIPE_YEARLY_PRICE_ID'),
         'longest' => env('STRIPE_LONGEST_PRICE_ID'),
+    ],
+
+    'mercadopago' => [
+        'access_token' => env('MERCADO_PAGO_ACCESS_TOKEN'),
+        'public_key' => env('MERCADO_PAGO_PUBLIC_KEY'),
     ]
 
 ];

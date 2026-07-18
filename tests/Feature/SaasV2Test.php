@@ -108,3 +108,44 @@ test('ERP client is forbidden from accessing manual product creation and edit ro
     $response->assertStatus(403);
 });
 
+test('Stripe Pix webhook successfully extends plan', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(5),
+    ]);
+
+    // Construct valid Stripe Webhook signature
+    $payload = json_encode([
+        'type' => 'payment_intent.succeeded',
+        'data' => [
+            'object' => [
+                'metadata' => [
+                    'user_id' => $user->id,
+                    'plan' => 'yearly',
+                ]
+            ]
+        ]
+    ]);
+
+    // Generate valid Stripe signature header
+    $secret = env('STRIPE_WEBHOOK_SECRET', 'whsec_test');
+    $time = time();
+    $signature = hash_hmac('sha256', $time . '.' . $payload, $secret);
+    $sigHeader = "t={$time},v1={$signature}";
+
+    // Set temporary webhook secret in env for the test
+    config(['cashier.webhook.secret' => $secret]);
+
+    $response = $this->postJson(route('api.payments.pix.webhook'), json_decode($payload, true), [
+        'Stripe-Signature' => $sigHeader,
+    ]);
+
+    $response->assertOk();
+
+    $user->refresh();
+    expect($user->status)->toBe('active');
+    // It should add 365 days to the expiration
+    expect($user->plano_expira_em->isAfter(now()->addDays(360)))->toBeTrue();
+});
+
+

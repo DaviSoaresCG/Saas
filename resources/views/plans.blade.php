@@ -147,20 +147,20 @@
               Preços
             </h2>
             <p class="text-gray-400 max-w-2xl mx-auto text-lg mb-8">
-              Focamos em mercados onde tecnologia, inovação e capital podem desbloquear valor a longo prazo.
+              Escolha o plano ideal para o seu negócio e comece a vender pelo WhatsApp hoje mesmo.
             </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Starter Plan -->
-            <div class="flex flex-col p-8 rounded-2xl border bg-slate-800/40 border-slate-700">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- Plano Mensal -->
+            <div class="flex flex-col p-8 rounded-2xl border bg-slate-800/40 border-slate-700 hover:border-blue-500/50 transition-all duration-300">
               <div class="mb-8">
-                <h3 class="text-2xl font-bold text-white mb-2">Starter</h3>
-                <p class="text-gray-400 text-sm h-10">Melhor opção para uso pessoal e para começar a vender.</p>
+                <h3 class="text-2xl font-bold text-white mb-2">Plano Mensal</h3>
+                <p class="text-gray-400 text-sm h-10">Flexibilidade sem compromisso de longo prazo.</p>
               </div>
 
               <div class="flex items-baseline mb-8">
-                <span class="text-4xl font-extrabold text-white tracking-tight">R$ 49,99</span>
+                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 29,90</span>
                 <span class="text-gray-400 ml-2">/mês</span>
               </div>
 
@@ -169,42 +169,58 @@
                   <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
                     <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
                   </div>
-                  <span class="ml-3 text-sm text-gray-300">Até 50 produtos</span>
+                  <span class="ml-3 text-sm text-gray-300">Produtos Ilimitados</span>
                 </li>
-                 <li class="flex items-start">
+                <li class="flex items-start">
                   <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
                     <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
                   </div>
-                  <span class="ml-3 text-sm text-gray-300">Suporte por Email</span>
+                  <span class="ml-3 text-sm text-gray-300">Pedidos direto no seu WhatsApp</span>
                 </li>
                 <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-slate-700/50">
-                    <i data-lucide="check" class="h-3 w-3 text-slate-500"></i>
+                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
+                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
                   </div>
-                  <span class="ml-3 text-sm text-gray-600 line-through">Gestão de estoque</span>
+                  <span class="ml-3 text-sm text-gray-300">Múltiplos Catálogos & Descontos</span>
+                </li>
+                <li class="flex items-start">
+                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
+                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
+                  </div>
+                  <span class="ml-3 text-sm text-gray-300">Suporte a Atributos (Cor, Tamanho)</span>
                 </li>
               </ul>
 
-              <a href="{{ route('pagamento.pending') }}">
-              <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white">
-                Começar Agora
-              </button>
-              </a>
+              @auth
+                <form action="{{ route('pagamento.generate') }}" method="POST">
+                  @csrf
+                  <input type="hidden" name="plan" value="monthly">
+                  <button type="submit" class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">
+                    Selecionar Mensal
+                  </button>
+                </form>
+              @else
+                <a href="{{ route('register') }}">
+                  <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white">
+                    Começar Agora
+                  </button>
+                </a>
+              @endauth
             </div>
 
-            <!-- Company Plan (Highlighted) -->
+            <!-- Plano Anual -->
             <div class="flex flex-col p-8 rounded-2xl border bg-slate-800/80 border-blue-500 shadow-xl shadow-blue-900/20 relative overflow-hidden transform md:-translate-y-4">
               <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                POPULAR
+                MELHOR VALOR
               </div>
               
               <div class="mb-8">
-                <h3 class="text-2xl font-bold text-white mb-2">Company</h3>
-                <p class="text-gray-400 text-sm h-10">Relevante para lojas em crescimento com múltiplos atendentes.</p>
+                <h3 class="text-2xl font-bold text-white mb-2">Plano Anual</h3>
+                <p class="text-gray-400 text-sm h-10">Economize quase 2 meses em relação ao mensal.</p>
               </div>
 
               <div class="flex items-baseline mb-8">
-                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 499,99</span>
+                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 299,00</span>
                 <span class="text-gray-400 ml-2">/ano</span>
               </div>
 
@@ -215,59 +231,47 @@
                   </div>
                   <span class="ml-3 text-sm text-gray-300">Produtos Ilimitados</span>
                 </li>
-                 <li class="flex items-start">
+                <li class="flex items-start">
                   <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
                     <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
                   </div>
-                  <span class="ml-3 text-sm text-gray-300">Suporte Prioritário (WhatsApp)</span>
+                  <span class="ml-3 text-sm text-gray-300">Pedidos direto no seu WhatsApp</span>
                 </li>
                 <li class="flex items-start">
                   <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
                     <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
                   </div>
-                  <span class="ml-3 text-sm text-gray-300">Gestão de estoque(Em desenvolvimento)</span>
+                  <span class="ml-3 text-sm text-gray-300">Múltiplos Catálogos & Descontos</span>
                 </li>
-              </ul>
-
-                <a href="{{ route('pagamento.pending') }}">
-                    <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25">
-                        Começar Agora
-                    </button>
-                </a>
-            </div>
-
-            <!-- Enterprise Plan -->
-            <div class="flex flex-col p-8 rounded-2xl border bg-slate-800/40 border-slate-700">
-              <div class="mb-8">
-                <h3 class="text-2xl font-bold text-white mb-2">Enterprise</h3>
-                <p class="text-gray-400 text-sm h-10">Para operações de grande escala e direitos de redistribuição.</p>
-              </div>
-
-              <div class="flex items-baseline mb-8">
-                <span class="text-4xl font-extrabold text-white tracking-tight">R$ 1499,99</span>
-                <span class="text-gray-400 ml-2">/tri-anual</span>
-              </div>
-
-              <ul class="space-y-4 mb-8 flex-1">
                 <li class="flex items-start">
                   <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
                     <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
                   </div>
-                  <span class="ml-3 text-sm text-gray-300">Tudo do Company</span>
+                  <span class="ml-3 text-sm text-gray-300">Suporte a Atributos (Cor, Tamanho)</span>
                 </li>
-                 <li class="flex items-start">
+                <li class="flex items-start">
                   <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
                     <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
                   </div>
-                  <span class="ml-3 text-sm text-gray-300">Gerente de conta dedicado</span>
+                  <span class="ml-3 text-sm text-emerald-400 font-semibold">Desconto de 17% garantido</span>
                 </li>
               </ul>
 
-              <a href="{{ route('pagamento.pending') }}">
-                <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white">
+              @auth
+                <form action="{{ route('pagamento.generate') }}" method="POST">
+                  @csrf
+                  <input type="hidden" name="plan" value="yearly">
+                  <button type="submit" class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 cursor-pointer">
+                    Selecionar Anual
+                  </button>
+                </form>
+              @else
+                <a href="{{ route('register') }}">
+                  <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25">
                     Começar Agora
-                </button>
-              </a>
+                  </button>
+                </a>
+              @endauth
             </div>
           </div>
         </div>

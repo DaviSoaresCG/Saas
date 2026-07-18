@@ -27,6 +27,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'whatsapp',
         'password',
         'nome_loja',
+        'store_name',
         'theme_name',
         'documento',
         'tipo_cliente',
