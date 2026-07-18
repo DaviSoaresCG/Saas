@@ -145,7 +145,7 @@
           </ol>
         </div>
 
-        <!-- Simulação Local (Ambiente de Teste) -->
+        {{-- <!-- Simulação Local (Ambiente de Teste) -->
         <div class="p-6 rounded-3xl border border-amber-500/30 bg-amber-500/5 text-center mb-8">
           <div class="flex items-center justify-center gap-2 text-amber-400 mb-2">
             <i data-lucide="alert-triangle" class="h-5 w-5"></i>
@@ -161,7 +161,7 @@
               Confirmar Pagamento Simulado
             </button>
           </form>
-        </div>
+        </div> --}}
 
         <div class="text-center">
           <a href="{{ route('pagamento.pending') }}" class="text-xs text-gray-500 hover:text-gray-300 transition-colors flex items-center justify-center gap-1">

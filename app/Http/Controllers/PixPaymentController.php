@@ -39,8 +39,8 @@ class PixPaymentController extends Controller
         $plan = $request->plan;
         
         // Preços: Mensal R$ 29,90, Anual R$ 299,00
-        //$amount = $plan === 'yearly' ? 299.00 : 29.90;
-        $amount = 0.02;
+        $amount = $plan === 'yearly' ? 299.00 : 29.90;
+        //$amount = 0.02;
         $planName = $plan === 'yearly' ? 'Plano Anual' : 'Plano Mensal';
 
         // 1. Evitar gerar múltiplos Pix duplicados no Mercado Pago se já existir um pendente idêntico recente
@@ -175,51 +175,51 @@ class PixPaymentController extends Controller
     /**
      * Simulate Webhook payment success for local environment.
      */
-    public function simulateSuccess(Request $request)
-    {
-        $payment = session('pending_pix');
-        $user = Auth::user();
+    // public function simulateSuccess(Request $request)
+    // {
+    //     $payment = session('pending_pix');
+    //     $user = Auth::user();
 
-        if (!$payment || !$user) {
-            return redirect()->route('pagamento.pending')->with('error', 'Nenhum pagamento pendente encontrado.');
-        }
+    //     if (!$payment || !$user) {
+    //         return redirect()->route('pagamento.pending')->with('error', 'Nenhum pagamento pendente encontrado.');
+    //     }
 
-        // Simula o sucesso atualizando o banco de dados
-        $paymentId = $payment['txid'];
-        $transaction = PaymentTransaction::where('payment_id', $paymentId)
-            ->where('status', 'pending')
-            ->first();
+    //     // Simula o sucesso atualizando o banco de dados
+    //     $paymentId = $payment['txid'];
+    //     $transaction = PaymentTransaction::where('payment_id', $paymentId)
+    //         ->where('status', 'pending')
+    //         ->first();
 
-        if ($transaction) {
-            $transaction->status = 'approved';
-            $transaction->save();
-        }
+    //     if ($transaction) {
+    //         $transaction->status = 'approved';
+    //         $transaction->save();
+    //     }
 
-        // Ativação do plano do usuário
-        $plan = $payment['plan'];
-        $days = $plan === 'yearly' ? 365 : 30;
+    //     // Ativação do plano do usuário
+    //     $plan = $payment['plan'];
+    //     $days = $plan === 'yearly' ? 365 : 30;
 
-        $currentExpiration = $user->plano_expira_em && $user->plano_expira_em->isFuture()
-            ? $user->plano_expira_em
-            : now();
+    //     $currentExpiration = $user->plano_expira_em && $user->plano_expira_em->isFuture()
+    //         ? $user->plano_expira_em
+    //         : now();
 
-        $user->plano_expira_em = $currentExpiration->addDays($days);
-        $user->status = 'active';
+    //     $user->plano_expira_em = $currentExpiration->addDays($days);
+    //     $user->status = 'active';
         
-        if (empty($user->slug)) {
-            $user->slug = Str::slug(str_replace(' ', '', $user->nome_loja ?: 'loja'));
-            $count = User::where('slug', 'LIKE', "{$user->slug}%")->count();
-            if ($count) {
-                $user->slug = "{$user->slug}-{$count}";
-            }
-        }
+    //     if (empty($user->slug)) {
+    //         $user->slug = Str::slug(str_replace(' ', '', $user->nome_loja ?: 'loja'));
+    //         $count = User::where('slug', 'LIKE', "{$user->slug}%")->count();
+    //         if ($count) {
+    //             $user->slug = "{$user->slug}-{$count}";
+    //         }
+    //     }
         
-        $user->save();
+    //     $user->save();
 
-        session()->forget('pending_pix');
+    //     session()->forget('pending_pix');
 
-        return redirect()->route('dashboard', ['slug' => $user->slug])->with('success', 'Pagamento Pix simulado e confirmado com sucesso! Sua loja já está ativa.');
-    }
+    //     return redirect()->route('dashboard', ['slug' => $user->slug])->with('success', 'Pagamento Pix simulado e confirmado com sucesso! Sua loja já está ativa.');
+    // }
 
     /**
      * Real API Webhook endpoint for Mercado Pago Pix payments
