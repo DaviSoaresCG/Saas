@@ -20,15 +20,15 @@ class PedidoController extends Controller
 
     public function show($slug, $id)
     {
+        $pedido = Pedido::findOrFail($id);
         $itens_pedido = ItemPedido::with('product')->where('pedido_id', $id)->paginate(10);
-        // dd($itens_pedido);
 
-        if (empty($itens_pedido)) {
+        if ($itens_pedido->isEmpty()) {
             return redirect()->back()->with('error', 'pedido nao encontrado');
         }
         $user = app(User::class);
 
-        return view('pedidos.show', compact('itens_pedido', 'user'));
+        return view('pedidos.show', compact('pedido', 'itens_pedido', 'user'));
     }
 
     public function finalizar(Request $request, $slug = null)
