@@ -34,7 +34,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'plano_expira_em',
         'status',
         'api_token',
-        'need_change_password'
+        'need_change_password',
+        'modal_carrinho'
     ];
 
     /**
@@ -59,6 +60,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             'password' => 'hashed',
             'plano_expira_em' => 'datetime',
             'need_change_password' => 'boolean',
+            'modal_carrinho' => 'boolean',
         ];
     }
 

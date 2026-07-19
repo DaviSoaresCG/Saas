@@ -58,10 +58,8 @@ class PedidoController extends Controller
         $produtos = '';
         $itensParaInserir = [];
         foreach ($cart as $product) {
-            $atributosTexto = '';
-            if (! empty($product['atributos'])) {
-                $atributosTexto = "\nAtributos: ".implode(', ', $product['atributos']);
-            }
+            $atributosTexto = ! empty($product['atributos']) ? implode(', ', $product['atributos']) : '';
+            $observacaoTexto = ! empty($product['observacao']) ? $product['observacao'] : null;
 
             $itensParaInserir[] = [
                 'pedido_id' => $pedido->id,
@@ -69,11 +67,15 @@ class PedidoController extends Controller
                 'value' => $product['value'],
                 'quantidade' => $product['quantity'],
                 'atributos' => $atributosTexto,
+                'observacao' => $observacaoTexto,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
 
-            $produtos .= "\n\n*Produto:* ".$product['name'].' #'.$product['id']."\n*Valor:* R$ ".number_format($product['value'], 2, ',', '.')."\n*Quantidade:* ".$product['quantity'].$atributosTexto;
+            $msgAtributos = ! empty($atributosTexto) ? "\nAtributos: " . $atributosTexto : '';
+            $msgObs = ! empty($observacaoTexto) ? "\nObs: " . $observacaoTexto : '';
+
+            $produtos .= "\n\n*Produto:* ".$product['name'].' #'.$product['id']."\n*Valor:* R$ ".number_format($product['value'], 2, ',', '.')."\n*Quantidade:* ".$product['quantity'].$msgAtributos.$msgObs;
         }
 
         // uma so ida no banco

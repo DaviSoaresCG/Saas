@@ -23,22 +23,12 @@
             @endif
         </div>
 
-        @if ($produto->atributos->isNotEmpty())
-            {{-- Produto com atributos: vai para a página do produto para o cliente escolher --}}
-            <a href="{{ tenant_route('products.show', ['product' => $produto->id]) }}"
-                class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors hover:opacity-90">
-                <i data-lucide="tag" class="h-4 w-4"></i>
-                <span>Ver opções</span>
-            </a>
-        @else
-            {{-- Produto sem atributos: adiciona direto ao carrinho --}}
-            <form action="{{ tenant_route('cart.add', ['id' => $produto->id]) }}" method="POST">
-                @csrf
-                <button type="submit"
-                    class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors cursor-pointer hover:opacity-90">
-                    <span>Adicionar ao carrinho</span>
-                </button>
-            </form>
-        @endif
+        <form action="{{ tenant_route('cart.add', ['id' => $produto->id]) }}" method="POST">
+            @csrf
+            <button type="submit"
+                class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors cursor-pointer hover:opacity-90">
+                <span>Adicionar ao carrinho</span>
+            </button>
+        </form>
     </div>
 </div>

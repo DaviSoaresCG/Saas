@@ -26,6 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'store_name' => ['required', 'string', 'max:255', 'min:3'],
+            'modal_carrinho' => ['nullable', 'boolean'],
         ];
     }
 }

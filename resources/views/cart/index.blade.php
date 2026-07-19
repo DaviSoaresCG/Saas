@@ -37,6 +37,11 @@
                                         @endforeach
                                     </div>
                                 @endif
+                                @if (!empty($item['observacao']))
+                                    <p class="mt-1 text-xs text-[var(--text-muted)] italic font-medium">
+                                        <span class="font-semibold not-italic">Obs:</span> {{ $item['observacao'] }}
+                                    </p>
+                                @endif
                             </div>
 
                             <div class="flex items-center gap-3">

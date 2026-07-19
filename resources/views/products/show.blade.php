@@ -72,23 +72,6 @@
                 <form action="{{ tenant_route('cart.add', ['id' => $product->id]) }}" method="POST" class="mt-6 space-y-5">
                     @csrf
 
-                    @if ($product->atributos->isNotEmpty())
-                        <div>
-                            <p class="text-sm font-bold text-[var(--text-base)] mb-3">Escolha os atributos:</p>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach ($product->atributos as $atributo)
-                                    <label for="atr_c_{{ $atributo->id }}"
-                                        class="flex items-center gap-2 rounded-xl border border-[var(--color-primary)]/30 bg-[var(--bg-page)]/60 px-3.5 py-2 text-sm text-[var(--text-base)] cursor-pointer transition-all has-[:checked]:border-[var(--color-primary)] has-[:checked]:bg-[var(--color-primary)]/15 has-[:checked]:font-bold">
-                                        <input type="checkbox" id="atr_c_{{ $atributo->id }}"
-                                            name="atributos[]" value="{{ $atributo->id }}"
-                                            class="accent-[var(--color-primary)]">
-                                        {{ $atributo->nome }}
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
                     <button type="submit"
                         class="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--text-on-primary)] shadow-lg transition-all hover:opacity-90 active:scale-95 cursor-pointer">
                         <i data-lucide="shopping-cart" class="h-5 w-5"></i>

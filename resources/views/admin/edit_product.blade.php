@@ -106,25 +106,7 @@
                 </p>
             </div>
 
-            {{-- Atributos --}}
-            @if ($atributos->isNotEmpty())
-            <div>
-                <label class="block text-sm font-bold text-[var(--text-base)] mb-3">
-                    Atributos do produto <span class="text-[var(--text-muted)] font-normal text-xs">(opcional)</span>
-                </label>
-                <div class="flex flex-wrap gap-2">
-                    @foreach ($atributos as $atributo)
-                        <label for="atr_{{ $atributo->id }}"
-                            class="flex items-center gap-2 rounded-xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/50 px-3 py-2 text-sm text-[var(--text-base)] cursor-pointer transition-all has-[:checked]:border-[var(--color-primary)] has-[:checked]:bg-[var(--color-primary)]/10 has-[:checked]:font-semibold">
-                            <input type="checkbox" id="atr_{{ $atributo->id }}" name="atributos[]"
-                                value="{{ $atributo->id }}" class="accent-[var(--color-primary)]"
-                                {{ in_array($atributo->id, old('atributos', $atributosVinculados)) ? 'checked' : '' }}>
-                            {{ $atributo->nome }}
-                        </label>
-                    @endforeach
-                </div>
-            </div>
-            @endif
+
 
             <div class="flex flex-wrap gap-4 pt-4 mt-8 border-t border-[var(--color-primary)]/10">
                 <button type="submit"

@@ -51,6 +51,17 @@
             @endif
         </div>
 
+        <div class="pt-4 border-t border-[var(--color-primary)]/20">
+            <label class="flex items-start gap-3 cursor-pointer select-none">
+                <input type="checkbox" name="modal_carrinho" value="1" {{ old('modal_carrinho', $user->modal_carrinho) ? 'checked' : '' }}
+                    class="mt-1 h-5 w-5 rounded border-[var(--color-primary)]/40 text-[var(--color-primary)] focus:ring-[var(--color-primary)] accent-[var(--color-primary)]">
+                <div>
+                    <span class="block text-sm font-bold text-[var(--text-base)]">Abrir modal de detalhes ao adicionar produto ao carrinho</span>
+                    <span class="block text-sm text-[var(--text-muted)] mt-0.5">Quando ativado, exibe um modal para o cliente definir quantidade e observações (ex: tamanho, cor ou variações) antes do produto ir para o carrinho.</span>
+                </div>
+            </label>
+        </div>
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Salvar') }}</x-primary-button>
 

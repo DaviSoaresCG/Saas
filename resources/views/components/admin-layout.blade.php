@@ -91,11 +91,6 @@
                             <i data-lucide="plus-circle" class="h-4 w-4 shrink-0 {{ $active === 'products-create' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Novo produto
                         </a>
-                        <a href="{{ route('atributos.index') }}" {!! $navClick !!}
-                            class="{{ $active === 'atributos' ? $navActive : $navIdle }}">
-                            <i data-lucide="tag" class="h-4 w-4 shrink-0 {{ $active === 'atributos' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
-                            Atributos
-                        </a>
                         @endif
                         <a href="{{ route('catalogos.index') }}" {!! $navClick !!}
                             class="{{ $active === 'catalogos' ? $navActive : $navIdle }}">

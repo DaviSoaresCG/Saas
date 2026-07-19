@@ -18,7 +18,9 @@ class StoreLayout extends Component
 
     public function render(): View
     {
-        $theme = app(User::class)->theme_name;
-        return view('components.store-layout', compact('theme'));
+        $tenantUser = app(User::class);
+        $theme = $tenantUser->theme_name;
+        $modalCarrinho = (bool) ($tenantUser->modal_carrinho ?? false);
+        return view('components.store-layout', compact('theme', 'modalCarrinho'));
     }
 }

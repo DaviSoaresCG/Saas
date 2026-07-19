@@ -20,6 +20,7 @@
                         <th scope="col" class="px-4 sm:px-6 py-4">Preço</th>
                         <th scope="col" class="px-4 sm:px-6 py-4">Qtd.</th>
                         <th scope="col" class="px-4 sm:px-6 py-4">Atributos</th>
+                        <th scope="col" class="px-4 sm:px-6 py-4">Observação</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--color-primary)]/60">
@@ -30,7 +31,8 @@
                             <td class="px-4 sm:px-6 py-4 font-semibold text-[var(--text-base)]">{{ $item->product->name }}</td>
                             <td class="px-4 sm:px-6 py-4 text-emerald-600 font-medium">R$ {{ $item->value }}</td>
                             <td class="px-4 sm:px-6 py-4 text-[var(--text-base)] tabular-nums">{{ $item->quantidade }}</td>
-                            <td class="px-4 sm:px-6 py-4 text-[var(--text-base)] tabular-nums">{{ $item->atributos }}</td>
+                            <td class="px-4 sm:px-6 py-4 text-[var(--text-base)] tabular-nums">{{ $item->atributos ?: '-' }}</td>
+                            <td class="px-4 sm:px-6 py-4 text-[var(--text-base)] italic">{{ $item->observacao ?: '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>

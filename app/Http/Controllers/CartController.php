@@ -34,12 +34,15 @@ class CartController extends Controller
             $value = $value * (1 - $desconto / 100);
         }
 
+        $quantity = max(1, (int) $request->input('quantity', 1));
+        $observacao = trim((string) $request->input('observacao', ''));
+
         // Atributos selecionados pelo cliente (ids)
         $atributos = $request->input('atributos', []);
         sort($atributos);
 
-        // Chave única: produto + combinação de atributos
-        $cartKey = $id . '_' . implode('_', $atributos);
+        // Chave única: produto + combinação de atributos + observação
+        $cartKey = $id . '_' . implode('_', $atributos) . ($observacao !== '' ? '_' . md5($observacao) : '');
 
         // Busca os nomes dos atributos selecionados
         $atributoNomes = [];
@@ -48,15 +51,19 @@ class CartController extends Controller
         }
 
         if (isset($cart[$cartKey])) {
-            $cart[$cartKey]['quantity']++;
+            $cart[$cartKey]['quantity'] += $quantity;
+            if (!empty($observacao)) {
+                $cart[$cartKey]['observacao'] = $observacao;
+            }
         } else {
             $cart[$cartKey] = [
-                'id'        => $product->id,
-                'name'      => $product->name,
-                'value'     => $value,
-                'path'      => $product->path,
-                'quantity'  => 1,
-                'atributos' => $atributoNomes,
+                'id'         => $product->id,
+                'name'       => $product->name,
+                'value'      => $value,
+                'path'       => $product->path,
+                'quantity'   => $quantity,
+                'atributos'  => $atributoNomes,
+                'observacao' => $observacao,
             ];
         }
 
