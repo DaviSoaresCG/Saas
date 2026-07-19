@@ -39,7 +39,7 @@
                 </thead>
                 <tbody class="divide-y divide-[var(--color-primary)]/60">
                     @foreach ($products as $product)
-                        <tr class="hover:bg-[var(--color-primary)]/10 transition-colors group">
+                        <tr class="hover:bg-[var(--color-primary)]/10 transition-colors group cursor-pointer" onclick="window.location='{{ route('products.show', ['product' => $product->id]) }}'">
                             <td class="px-4 sm:px-6 py-4">
                                 <a href="{{ route('products.show', ['product' => $product->id]) }}"
                                     class="font-semibold text-[var(--text-base)] hover:opacity-70 transition-opacity">
