@@ -10,7 +10,7 @@ class Pedido extends Model
 {
     use BelongsToTenant;
 
-    protected $fillable = ['user_id', 'total'];
+    protected $fillable = ['user_id', 'total', 'cliente_nome', 'cliente_phone'];
 
     public function user()
     {

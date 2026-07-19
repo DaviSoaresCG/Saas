@@ -88,23 +88,99 @@
                             </span>
                         </div>
                     </div>
-                    <form action="{{ tenant_route('order.finished') }}" method="get">
-                        @csrf
-                        <input type="number" hidden id="summary-total" value="">
-                        <button
-                            class="mt-8 w-full cursor-pointer  bg-[var(--color-primary)] text-[var(--text-on-primary)] text-lg font-semibold py-3 rounded-lg shadow-md">
-                            Finalizar pedido
-                        </button>
-                    </form>
+                    <button type="button" id="open-checkout-modal-btn"
+                        class="mt-8 w-full cursor-pointer bg-[var(--color-primary)] text-[var(--text-on-primary)] text-lg font-semibold py-3 rounded-lg shadow-md hover:opacity-95 transition-all">
+                        Finalizar pedido
+                    </button>
 
                 </div>
             </div>
 
         </div>
     </div>
+
+    <!-- Modal de Finalização / Dados do Cliente -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-all duration-300">
+        <div class="relative w-full max-w-md bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)]">
+            
+            <button type="button" id="close-modal-btn" class="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-base)] transition-colors cursor-pointer">
+                <i data-lucide="x" class="h-6 w-6"></i>
+            </button>
+
+            <div class="mb-6 text-center">
+                <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] mb-3">
+                    <i data-lucide="user-check" class="h-7 w-7"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[var(--text-base)]">Identificação do Cliente</h3>
+                <p class="text-sm text-[var(--text-muted)] mt-1 font-medium">Preencha os campos para salvarmos o seu pedido.</p>
+            </div>
+
+            <form id="checkout-form" action="{{ tenant_route('order.finished') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label for="cliente_nome" class="block text-sm font-semibold text-[var(--text-base)] mb-1.5">
+                        Nome completo <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="cliente_nome" name="cliente_nome" required
+                        placeholder="Digite seu nome completo"
+                        class="w-full px-4 py-3 rounded-xl bg-[var(--bg-card)] border border-[var(--color-primary)]/30 text-[var(--text-base)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all">
+                </div>
+
+                <div>
+                    <label for="cliente_phone" class="block text-sm font-semibold text-[var(--text-base)] mb-1.5">
+                        Celular / WhatsApp <span class="text-red-500">*</span>
+                    </label>
+                    <input type="tel" id="cliente_phone" name="cliente_phone" required
+                        placeholder="(00) 90000-0000"
+                        class="w-full px-4 py-3 rounded-xl bg-[var(--bg-card)] border border-[var(--color-primary)]/30 text-[var(--text-base)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all" x-data x-mask="(99) 99999-9999">
+                </div>
+
+                <div class="pt-2 flex flex-col gap-2.5">
+                    <button type="submit"
+                        class="w-full cursor-pointer bg-[var(--color-primary)] hover:opacity-90 text-[var(--text-on-primary)] font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-base">
+                        <span>Salvar e Enviar Pedido</span>
+                        <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                    </button>
+                    <button type="button" id="cancel-modal-btn"
+                        class="w-full cursor-pointer bg-transparent hover:bg-gray-500/10 text-[var(--text-muted)] font-semibold py-2.5 rounded-xl transition-all text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            const checkoutModal = document.getElementById('checkout-modal');
+            const openModalBtn = document.getElementById('open-checkout-modal-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const cancelModalBtn = document.getElementById('cancel-modal-btn');
+
+            if (openModalBtn && checkoutModal) {
+                openModalBtn.addEventListener('click', function() {
+                    checkoutModal.classList.remove('hidden');
+                });
+
+                if (closeModalBtn) {
+                    closeModalBtn.addEventListener('click', function() {
+                        checkoutModal.classList.add('hidden');
+                    });
+                }
+
+                if (cancelModalBtn) {
+                    cancelModalBtn.addEventListener('click', function() {
+                        checkoutModal.classList.add('hidden');
+                    });
+                }
+
+                checkoutModal.addEventListener('click', function(e) {
+                    if (e.target === checkoutModal) {
+                        checkoutModal.classList.add('hidden');
+                    }
+                });
+            }
 
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             document.querySelectorAll('.btn-update-cart').forEach(button => {

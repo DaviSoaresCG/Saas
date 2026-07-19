@@ -31,7 +31,7 @@ class PedidoController extends Controller
         return view('pedidos.show', compact('itens_pedido', 'user'));
     }
 
-    public function finalizar($slug)
+    public function finalizar(Request $request, $slug = null)
     {
         $cart = session()->get('cart', []);
         if (empty($cart)) {
@@ -43,18 +43,26 @@ class PedidoController extends Controller
             $total += $product['value'] * $product['quantity'];
         }
 
+        $clienteNome = $request->input('cliente_nome');
+        $clientePhone = $request->input('cliente_phone');
+        $whatsapp_limpo = preg_replace('/\D/', '', $clientePhone);
+
+
         $pedido = Pedido::create([
             'user_id' => app(User::class)->id,
             'total' => $total,
+            'cliente_nome' => $clienteNome,
+            'cliente_phone' => $whatsapp_limpo,
         ]);
 
         $produtos = '';
         $itensParaInserir = [];
-        $atributosTexto = '';
-        if (! empty($product['atributos'])) {
-            $atributosTexto = "\nAtributos: ".implode(', ', $product['atributos']);
-        }
         foreach ($cart as $product) {
+            $atributosTexto = '';
+            if (! empty($product['atributos'])) {
+                $atributosTexto = "\nAtributos: ".implode(', ', $product['atributos']);
+            }
+
             $itensParaInserir[] = [
                 'pedido_id' => $pedido->id,
                 'product_id' => $product['id'],
@@ -65,21 +73,30 @@ class PedidoController extends Controller
                 'updated_at' => now(),
             ];
 
-            $produtos .= "\n*Produto: ".$product['name'].'#'.$product['id'].'*'."\nValor: ".$product['value']."\nQuantidade: ".$product['quantity'].$atributosTexto;
+            $produtos .= "\n\n*Produto:* ".$product['name'].' #'.$product['id']."\n*Valor:* R$ ".number_format($product['value'], 2, ',', '.')."\n*Quantidade:* ".$product['quantity'].$atributosTexto;
         }
+
         // uma so ida no banco
         ItemPedido::insert($itensParaInserir);
 
-        $whatsapp = Pedido::with('user')->findorFail($pedido->id);
+        $whatsapp = Pedido::with('user')->findOrFail($pedido->id);
         $tenantPhone = $whatsapp->user->whatsapp; // campo no banco
-        $mensagem = "Olá, acabei de finalizar o pedido *#{$pedido->id}*.\nTotal: R$ {$total}".$produtos;
+
+        $clientDetails = '';
+        if (!empty($clienteNome)) {
+            $clientDetails .= "\n*Cliente:* " . $clienteNome;
+        }
+        if (!empty($clientePhone)) {
+            $clientDetails .= "\n*WhatsApp/Contato:* " . $clientePhone;
+        }
+
+        $mensagem = "Olá, acabei de finalizar o pedido *#{$pedido->id}*." . $clientDetails . "\n*Total:* R$ {$total}" . $produtos;
 
         // Monta a URL do WhatsApp
         $url = "https://wa.me/{$tenantPhone}?text=".urlencode($mensagem);
         session()->forget('cart');
 
-        return view('pedidos.whatsapp', compact('pedido', 'url'));
-
+        return view('pedidos.whatsapp', compact('pedido', 'url', 'slug'));
     }
 
     public function search(Request $request, $slug)

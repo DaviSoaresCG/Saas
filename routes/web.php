@@ -38,7 +38,7 @@ if (!function_exists('registerPublicCatalogRoutes')) {
             Route::get('/clear', 'clear')->name('clear');
         });
 
-        Route::get('/pedido-finalizar', [PedidoController::class, 'finalizar'])->name($prefix . 'order.finished');
+        Route::match(['get', 'post'], '/pedido-finalizar', [PedidoController::class, 'finalizar'])->name($prefix . 'order.finished');
     }
 }
 
