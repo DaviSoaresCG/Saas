@@ -90,7 +90,7 @@ class ProdutoController extends Controller
         // Associa atributos
         $product->atributos()->sync($request->input('atributos', []));
 
-        return redirect()->to(tenant_route('products.index'));
+        return redirect()->route('dashboard');
     }
 
     public function edit($slug, $id)
