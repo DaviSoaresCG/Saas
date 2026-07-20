@@ -34,7 +34,7 @@
                     <tr>
                         <th scope="col" class="px-4 sm:px-6 py-4">Nome</th>
                         <th scope="col" class="px-4 sm:px-6 py-4">Preço</th>
-                        <th scope="col" class="px-4 sm:px-6 py-4 text-right"><span class="sr-only">Ações</span></th>
+                        <th scope="col" class="px-4 sm:px-6 py-4 text-right">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--color-primary)]/60">
@@ -61,7 +61,7 @@
                                             @method('DELETE')
                                             <input type="hidden" name="slug" value="{{ auth()->user()->slug }}">
                                             <button type="submit"
-                                                class="inline-flex items-center gap-1 rounded-lg border border-red-500/40 bg-red-500 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer hover:bg-red-600 transition-colors">
+                                                class="inline-flex items-center gap-1 rounded-lg border border-red-500/40 bg-red-500 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer hover:bg-red-600 transition-colors relative z-10">
                                                 Excluir
                                             </button>
                                         </form>

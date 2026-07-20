@@ -12,7 +12,7 @@ class CatalogoController extends Controller
     /**
      * Display a listing of the catalogs.
      */
-    public function index()
+    public function index($slug = null)
     {
         $catalogos = Auth::user()->catalogos()->latest()->get();
         return view('admin.catalogos.index', compact('catalogos'));
@@ -21,7 +21,7 @@ class CatalogoController extends Controller
     /**
      * Store a newly created catalog.
      */
-    public function store(Request $request)
+    public function store(Request $request, $slug = null)
     {
         $request->validate([
             'nome' => 'required|string|max:255',
@@ -45,15 +45,19 @@ class CatalogoController extends Controller
             'desconto_index' => $request->desconto_index,
         ]);
 
-        return redirect()->route('catalogos.index')
+        return redirect()->route('catalogos.index', ['slug' => Auth::user()->slug])
             ->with('success', 'Catálogo criado com sucesso!');
     }
 
     /**
      * Update the specified catalog.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug = null, $id = null)
     {
+        if ($id === null) {
+            $id = $slug;
+        }
+
         $catalogo = Auth::user()->catalogos()->findOrFail($id);
 
         $request->validate([
@@ -72,19 +76,23 @@ class CatalogoController extends Controller
             'desconto_index' => $request->desconto_index,
         ]);
 
-        return redirect()->route('catalogos.index')
+        return redirect()->route('catalogos.index', ['slug' => Auth::user()->slug])
             ->with('success', 'Catálogo atualizado com sucesso!');
     }
 
     /**
      * Remove the specified catalog.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $slug = null, $id = null)
     {
+        if ($id === null) {
+            $id = $slug;
+        }
+
         $catalogo = Auth::user()->catalogos()->findOrFail($id);
         $catalogo->delete();
 
-        return redirect()->route('catalogos.index')
+        return redirect()->route('catalogos.index', ['slug' => Auth::user()->slug])
             ->with('success', 'Catálogo removido com sucesso!');
     }
 }

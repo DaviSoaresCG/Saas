@@ -22,7 +22,7 @@
                     Novo Catálogo
                 </h2>
 
-                <form action="{{ route('catalogos.store') }}" method="POST" class="space-y-4">
+                <form action="{{ route('catalogos.store', ['slug' => auth()->user()->slug]) }}" method="POST" class="space-y-4">
                     @csrf
                     <div>
                         <x-input-base name="nome" value="{{ old('nome') }}" type="text" icon="folder" placeholder="Ex: Clientes VIP, Atacado" label="Nome do Catálogo" required />
@@ -130,13 +130,13 @@
                                             editId = '{{ $cat->id }}';
                                             editNome = '{{ $cat->nome }}';
                                             editDesconto = '{{ $cat->desconto_index }}';
-                                            updateUrl = '{{ route('catalogos.update', $cat->id) }}';
+                                            updateUrl = '{{ route('catalogos.update', ['slug' => auth()->user()->slug, 'catalogo' => $cat->id]) }}';
                                             window.scrollTo({top: 0, behavior: 'smooth'});
                                         " class="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1.5 text-xs font-semibold text-amber-500 hover:bg-amber-500/20 transition-colors cursor-pointer">
                                             <i data-lucide="edit" class="h-3.5 w-3.5"></i>
                                             Editar
                                         </button>
-                                        <form action="{{ route('catalogos.destroy', $cat->id) }}" method="POST"
+                                        <form action="{{ route('catalogos.destroy', ['slug' => auth()->user()->slug, 'catalogo' => $cat->id]) }}" method="POST"
                                             onsubmit="return confirm('Remover o catálogo \'{{ $cat->nome }}\'?');">
                                             @csrf
                                             @method('DELETE')
