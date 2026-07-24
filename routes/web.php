@@ -120,23 +120,21 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware(['tenant'])->group(func
 Route::domain(env('APP_DOMAIN'))->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
+    Route::get('/loja-indisponivel', fn () => view('errors.loja-indisponivel'))->name('loja-indisponivel');
+});
 
-    // Fluxo de pagamento Pix (Clientes Diretos)
-    Route::middleware(['auth', 'verified'])->group(function () {
-        Route::middleware(['payment.incomplete'])->group(function () {
-            Route::get('/pagamento/pendente', [PixPaymentController::class, 'pending'])->name('pagamento.pending');
-            Route::post('/pagamento/gerar', [PixPaymentController::class, 'generate'])->name('pagamento.generate');
-            Route::get('/pagamento/checkout', [PixPaymentController::class, 'checkout'])->name('pagamento.checkout');
-            Route::get('/pagamento/status', [PixPaymentController::class, 'checkStatus'])->name('pagamento.status');
-        });
-
-        // Status da Assinatura (Unificado)
-        Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
-        Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
+// Fluxo de pagamento (Acessível de qualquer subdomínio ou ambiente local)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::middleware(['payment.incomplete'])->group(function () {
+        Route::get('/pagamento/pendente', [PixPaymentController::class, 'pending'])->name('pagamento.pending');
+        Route::post('/pagamento/gerar', [PixPaymentController::class, 'generate'])->name('pagamento.generate');
+        Route::get('/pagamento/checkout', [PixPaymentController::class, 'checkout'])->name('pagamento.checkout');
+        Route::get('/pagamento/status', [PixPaymentController::class, 'checkStatus'])->name('pagamento.status');
     });
 
-    // Erros e avisos
-    Route::get('/loja-indisponivel', fn () => view('errors.loja-indisponivel'))->name('loja-indisponivel');
+    // Status da Assinatura (Unificado)
+    Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
+    Route::get('/subscription/pending', [AdminController::class, 'subscriptionPending'])->name('subscription.pending');
 });
 
 /*

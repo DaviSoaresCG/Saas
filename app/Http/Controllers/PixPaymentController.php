@@ -40,31 +40,20 @@ class PixPaymentController extends Controller
         
         // Preços: Mensal R$ 29,90, Anual R$ 299,00
         $amount = $plan === 'yearly' ? 299.00 : 29.90;
-        //$amount = 0.02;
         $planName = $plan === 'yearly' ? 'Plano Anual' : 'Plano Mensal';
 
-        // 1. Evitar gerar múltiplos Pix duplicados no Mercado Pago se já existir um pendente idêntico recente
+        // Evitar preferências duplicadas recentes do mesmo usuário
         $existingTransaction = PaymentTransaction::where('user_id', $user->id)
             ->where('plan', $plan)
             ->where('status', 'pending')
-            ->where('created_at', '>=', now()->subMinutes(30))
+            ->where('created_at', '>=', now()->subMinutes(15))
             ->first();
 
-        if ($existingTransaction) {
-            session([
-                'pending_pix' => [
-                    'plan' => $existingTransaction->plan,
-                    'amount' => (float)$existingTransaction->amount,
-                    'plan_name' => $planName,
-                    'txid' => $existingTransaction->payment_id,
-                    'qr_code' => $existingTransaction->qr_code,
-                    'qr_code_base64' => $existingTransaction->qr_code_base64,
-                ]
-            ]);
-            return redirect()->route('pagamento.checkout');
+        if ($existingTransaction && !empty($existingTransaction->qr_code)) {
+            return redirect()->away($existingTransaction->qr_code);
         }
 
-        // 2. Chamar a API do Mercado Pago
+        // Criar Preferência de Checkout Pro no Mercado Pago
         try {
             $nameParts = explode(' ', trim($user->name));
             $firstName = $nameParts[0] ?? 'Cliente';
@@ -75,66 +64,65 @@ class PixPaymentController extends Controller
                 throw new \Exception('Mercado Pago Access Token não está configurado.');
             }
 
-            Log::info("Iniciando requisição de Pix no Mercado Pago para o usuário: {$user->email}");
+            Log::info("Iniciando requisição de Checkout Pro Mercado Pago para o usuário: {$user->email}");
 
             $response = Http::withToken($accessToken)
                 ->withHeaders([
                     'X-Idempotency-Key' => Str::uuid()->toString(),
                 ])
-                ->post('https://api.mercadopago.com/v1/payments', [
-                    'transaction_amount' => (float)$amount,
-                    'description' => "Assinatura ZapCatalog - {$planName}",
-                    'payment_method_id' => 'pix',
+                ->post('https://api.mercadopago.com/checkout/preferences', [
+                    'items' => [
+                        [
+                            'title' => "Assinatura ZapCatalog - {$planName}",
+                            'quantity' => 1,
+                            'currency_id' => 'BRL',
+                            'unit_price' => (float)$amount,
+                        ]
+                    ],
                     'payer' => [
                         'email' => $user->email,
-                        'first_name' => $firstName,
-                        'last_name' => $lastName,
+                        'name' => $firstName,
+                        'surname' => $lastName,
                     ],
+                    'back_urls' => [
+                        'success' => route('subscription.success'),
+                        'pending' => route('subscription.pending'),
+                        'failure' => route('pagamento.pending'),
+                    ],
+                    'auto_return' => 'approved',
                     'external_reference' => (string) $user->id,
-                    'date_of_expiration' => now()->addMinutes(30)->format('Y-m-d\TH:i:s.000P'),
+                    'notification_url' => route('api.payments.pix.webhook'),
                 ]);
 
             if ($response->failed()) {
-                Log::error('Erro ao gerar Mercado Pago Pix: ' . $response->body());
-                return redirect()->back()->with('error', 'Ocorreu um erro ao gerar o Pix com o Mercado Pago: ' . ($response->json('message') ?? 'Erro na API'));
+                Log::error('Erro ao gerar Checkout Pro Mercado Pago: ' . $response->body());
+                return redirect()->back()->with('error', 'Ocorreu um erro ao gerar a cobrança no Mercado Pago: ' . ($response->json('message') ?? 'Erro na API'));
             }
 
-            $paymentId = $response->json('id');
-            $qrCode = $response->json('point_of_interaction.transaction_data.qr_code');
-            $qrCodeBase64 = $response->json('point_of_interaction.transaction_data.qr_code_base64');
+            $initPoint = $response->json('init_point');
+            $preferenceId = $response->json('id');
 
-            if (empty($qrCode)) {
-                throw new \Exception('Código Pix Copia e Cola não foi retornado pela API do Mercado Pago.');
+            if (empty($initPoint)) {
+                throw new \Exception('URL do Checkout Pro não foi retornada pelo Mercado Pago.');
             }
 
-            // 3. Salvar a transação local no banco de dados
-            $transaction = PaymentTransaction::create([
+            // Salvar a transação no banco de dados
+            PaymentTransaction::create([
                 'user_id' => $user->id,
-                'payment_id' => (string)$paymentId,
+                'payment_id' => (string)$preferenceId,
                 'amount' => $amount,
                 'plan' => $plan,
                 'status' => 'pending',
-                'qr_code' => $qrCode,
-                'qr_code_base64' => $qrCodeBase64,
+                'qr_code' => $initPoint,
+                'qr_code_base64' => null,
             ]);
 
-            // 4. Salvar na sessão
-            session([
-                'pending_pix' => [
-                    'plan' => $plan,
-                    'amount' => $amount,
-                    'plan_name' => $planName,
-                    'txid' => (string)$paymentId,
-                    'qr_code' => $qrCode,
-                    'qr_code_base64' => $qrCodeBase64,
-                ]
-            ]);
-
-            return redirect()->route('pagamento.checkout');
+            // Redireciona diretamente para o Checkout Pro oficial do Mercado Pago
+            return redirect()->away($initPoint);
 
         } catch (\Exception $e) {
-            Log::error('Erro ao gerar Mercado Pago Pix: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Ocorreu um erro ao gerar o pagamento via Pix: ' . $e->getMessage());
+            Log::error('Erro ao gerar Checkout Pro Mercado Pago: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocorreu um erro ao preparar o pagamento: ' . $e->getMessage());
         }
     }
 
