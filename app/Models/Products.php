@@ -56,6 +56,11 @@ class Products extends Model
         return $this->belongsToMany(Atributo::class, 'atributo_product', 'product_id', 'atributo_id');
     }
 
+    public function grupos()
+    {
+        return $this->belongsToMany(Grupo::class, 'grupo_product', 'product_id', 'grupo_id');
+    }
+
     /**
      * Format preco_base as money.
      */

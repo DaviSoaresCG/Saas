@@ -106,7 +106,29 @@
                 </p>
             </div>
 
-
+            @if (isset($grupos) && $grupos->isNotEmpty())
+            <div>
+                <label class="block text-sm font-bold text-[var(--text-base)] mb-2">
+                    Grupos / Categorias
+                    <span class="text-[var(--text-muted)] font-normal text-xs">(selecione onde exibir o produto)</span>
+                </label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    @foreach ($grupos as $grupo)
+                        <label class="flex items-center gap-2.5 rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/40 p-3 cursor-pointer hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/5 transition-all">
+                            <input type="checkbox" name="grupos[]" value="{{ $grupo->id }}"
+                                {{ in_array($grupo->id, old('grupos', $gruposVinculados ?? [])) ? 'checked' : '' }}
+                                class="rounded-lg border-[var(--color-primary)]/30 bg-[var(--bg-card)] text-[var(--color-primary)] focus:ring-0 h-4 w-4">
+                            @if ($grupo->foto_path)
+                                <img src="{{ $grupo->foto_url }}" class="h-6 w-6 rounded-lg object-cover" alt="">
+                            @else
+                                <i data-lucide="layers" class="h-4 w-4 text-[var(--color-primary)] opacity-70"></i>
+                            @endif
+                            <span class="text-xs font-semibold text-[var(--text-base)] truncate">{{ $grupo->nome }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+            @endif
 
             <div class="flex flex-wrap gap-4 pt-4 mt-8 border-t border-[var(--color-primary)]/10">
                 <button type="submit"

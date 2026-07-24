@@ -92,6 +92,11 @@
                             Novo produto
                         </a>
                         @endif
+                        <a href="{{ route('grupos.index') }}" {!! $navClick !!}
+                            class="{{ $active === 'grupos' ? $navActive : $navIdle }}">
+                            <i data-lucide="layers" class="h-4 w-4 shrink-0 {{ $active === 'grupos' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
+                            Grupos
+                        </a>
                         <a href="{{ route('catalogos.index') }}" {!! $navClick !!}
                             class="{{ $active === 'catalogos' ? $navActive : $navIdle }}">
                             <i data-lucide="folder" class="h-4 w-4 shrink-0 {{ $active === 'catalogos' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>

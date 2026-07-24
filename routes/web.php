@@ -11,6 +11,7 @@ use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\ErpApiController;
 use App\Http\Controllers\PixPaymentController;
 use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\GrupoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +98,10 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware(['tenant'])->group(func
 
         // CRUD de Catálogos Promocionais
         Route::resource('catalogos', CatalogoController::class)->except(['show', 'create', 'edit']);
+
+        // CRUD de Grupos (Categorias)
+        Route::post('/grupos/{grupo}/sync-products', [GrupoController::class, 'syncProducts'])->name('grupos.sync-products');
+        Route::resource('grupos', GrupoController::class)->except(['show', 'create', 'edit']);
 
         // Perfil do Usuário
         Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Atributo;
+use App\Models\Grupo;
 use App\Models\ProductClick;
 use App\Models\ProductImage;
 use App\Models\Products;
@@ -12,17 +13,28 @@ use Illuminate\Support\Facades\Storage;
 
 class ProdutoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = app(User::class);
-        $products = Products::with(['atributos', 'productImages'])->get();
+        $selectedGrupo = $request->query('grupo');
 
-        return view('products.index', compact('user', 'products'));
+        $query = Products::with(['atributos', 'productImages', 'grupos']);
+
+        if ($selectedGrupo) {
+            $query->whereHas('grupos', function ($q) use ($selectedGrupo) {
+                $q->where('grupos.id', $selectedGrupo);
+            });
+        }
+
+        $products = $query->get();
+        $grupos = Grupo::all();
+
+        return view('products.index', compact('user', 'products', 'grupos', 'selectedGrupo'));
     }
 
     public function show($slug, $id)
     {
-        $product = Products::with(['atributos', 'productImages'])->findOrFail($id);
+        $product = Products::with(['atributos', 'productImages', 'grupos'])->findOrFail($id);
 
         ProductClick::recordProductView($product);
         $user = app(User::class);
@@ -46,8 +58,9 @@ class ProdutoController extends Controller
     public function create($slug)
     {
         $atributos = Atributo::all();
+        $grupos = Grupo::all();
 
-        return view('admin.create_product', compact('atributos'));
+        return view('admin.create_product', compact('atributos', 'grupos'));
     }
 
     public function store(Request $request)
@@ -87,19 +100,22 @@ class ProdutoController extends Controller
         // Primeira imagem = capa
         $this->syncCover($product);
 
-        // Associa atributos
+        // Associa atributos e grupos
         $product->atributos()->sync($request->input('atributos', []));
+        $product->grupos()->sync($request->input('grupos', []));
 
         return redirect()->route('dashboard');
     }
 
     public function edit($slug, $id)
     {
-        $product = Products::with(['atributos', 'productImages'])->findOrFail($id);
+        $product = Products::with(['atributos', 'productImages', 'grupos'])->findOrFail($id);
         $atributos = Atributo::all();
         $atributosVinculados = $product->atributos->pluck('id')->toArray();
+        $grupos = Grupo::all();
+        $gruposVinculados = $product->grupos->pluck('id')->toArray();
 
-        return view('admin.edit_product', compact('product', 'atributos', 'atributosVinculados'));
+        return view('admin.edit_product', compact('product', 'atributos', 'atributosVinculados', 'grupos', 'gruposVinculados'));
     }
 
     public function update($slug, Request $request)
@@ -137,6 +153,7 @@ class ProdutoController extends Controller
         }
 
         $product->atributos()->sync($request->input('atributos', []));
+        $product->grupos()->sync($request->input('grupos', []));
 
         return redirect()->route('admin.products', ['slug' => auth()->user()->slug])
             ->with('success', 'Produto atualizado com sucesso!');
