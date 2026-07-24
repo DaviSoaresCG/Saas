@@ -67,16 +67,17 @@ class PixPaymentController extends Controller
 
             Log::info("Iniciando requisição de Checkout Pro Mercado Pago para o usuário: {$user->email}");
 
-            // Garantir que as URLs enviadas ao Mercado Pago utilizem HTTPS em produção
-            $isHttps = request()->secure() || str_starts_with(config('app.url'), 'https');
-            $formatUrl = function($url) use ($isHttps) {
-                return $isHttps ? str_replace('http://', 'https://', $url) : $url;
-            };
+            // Garantir que as URLs enviadas ao Mercado Pago utilizem HTTPS no domínio da aplicação
+            $host = request()->getHost();
+            $scheme = (!str_contains($host, 'localhost') && !str_contains($host, '127.0.0.1') && !str_contains($host, '.test')) ? 'https://' : 'http://';
+            $baseUrl = $scheme . $host;
 
-            $successUrl = $formatUrl(route('subscription.success'));
-            $pendingUrl = $formatUrl(route('subscription.pending'));
-            $failureUrl = $formatUrl(route('pagamento.pending'));
-            $notificationUrl = $formatUrl(route('api.payments.pix.webhook'));
+            $successUrl = $baseUrl . '/subscription/success';
+            $pendingUrl = $baseUrl . '/subscription/pending';
+            $failureUrl = $baseUrl . '/pagamento/pendente';
+            $notificationUrl = $baseUrl . '/api/payments/pix/webhook';
+
+            Log::info("Criando Preferência Mercado Pago com successUrl: {$successUrl} e notificationUrl: {$notificationUrl}");
 
             $response = Http::withToken($accessToken)
                 ->withHeaders([
@@ -101,7 +102,8 @@ class PixPaymentController extends Controller
                         'pending' => $pendingUrl,
                         'failure' => $failureUrl,
                     ],
-                    'auto_return' => 'approved',
+                    'auto_return' => 'all',
+                    'binary_mode' => true,
                     'external_reference' => (string) $user->id,
                     'notification_url' => $notificationUrl,
                 ]);
