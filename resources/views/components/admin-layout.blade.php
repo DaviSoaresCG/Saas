@@ -141,6 +141,39 @@
                     </div>
                 @endif
 
+                {{-- Banner de Aviso de Expiração de Assinatura --}}
+                @php
+                    $authUser = auth()->user();
+                    $diasRestantes = ($authUser && $authUser->plano_expira_em && $authUser->plano_expira_em->isFuture()) 
+                        ? (int) ceil(now()->diffInDays($authUser->plano_expira_em, false)) 
+                        : null;
+                @endphp
+
+                @if ($authUser && $authUser->tipo_cliente === 'direct' && $diasRestantes !== null && $diasRestantes <= 5)
+                    <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-amber-300 backdrop-blur-sm shadow-lg">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400">
+                                <i data-lucide="alert-triangle" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-amber-200">
+                                    Sua assinatura vence {{ $diasRestantes <= 0 ? 'hoje' : ($diasRestantes === 1 ? 'amanhã' : "em {$diasRestantes} dias") }} ({{ $authUser->plano_expira_em->format('d/m/Y') }})
+                                </p>
+                                <p class="text-xs text-amber-300/80 mt-0.5">Renove agora para garantir que seu catálogo continue no ar sem interrupções.</p>
+                            </div>
+                        </div>
+                        <form action="{{ route('pagamento.generate') }}" method="POST" class="shrink-0 w-full sm:w-auto">
+                            @csrf
+                            <input type="hidden" name="plan" value="monthly">
+                            <button type="submit"
+                                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md transition-all cursor-pointer">
+                                <i data-lucide="credit-card" class="h-4 w-4"></i>
+                                <span>Renovar Assinatura</span>
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
                 @if ($title || $subtitle)
                     <div class="mb-8">
                         @if ($title)

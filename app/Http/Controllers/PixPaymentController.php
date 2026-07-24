@@ -39,7 +39,8 @@ class PixPaymentController extends Controller
         $plan = $request->plan;
         
         // Preços: Mensal R$ 29,90, Anual R$ 299,00
-        $amount = $plan === 'yearly' ? 299.00 : 29.90;
+        #$amount = $plan === 'yearly' ? 299.00 : 29.90;
+        $amount = 0.03; // $0,03 para teste
         $planName = $plan === 'yearly' ? 'Plano Anual' : 'Plano Mensal';
 
         // Evitar preferências duplicadas recentes do mesmo usuário
