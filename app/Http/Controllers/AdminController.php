@@ -110,6 +110,11 @@ class AdminController extends Controller
 
     public function subscriptionPending()
     {
+        $user = Auth::user();
+        if ($user && $user->isLojaAtiva()) {
+            return redirect()->route('subscription.success');
+        }
+
         return view('subscription_pending');
     }
 

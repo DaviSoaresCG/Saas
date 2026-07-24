@@ -60,7 +60,7 @@
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                 </span>
-                Confirmando com o Stripe
+                Confirmando pagamento no Mercado Pago
             </div>
 
             <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-8 md:p-10 shadow-2xl shadow-black/40">
@@ -75,10 +75,10 @@
                     Processando sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">inscrição</span>
                 </h1>
                 <p class="text-gray-400 text-base leading-relaxed mb-2">
-                    Estamos finalizando a confirmação do pagamento. Isso costuma levar só alguns segundos.
+                    Estamos aguardando a confirmação do pagamento. Isso pode levar alguns segundos após a conclusão do Pix ou cartão.
                 </p>
                 <p class="text-sm text-slate-500">
-                    Não feche esta página — você será avisado assim que estiver pronto.
+                    Você será redirecionado automaticamente assim que o pagamento for aprovado.
                 </p>
             </div>
 
@@ -100,17 +100,17 @@
     <script>
         lucide.createIcons();
 
-        const currentUserId = {{ auth()->id() }};
-    </script>
-
-    <script type="module">
-        console.log('Iniciando escuta do WebSocket...');
-
-        Echo.private(`App.Models.User.${currentUserId}`)
-            .listen('InscricaoConfirmada', (e) => {
-                console.log('⚡ Evento recebido via WebSocket!', e);
-                window.location.href = "{{ route('subscription.success') }}";
-            });
+        // Polling automático a cada 3 segundos verificando aprovação do pagamento
+        setInterval(function() {
+            fetch("{{ route('pagamento.status') }}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.status === 'approved') {
+                        window.location.href = "{{ route('subscription.success') }}";
+                    }
+                })
+                .catch(err => console.error('Erro ao checar status:', err));
+        }, 3000);
     </script>
 </body>
 </html>
