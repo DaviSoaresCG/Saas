@@ -40,7 +40,7 @@ class PixPaymentController extends Controller
         
         // Preços: Mensal R$ 29,90, Anual R$ 299,00
         #$amount = $plan === 'yearly' ? 299.00 : 29.90;
-        $amount = 0.03; // $0,03 para teste
+        $amount = 1.00; // $1,00 para teste
         $planName = $plan === 'yearly' ? 'Plano Anual' : 'Plano Mensal';
 
         // Evitar preferências duplicadas recentes do mesmo usuário
@@ -67,6 +67,17 @@ class PixPaymentController extends Controller
 
             Log::info("Iniciando requisição de Checkout Pro Mercado Pago para o usuário: {$user->email}");
 
+            // Garantir que as URLs enviadas ao Mercado Pago utilizem HTTPS em produção
+            $isHttps = request()->secure() || str_starts_with(config('app.url'), 'https');
+            $formatUrl = function($url) use ($isHttps) {
+                return $isHttps ? str_replace('http://', 'https://', $url) : $url;
+            };
+
+            $successUrl = $formatUrl(route('subscription.success'));
+            $pendingUrl = $formatUrl(route('subscription.pending'));
+            $failureUrl = $formatUrl(route('pagamento.pending'));
+            $notificationUrl = $formatUrl(route('api.payments.pix.webhook'));
+
             $response = Http::withToken($accessToken)
                 ->withHeaders([
                     'X-Idempotency-Key' => Str::uuid()->toString(),
@@ -86,13 +97,13 @@ class PixPaymentController extends Controller
                         'surname' => $lastName,
                     ],
                     'back_urls' => [
-                        'success' => route('subscription.success'),
-                        'pending' => route('subscription.pending'),
-                        'failure' => route('pagamento.pending'),
+                        'success' => $successUrl,
+                        'pending' => $pendingUrl,
+                        'failure' => $failureUrl,
                     ],
                     'auto_return' => 'approved',
                     'external_reference' => (string) $user->id,
-                    'notification_url' => route('api.payments.pix.webhook'),
+                    'notification_url' => $notificationUrl,
                 ]);
 
             if ($response->failed()) {
