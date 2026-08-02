@@ -202,9 +202,10 @@
               </button>
             </form>
           </div>
+          
         </div>
 
-      </div>
+        
     </main>
 
     <!-- Footer -->

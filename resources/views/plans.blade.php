@@ -150,6 +150,17 @@
               Escolha o plano ideal para o seu negócio e comece a vender pelo WhatsApp hoje mesmo.
             </p>
           </div>
+          <div class="flex items-center justify-center">
+          <form action="{{ route('counpons.validate') }}" method="POST">
+            @csrf
+            <label for="code" class="text-gray-300 text-lg mb-8">Cupom</label>
+            <input type="text" id="code" name="code" placeholder="Cupom" class="text-gray-300 text-lg mb-8">
+            <button type="submit" class="w-full py-3.5 px-6 rounded-xl text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 cursor-pointer">
+              Validar Cupom
+            </button>
+          </form>
+        </div>
+      </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <!-- Plano Mensal -->

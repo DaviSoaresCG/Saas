@@ -123,6 +123,7 @@ Route::domain(env('APP_DOMAIN'))->group(function () {
     Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
     Route::get('/loja-indisponivel', fn () => view('errors.loja-indisponivel'))->name('loja-indisponivel');
     Route::resource('counpons', CounponsController::class)->middleware(['auth']);
+    Route::post('validar-cupom', [CounponsController::class, 'validar'])->name('counpons.validate')->middleware(['auth']);
 });
 
 // Fluxo de pagamento (Acessível de qualquer subdomínio ou ambiente local)
