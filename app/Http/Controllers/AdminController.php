@@ -209,4 +209,14 @@ class AdminController extends Controller
         return view('admin.products', compact('products', 'link'));
     }
 
+    public function gerarTokenAPI()
+    {
+        $user = auth()->user();
+        $token = $user->createToken('api-token')->plainTextToken;
+        $user->api_token = $token;
+        $user->save();
+
+        return redirect()->route('profile.edit')->with('status', 'Token API gerado com sucesso');
+    }
+
 }

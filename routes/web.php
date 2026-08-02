@@ -72,6 +72,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware(['tenant'])->group(func
             Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
             Route::get('/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
             Route::patch('/update-slug', [AdminController::class, 'gerarSlugUnicoPost'])->name('slug.update');
+            Route::patch('/token-api', [AdminController::class, 'gerarTokenAPI'])->name('token.get');
 
             Route::controller(PedidoController::class)->group(function () {
                 Route::get('/pedidos', 'index')->name('order.index');

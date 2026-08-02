@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('tipo_cliente')->default('direct'); // 'direct' or 'erp'
             $table->timestamp('plano_expira_em')->nullable();
             $table->string('status')->default('active'); // 'active', 'suspended', etc.
-            $table->string('api_token', 80)->unique()->nullable()->default(null);
+            $table->string('api_token')->unique()->nullable()->default(null);
             $table->boolean('need_change_password')->default(false);
         });
     }

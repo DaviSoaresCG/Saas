@@ -119,7 +119,7 @@
                             class="{{ $active === 'profile' ? $navActive : $navIdle }}">
                             <i data-lucide="user-cog"
                                 class="h-4 w-4 shrink-0 {{ $active === 'profile' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
-                            Perfil
+                            Configurações
                         </a>
                     </nav>
                 </div>
