@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Counpons;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CounponsController extends Controller
