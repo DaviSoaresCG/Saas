@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Cliente Direto Ativo
         $diretoAtivo = User::updateOrCreate(
-            ['email' => 'direto.ativo@gmail.com'],
+            ['email' => 'maria@gmail.com'],
             [
                 'name' => 'Lojista Direto Ativo',
                 'nome_loja' => 'Loja Direto Ativa',
-                'slug' => 'loja1',
-                'whatsapp' => '63999999991',
+                'slug' => 'maria',
+                'whatsapp' => '63991055232',
                 'password' => Hash::make('123123123'),
                 'tipo_cliente' => 'direct',
                 'status' => 'active',
@@ -50,14 +50,14 @@ class DatabaseSeeder extends Seeder
 
         // 3. Cliente vindo do ERP ConectaVenda
         $erpUser = User::updateOrCreate(
-            ['email' => 'erp.cliente@gmail.com'],
+            ['email' => 'joao@gmail.com'],
             [
                 'name' => 'Lojista Integrado ERP',
                 'nome_loja' => 'Loja Integrada ERP',
-                'slug' => 'loja3',
-                'whatsapp' => '63999999993',
-                'documento' => '12345678901', // CPF/CNPJ usado como senha inicial
-                'password' => Hash::make('12345678901'),
+                'slug' => 'joao',
+                'whatsapp' => '63991055232',
+                'documento' => '123456789', // CPF/CNPJ usado como senha inicial
+                'password' => Hash::make('123456789'),
                 'tipo_cliente' => 'erp',
                 'status' => 'active',
                 'api_token' => 'erp_test_token_123',

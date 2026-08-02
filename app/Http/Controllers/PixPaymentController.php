@@ -71,6 +71,7 @@ class PixPaymentController extends Controller
             $host = request()->getHost();
             $scheme = (!str_contains($host, 'localhost') && !str_contains($host, '127.0.0.1') && !str_contains($host, '.test')) ? 'https://' : 'http://';
             $baseUrl = $scheme . $host;
+            Log::info('Base URL: ' . $baseUrl);
 
             $successUrl = $baseUrl . '/subscription/success';
             $pendingUrl = $baseUrl . '/subscription/pending';

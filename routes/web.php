@@ -11,6 +11,7 @@ use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\ErpApiController;
 use App\Http\Controllers\PixPaymentController;
 use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\CounponsController;
 use App\Http\Controllers\GrupoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -121,6 +122,7 @@ Route::domain(env('APP_DOMAIN'))->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
     Route::get('/loja-indisponivel', fn () => view('errors.loja-indisponivel'))->name('loja-indisponivel');
+    Route::resource('counpons', CounponsController::class)->middleware(['auth']);
 });
 
 // Fluxo de pagamento (Acessível de qualquer subdomínio ou ambiente local)

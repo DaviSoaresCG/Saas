@@ -59,7 +59,7 @@ class AdminController extends Controller
             return view('subscription_pending');
         } elseif (empty($user->slug)) {
 
-            $store_name = str_replace(' ', '', $user->store_name);
+            $store_name = str_replace(' ', '', $user->nome_loja);
             $slug = Str::slug($store_name);
             $unique_slug = $this->generateUniqueSlug($slug);
             $user->slug = $unique_slug;
