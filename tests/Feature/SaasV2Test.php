@@ -61,6 +61,32 @@ test('Sync products API updates products for ERP user', function () {
     expect($product->preco_base)->toBe('120,50'); // Formatted string from accessor
 });
 
+test('SigaDezAPI syncProducts route creates products for authenticated user', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'erp',
+    ]);
+
+    $response = $this->actingAs($user, 'sanctum')->postJson('/api/sync-products', [
+        'products' => [
+            [
+                'id' => 999,
+                'sku' => 'SKU-SIGA-01',
+                'name' => 'Produto SigaDez API',
+                'description' => 'Descrição do produto SigaDez',
+                'price' => 250.00,
+            ]
+        ]
+    ]);
+
+    $response->assertStatus(202)
+        ->assertJsonStructure(['message']);
+
+    $product = Products::where('erp_id', 999)->where('user_id', $user->id)->first();
+    expect($product)->not->toBeNull();
+    expect($product->user_id)->toBe($user->id);
+    expect($product->nome)->toBe('Produto SigaDez API');
+});
+
 test('Accessing variant catalog applies discount and does not redirect', function () {
     $user = User::factory()->create([
         'tipo_cliente' => 'direct',

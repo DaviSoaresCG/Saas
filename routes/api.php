@@ -5,9 +5,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return User::all();
-})->middleware('auth:sanctum');
 
-Route::post('/onboarding', [SigaDezAPI::class, 'onboarding']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/sync-products', [SigaDezAPI::class, 'syncProducts']);
+    Route::get('/teste', fn() => "teste");
+});
+
 

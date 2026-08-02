@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessImageBase64;
+use App\Models\Products;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -68,19 +70,53 @@ class SigaDezAPI extends Controller
 
     public function syncProducts(Request $request)
     {
+        $validated = $request->validate([
+            'products' => 'required|array|max:100',
+            'products.*.id' => 'required|integer',
+            'products.*.sku' => 'required|string',
+            'products.*.name' => 'required|string',
+            'products.*.description' => 'required|string',
+            'products.*.price' => 'required|numeric',
+            'products.*.image_base64' => 'nullable',
+        ]);
+        
         $user = $request->user();
-
-        if (!$user) {
+        if(!$user)
+        {
             return response()->json([
-                'message' => 'User not found',
-            ], 404);
+                'message' => "Usuário não identificado",
+                'error' => true
+            ], 401);
+        }
+        
+        app()->instance(User::class, $user);
+
+        $processados = 0;
+
+        foreach($validated['products'] as $product){
+            $produto = Products::updateOrCreate(
+                [
+                    'erp_id' => $product['id'],
+                    'user_id' => $user->id,
+                ],
+                [
+                    'nome' => $product['name'],
+                    'sku' => $product['sku'],
+                    'description' => $product['description'],
+                    'preco_base' => $product['price'],
+                ]
+            );
+
+            if(!empty($product['image_base64'])){
+                ProcessImageBase64::dispatch($produto->id, $user->id, $product['image_base64']);
+            }
+            $processados++;
         }
 
-        if ($user->client_type != 'erp') {
-            return response()->json([
-                'message' => 'User is not ERP',
-            ], 400);
-        }
+        return response()->json([
+            'message' => "{$processados} produtos processados com sucesso. Imagens sendo processadas em segundo plano.",
+        ], 202);
+
     }
 
     public function generateUniqueSlug($slug)

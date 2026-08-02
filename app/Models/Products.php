@@ -26,7 +26,7 @@ class Products extends Model
     protected static function booted()
     {
         static::saving(function ($product) {
-            $user = app(User::class);
+            $user = app()->bound(User::class) ? app(User::class) : auth()->user();
             if ($user && $user->tipo_cliente === 'erp' && $product->exists) {
                 // If it is an API request (started by ERP sync), allow modifications.
                 // Otherwise, prevent modifications to critical fields (nome, preco_base, estoque).

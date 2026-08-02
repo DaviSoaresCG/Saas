@@ -15,7 +15,9 @@ class TenantScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $user = app()->make(User::class);
-        $builder->where($model->getTable().'.user_id', $user->id);
+        $user = app()->bound(User::class) ? app(User::class) : auth()->user();
+        if ($user && isset($user->id)) {
+            $builder->where($model->getTable().'.user_id', $user->id);
+        }
     }
 }
