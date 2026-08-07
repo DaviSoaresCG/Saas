@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageBase64;
+use App\Models\Grupo;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -74,10 +75,15 @@ class SigaDezAPI extends Controller
             'products' => 'required|array|max:100',
             'products.*.id' => 'required|integer',
             'products.*.sku' => 'required|string',
+            'products.*.status' => 'required|boolean',
+            'products.*.peso' => 'required|numeric',
             'products.*.name' => 'required|string',
             'products.*.description' => 'required|string',
             'products.*.price' => 'required|numeric',
             'products.*.image_base64' => 'nullable',
+            'products.*.group' => 'required|array',
+            'products.*.group.id' => 'required|integer',
+            'products.*.group.name' => 'required|string',
         ]);
         
         $user = $request->user();
@@ -88,6 +94,7 @@ class SigaDezAPI extends Controller
                 'error' => true
             ], 401);
         }
+        
         
         app()->instance(User::class, $user);
 
@@ -102,6 +109,8 @@ class SigaDezAPI extends Controller
                 [
                     'nome' => $product['name'],
                     'sku' => $product['sku'],
+                    'peso' => $product['peso'],
+                    'status' => $product['status'],
                     'description' => $product['description'],
                     'preco_base' => $product['price'],
                 ]
@@ -111,8 +120,19 @@ class SigaDezAPI extends Controller
                 ProcessImageBase64::dispatch($produto->id, $user->id, $product['image_base64']);
             }
             $processados++;
+
+            $grupo = Grupo::updateOrCreate(
+                ['erp_id' => $product['group']['id'], 'user_id' => $user->id],
+                [
+                    'nome' => $product['group']['name'],
+                ]
+            );
+
+            $produto->grupos()->syncWithoutDetaching($grupo->id);
+            
         }
 
+        
         return response()->json([
             'message' => "{$processados} produtos processados com sucesso. Imagens sendo processadas em segundo plano.",
         ], 202);

@@ -12,6 +12,7 @@ class Grupo extends Model
 
     protected $fillable = [
         'user_id',
+        'erp_id',
         'nome',
         'foto_path',
     ];
