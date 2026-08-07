@@ -19,12 +19,18 @@
             <div x-data="carousel({{ $images->count() }})" class="relative bg-[var(--bg-card)] select-none">
                 {{-- Imagem principal --}}
                 <div class="relative aspect-square sm:aspect-[4/3] lg:aspect-auto lg:min-h-[420px] overflow-hidden">
+                    @if($hasMultiple)
                     @foreach ($images as $i => $img)
-                        <img src="{{ str_starts_with($img->path ?? '', 'http') ? $img->path : asset('storage/' . $img->path) }}"
+                        <img src="{{ str_starts_with($img->path ?? '', 'https://') ? $img->path : asset('storage/' . $img->path) }}"
                             alt="{{ $product->name }}"
                             class="absolute inset-0 w-full h-full object-contain transition-opacity duration-400"
                             :class="active === {{ $i }} ? 'opacity-100 z-10' : 'opacity-0 z-0'">
                     @endforeach
+                    @else
+                        <img src="{{ str_starts_with($product->path ?? '', 'https://') ? $product->path : asset('storage/' . $product->path) }}"
+                            alt="{{ $product->name }}"
+                            class="absolute inset-0 w-full h-full object-contain transition-opacity duration-400 opacity-100 z-10">
+                    @endif
 
                     {{-- Setas (somente quando há mais de 1 imagem) --}}
                     @if ($hasMultiple)
