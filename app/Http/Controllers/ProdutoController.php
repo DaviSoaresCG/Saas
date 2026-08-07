@@ -18,7 +18,7 @@ class ProdutoController extends Controller
         $user = app(User::class);
         $selectedGrupo = $request->query('grupo');
 
-        $query = Products::with(['atributos', 'productImages', 'grupos']);
+        $query = Products::with(['atributos', 'productImages', 'grupos'])->where('status', true);
 
         if ($selectedGrupo) {
             $query->whereHas('grupos', function ($q) use ($selectedGrupo) {
