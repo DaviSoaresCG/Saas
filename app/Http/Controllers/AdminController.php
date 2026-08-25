@@ -219,4 +219,9 @@ class AdminController extends Controller
         return redirect()->route('profile.edit')->with('status', 'Token API gerado com sucesso');
     }
 
+    public function apiDocs()
+    {
+        $user = auth()->user();
+        return view('admin.api_docs', compact('user'));
+    }
 }

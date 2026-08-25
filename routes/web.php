@@ -70,6 +70,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware(['tenant'])->group(func
 
         Route::prefix('dashboard')->group(function () {
             Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+            Route::get('/api-docs', [AdminController::class, 'apiDocs'])->name('admin.api-docs');
             Route::get('/products', [AdminController::class, 'getAllProducts'])->name('admin.products');
             Route::patch('/update-slug', [AdminController::class, 'gerarSlugUnicoPost'])->name('slug.update');
             Route::patch('/token-api', [AdminController::class, 'gerarTokenAPI'])->name('token.get');

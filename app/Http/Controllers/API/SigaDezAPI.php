@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageBase64;
 use App\Models\Grupo;
+use App\Models\Pedido;
 use App\Models\Products;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class SigaDezAPI extends Controller
@@ -67,6 +69,26 @@ class SigaDezAPI extends Controller
             'message' => 'Usuário cadastrado com sucesso',
             'token' => $token,
         ], 201);
+    }
+
+    public function syncOrders(Request $request)
+    {
+        $user = $request->user();
+        app()->instance(User::class, $user);
+
+        return DB::transaction(function () {
+            $pedidos = Pedido::with('iten_pedido.product')
+                ->where('sync', false)
+                ->get();
+
+            if ($pedidos->isNotEmpty()) {
+                Pedido::whereIn('id', $pedidos->pluck('id'))->update(['sync' => true]);
+            }
+
+            return response()->json([
+                'pedidos' => $pedidos
+            ], 200);
+        });
     }
 
     public function syncProducts(Request $request)

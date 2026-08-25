@@ -108,6 +108,12 @@
                                 class="h-4 w-4 shrink-0 {{ $active === 'orders' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Pedidos
                         </a>
+                        <a href="{{ route('admin.api-docs') }}" {!! $navClick !!}
+                            class="{{ $active === 'api-docs' ? $navActive : $navIdle }}">
+                            <i data-lucide="code-2"
+                                class="h-4 w-4 shrink-0 {{ $active === 'api-docs' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
+                            Documentação API
+                        </a>
                         @if (auth()->user()->tipo_cliente === 'direct')
                         <a href="{{ route('dashboard') }}#assinatura" {!! $navClick !!} class="{{ $navIdle }}">
                             <i data-lucide="credit-card"
