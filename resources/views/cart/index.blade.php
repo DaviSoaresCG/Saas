@@ -60,13 +60,19 @@
                             </div>
 
                             <div class="flex flex-col items-end">
-                                <p class="text-[var(--text-base)] font-bold">
-                                    Valor Unitário: {{ number_format($item['value'], 2, ',', '.') }}
-                                </p>
-                                <span class="item-subtotal text-xl font-bold text-[var(--text-base)] mb-2"
-                                    id="item-subtotal-{{ $id }}">
-                                    R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
-                                </span>
+                                @if (session('sob_consulta'))
+                                    <p class="text-sm font-bold text-amber-500 mb-2">
+                                        Preço Sob Consulta
+                                    </p>
+                                @else
+                                    <p class="text-[var(--text-base)] font-bold">
+                                        Valor Unitário: {{ number_format($item['value'], 2, ',', '.') }}
+                                    </p>
+                                    <span class="item-subtotal text-xl font-bold text-[var(--text-base)] mb-2"
+                                        id="item-subtotal-{{ $id }}">
+                                        R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
+                                    </span>
+                                @endif
                                 <button data-action="remove" data-product-id="{{ $id }}"
                                     class="btn-remove-item p-1 rounded cursor-pointer text-white bg-red-600 transition-colors text-sm font-medium flex items-center gap-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -89,7 +95,11 @@
                         <div class="flex justify-between text-[var(--text-base)] text-xl font-bold">
                             <span>Total</span>
                             <span id="summary-total">
-                                R$ {{ number_format($total, 2, ',', '.') }}
+                                @if (session('sob_consulta'))
+                                    <span class="text-amber-500 font-bold text-lg">Sob Consulta</span>
+                                @else
+                                    R$ {{ number_format($total, 2, ',', '.') }}
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -236,7 +246,11 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        document.getElementById('summary-total').innerText = 'R$ ' + data.new_total;
+                        const isSobConsulta = {{ session('sob_consulta') ? 'true' : 'false' }};
+                        if (!isSobConsulta) {
+                            const summaryTotalEl = document.getElementById('summary-total');
+                            if (summaryTotalEl) summaryTotalEl.innerText = 'R$ ' + data.new_total;
+                        }
 
                         if (itemElement) {
                             if (quantity <= 0) {
@@ -245,7 +259,7 @@
                                 setTimeout(() => itemElement.parentElement.remove(), 300);
                             } else {
                                 const itemSubtotalEl = document.getElementById('item-subtotal-' + productId);
-                                if (itemSubtotalEl) itemSubtotalEl.innerText = 'R$ ' + data.item_subtotal;
+                                if (itemSubtotalEl && !isSobConsulta) itemSubtotalEl.innerText = 'R$ ' + data.item_subtotal;
                                 const quantityEl = document.getElementById('quantity-' + productId);
                                 if (quantityEl) quantityEl.innerText = data.quantity;
                             }

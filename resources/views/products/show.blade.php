@@ -21,13 +21,13 @@
                 <div class="relative aspect-square sm:aspect-[4/3] lg:aspect-auto lg:min-h-[420px] overflow-hidden">
                     @if($hasMultiple)
                     @foreach ($images as $i => $img)
-                        <img src="{{ str_starts_with($img->path ?? '', 'https://') ? $img->path : asset('storage/' . $img->path) }}"
+                        <img src="{{ str_starts_with($img->path ?? '', 'http') ? $img->path : asset('storage/' . $img->path) }}"
                             alt="{{ $product->name }}"
                             class="absolute inset-0 w-full h-full object-contain transition-opacity duration-400"
                             :class="active === {{ $i }} ? 'opacity-100 z-10' : 'opacity-0 z-0'">
                     @endforeach
                     @else
-                        <img src="{{ str_starts_with($product->path ?? '', 'https://') ? $product->path : asset('storage/' . $product->path) }}"
+                        <img src="{{ str_starts_with($product->path ?? '', 'http') ? $product->path : asset('storage/' . $product->path) }}"
                             alt="{{ $product->name }}"
                             class="absolute inset-0 w-full h-full object-contain transition-opacity duration-400 opacity-100 z-10">
                     @endif
@@ -65,8 +65,17 @@
                     {{ $product->name }}
                 </h1>
                 
+                @if(isset($user) && $user->tipo_cliente === 'erp')
+                    <div class="my-2 border-t border-gray-300 dark:border-gray-700 pt-2">
+                        <p class="text-[var(--text-base)] font-medium text-sm">SKU: {{ $product->sku }}</p>
+                        <p class="text-[var(--text-muted)] font-medium text-sm">Peso: {{ $product->peso }}</p>
+                    </div>
+                @endif
+
                 <div class="mt-4 flex items-baseline gap-2">
-                    @if ($product->valor_com_desconto)
+                    @if (session('sob_consulta'))
+                        <span class="text-2xl sm:text-3xl font-extrabold text-amber-500">Preço Sob Consulta</span>
+                    @elseif ($product->valor_com_desconto)
                         <span class="text-3xl font-extrabold text-emerald-600">R$ {{ $product->valor_com_desconto }}</span>
                         <span class="text-lg text-gray-500 line-through">R$ {{ $product->value }}</span>
                     @else
@@ -75,7 +84,12 @@
                 </div>
 
                 {{-- Form de adicionar ao carrinho (POST) --}}
-                <form action="{{ tenant_route('cart.add', ['id' => $product->id]) }}" method="POST" class="mt-6 space-y-5">
+                <form action="{{ tenant_route('cart.add', ['id' => $product->id]) }}" method="POST" class="mt-6 space-y-5"
+                    @if(isset($user) && $user->tipo_cliente === 'erp')
+                        data-sku="{{ $product->sku }}"
+                        data-peso="{{ $product->peso }}"
+                    @endif
+                >
                     @csrf
 
                     <button type="submit"

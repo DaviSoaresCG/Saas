@@ -23,10 +23,20 @@ class CatalogoController extends Controller
      */
     public function store(Request $request, $slug = null)
     {
-        $request->validate([
+        $sobConsulta = $request->boolean('sob_consulta');
+
+        $rules = [
             'nome' => 'required|string|max:255',
-            'desconto_index' => 'required|numeric|min:0|max:100',
-        ], [
+            'sob_consulta' => 'nullable|boolean',
+        ];
+
+        if (!$sobConsulta) {
+            $rules['desconto_index'] = 'required|numeric|min:0|max:100';
+        } else {
+            $rules['desconto_index'] = 'nullable|numeric|min:0|max:100';
+        }
+
+        $request->validate($rules, [
             'nome.required' => 'O nome do catálogo é obrigatório.',
             'desconto_index.required' => 'O valor do desconto é obrigatório.',
             'desconto_index.numeric' => 'O desconto deve ser um número.',
@@ -42,7 +52,8 @@ class CatalogoController extends Controller
         Auth::user()->catalogos()->create([
             'nome' => $request->nome,
             'hash' => $hash,
-            'desconto_index' => $request->desconto_index,
+            'desconto_index' => $sobConsulta ? 0.00 : ($request->desconto_index ?? 0.00),
+            'sob_consulta' => $sobConsulta,
         ]);
 
         return redirect()->route('catalogos.index', ['slug' => Auth::user()->slug])
@@ -59,11 +70,20 @@ class CatalogoController extends Controller
         }
 
         $catalogo = Auth::user()->catalogos()->findOrFail($id);
+        $sobConsulta = $request->boolean('sob_consulta');
 
-        $request->validate([
+        $rules = [
             'nome' => 'required|string|max:255',
-            'desconto_index' => 'required|numeric|min:0|max:100',
-        ], [
+            'sob_consulta' => 'nullable|boolean',
+        ];
+
+        if (!$sobConsulta) {
+            $rules['desconto_index'] = 'required|numeric|min:0|max:100';
+        } else {
+            $rules['desconto_index'] = 'nullable|numeric|min:0|max:100';
+        }
+
+        $request->validate($rules, [
             'nome.required' => 'O nome do catálogo é obrigatório.',
             'desconto_index.required' => 'O valor do desconto é obrigatório.',
             'desconto_index.numeric' => 'O desconto deve ser um número.',
@@ -73,7 +93,8 @@ class CatalogoController extends Controller
 
         $catalogo->update([
             'nome' => $request->nome,
-            'desconto_index' => $request->desconto_index,
+            'desconto_index' => $sobConsulta ? 0.00 : ($request->desconto_index ?? 0.00),
+            'sob_consulta' => $sobConsulta,
         ]);
 
         return redirect()->route('catalogos.index', ['slug' => Auth::user()->slug])

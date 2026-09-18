@@ -20,9 +20,18 @@
         <header class="sticky top-0 z-20 bg-[var(--bg-page)] backdrop-blur-md">
             <div class="mx-auto h-16 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3 min-w-0">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--color-primary)] shrink-0">
-                        <i data-lucide="shopping-bag" class="h-5 w-5 text-[var(--text-on-primary)]"></i>
-                    </div>
+                    @php
+                        $displayLogo = $storeLogo ?? $logoUrl ?? null;
+                    @endphp
+                    @if (!empty($displayLogo))
+                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full overflow-hidden shrink-0 border-2 border-[var(--color-primary)]/30 bg-[var(--bg-card)] shadow-sm">
+                            <img src="{{ $displayLogo }}" alt="{{ $storeName }}" class="h-full w-full object-cover">
+                        </div>
+                    @else
+                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[var(--color-primary)] shrink-0 shadow-sm">
+                            <i data-lucide="shopping-bag" class="h-5 w-5 sm:h-6 sm:w-6 text-[var(--text-on-primary)]"></i>
+                        </div>
+                    @endif
                     <div class="min-w-0">
                         <p class="text-xs font-medium text-[var(--text-base)] uppercase tracking-wide truncate">{{ $storeName }}</p>
                         @if ($pageTitle)
@@ -55,8 +64,8 @@
 
     @if (!empty($modalCarrinho))
         <!-- Modal Adicionar Produto ao Carrinho -->
-        <div id="add-to-cart-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-all duration-300">
-            <div class="relative w-full max-w-md bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)]">
+        <div id="add-to-cart-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300 ease-out">
+            <div id="add-to-cart-modal-content" class="relative w-full max-w-md bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)] transform scale-95 opacity-0 transition-all duration-300 ease-out">
                 
                 <button type="button" id="close-add-modal-btn" class="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-base)] transition-colors cursor-pointer">
                     <i data-lucide="x" class="h-6 w-6"></i>
@@ -68,6 +77,11 @@
                     </div>
                     <h3 id="add-modal-product-name" class="text-xl font-bold text-[var(--text-base)]">Adicionar ao Carrinho</h3>
                     <p id="add-modal-product-price" class="text-base font-extrabold text-emerald-600 mt-1"></p>
+                    
+                    <div id="add-modal-erp-info" class="hidden my-2 pt-2 text-center">
+                        <p id="add-modal-product-sku" class="text-[var(--text-base)] font-medium text-sm"></p>
+                        <p id="add-modal-product-peso" class="text-[var(--text-muted)] font-medium text-sm"></p>
+                    </div>
                 </div>
 
                 <form id="add-to-cart-modal-form" action="" method="POST" class="space-y-4">
@@ -113,11 +127,15 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const addToCartModal = document.getElementById('add-to-cart-modal');
+                const modalContent = document.getElementById('add-to-cart-modal-content');
                 const closeAddModalBtn = document.getElementById('close-add-modal-btn');
                 const cancelAddModalBtn = document.getElementById('cancel-add-modal-btn');
                 const modalForm = document.getElementById('add-to-cart-modal-form');
                 const modalProdName = document.getElementById('add-modal-product-name');
                 const modalProdPrice = document.getElementById('add-modal-product-price');
+                const modalProdSku = document.getElementById('add-modal-product-sku');
+                const modalProdPeso = document.getElementById('add-modal-product-peso');
+                const modalErpInfo = document.getElementById('add-modal-erp-info');
                 const modalQtyInput = document.getElementById('add-modal-quantity');
                 const btnMinus = document.getElementById('btn-modal-qty-minus');
                 const btnPlus = document.getElementById('btn-modal-qty-plus');
@@ -136,8 +154,34 @@
                     });
                 }
 
+                function showModal() {
+                    if (!addToCartModal) return;
+                    addToCartModal.classList.remove('hidden');
+                    addToCartModal.classList.add('flex');
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            addToCartModal.classList.remove('opacity-0');
+                            addToCartModal.classList.add('opacity-100');
+                            if (modalContent) {
+                                modalContent.classList.remove('scale-95', 'opacity-0');
+                                modalContent.classList.add('scale-100', 'opacity-100');
+                            }
+                        });
+                    });
+                }
+
                 function hideModal() {
-                    if (addToCartModal) addToCartModal.classList.add('hidden');
+                    if (!addToCartModal) return;
+                    addToCartModal.classList.remove('opacity-100');
+                    addToCartModal.classList.add('opacity-0');
+                    if (modalContent) {
+                        modalContent.classList.remove('scale-100', 'opacity-100');
+                        modalContent.classList.add('scale-95', 'opacity-0');
+                    }
+                    setTimeout(() => {
+                        addToCartModal.classList.remove('flex');
+                        addToCartModal.classList.add('hidden');
+                    }, 300);
                 }
 
                 if (closeAddModalBtn) closeAddModalBtn.addEventListener('click', hideModal);
@@ -147,6 +191,12 @@
                         if (e.target === addToCartModal) hideModal();
                     });
                 }
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && addToCartModal && !addToCartModal.classList.contains('hidden')) {
+                        hideModal();
+                    }
+                });
 
                 document.querySelectorAll('form[action*="/cart/add/"]').forEach(function(form) {
                     form.addEventListener('submit', function(e) {
@@ -158,15 +208,35 @@
                         const actionUrl = form.getAttribute('action');
                         const card = form.closest('.group') || form.closest('.p-6') || form.parentElement;
                         const productName = card ? (card.querySelector('h1, h3, .font-bold')?.innerText || 'Produto') : 'Produto';
-                        const productPrice = card ? (card.querySelector('.tabular-nums, .text-emerald-600')?.innerText || '') : '';
+                        const productPrice = card ? (card.querySelector('.tabular-nums, .text-emerald-600, .text-amber-500')?.innerText || '') : '';
+                        const sku = form.dataset.sku || card?.dataset?.sku || '';
+                        const peso = form.dataset.peso || card?.dataset?.peso || '';
 
                         modalForm.setAttribute('action', actionUrl);
                         if (modalProdName) modalProdName.innerText = productName;
-                        if (modalProdPrice) modalProdPrice.innerText = productPrice;
+                        if (modalProdPrice) {
+                            modalProdPrice.innerText = productPrice;
+                            if (productPrice.includes('Sob Consulta')) {
+                                modalProdPrice.className = 'text-base font-extrabold text-amber-500 mt-1';
+                            } else {
+                                modalProdPrice.className = 'text-base font-extrabold text-emerald-600 mt-1';
+                            }
+                        }
+
+                        if (modalErpInfo) {
+                            if (sku || peso) {
+                                if (modalProdSku) modalProdSku.innerText = sku ? `SKU: ${sku}` : '';
+                                if (modalProdPeso) modalProdPeso.innerText = peso ? `Peso: ${peso}` : '';
+                                modalErpInfo.classList.remove('hidden');
+                            } else {
+                                modalErpInfo.classList.add('hidden');
+                            }
+                        }
+
                         if (modalQtyInput) modalQtyInput.value = '1';
                         document.getElementById('add-modal-observacao').value = '';
 
-                        if (addToCartModal) addToCartModal.classList.remove('hidden');
+                        showModal();
                     });
                 });
             });

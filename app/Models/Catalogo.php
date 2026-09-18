@@ -16,10 +16,12 @@ class Catalogo extends Model
         'nome',
         'hash',
         'desconto_index',
+        'sob_consulta',
     ];
 
     protected $casts = [
         'desconto_index' => 'decimal:2',
+        'sob_consulta' => 'boolean',
     ];
 
     /**

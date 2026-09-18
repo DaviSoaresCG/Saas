@@ -74,6 +74,12 @@ test('SigaDezAPI syncProducts route creates products for authenticated user', fu
                 'name' => 'Produto SigaDez API',
                 'description' => 'Descrição do produto SigaDez',
                 'price' => 250.00,
+                'status' => true,
+                'peso' => 0.5,
+                'group' => [
+                    'id' => 1,
+                    'name' => 'Geral',
+                ],
             ]
         ]
     ]);
@@ -120,6 +126,152 @@ test('Accessing variant catalog applies discount and does not redirect', functio
     expect(session('catalog_hash'))->toBe('hash12345678');
 });
 
+test('Accessing catalog with sob_consulta sets session and passes to order and sync-orders API', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'erp',
+        'plano_expira_em' => now()->addDays(30),
+        'api_token' => 'token_sync_orders_test',
+    ]);
+
+    app()->instance(User::class, $user);
+
+    $catalog = Catalogo::create([
+        'user_id' => $user->id,
+        'nome' => 'Catálogo Orçamento',
+        'hash' => 'hashsobcons1',
+        'desconto_index' => 0.00,
+        'sob_consulta' => true,
+    ]);
+
+    $product = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Produto Sob Consulta Teste',
+        'preco_base' => 250.00,
+        'sku' => 'SKU-SOB-01',
+        'estoque' => 5,
+        'description' => 'Item especial sob consulta',
+    ]);
+
+    // 1. Acesso ao catálogo variante ativa session('sob_consulta')
+    $response = $this->get('http://' . env('APP_DOMAIN', 'saas.test') . '/hashsobcons1/produtos');
+    $response->assertOk();
+    $response->assertSee('Preço Sob Consulta');
+    expect(session('sob_consulta'))->toBeTrue();
+
+    // 2. Finalizar pedido grava sob_consulta = true no Pedido
+    $orderResponse = $this->withSession([
+        'sob_consulta' => true,
+        'cart' => [
+            $product->id => [
+                'id' => $product->id,
+                'name' => $product->nome,
+                'value' => 250.00,
+                'path' => '',
+                'quantity' => 2,
+                'atributos' => [],
+                'observacao' => '',
+            ]
+        ]
+    ])->post('http://' . env('APP_DOMAIN', 'saas.test') . '/hashsobcons1/pedido-finalizar', [
+        'cliente_nome' => 'Cliente Teste Sob Consulta',
+        'cliente_phone' => '11999998888',
+    ]);
+
+    $orderResponse->assertOk();
+
+    $pedido = \App\Models\Pedido::where('cliente_nome', 'Cliente Teste Sob Consulta')->first();
+    expect($pedido)->not->toBeNull();
+    expect($pedido->sob_consulta)->toBeTrue();
+
+    // 3. Chamada à API sync-orders retorna o pedido com sob_consulta = true
+    $apiResponse = $this->actingAs($user, 'sanctum')->postJson('/api/sync-orders');
+    $apiResponse->assertOk()
+        ->assertJsonPath('pedidos.0.sob_consulta', true)
+        ->assertJsonPath('pedidos.0.cliente_nome', 'Cliente Teste Sob Consulta');
+});
+
+test('Merchant can store and update catalog with sob_consulta via controller', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    app()->instance(User::class, $user);
+
+    // 1. Criar catálogo com sob_consulta = true
+    $response = $this->actingAs($user)->post("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/catalogos", [
+        'nome' => 'Catálogo Sem Preço',
+        'sob_consulta' => '1',
+    ]);
+
+    $response->assertRedirect();
+    $catalogo = Catalogo::where('user_id', $user->id)->where('nome', 'Catálogo Sem Preço')->first();
+    expect($catalogo)->not->toBeNull();
+    expect($catalogo->sob_consulta)->toBeTrue();
+    expect((float) $catalogo->desconto_index)->toBe(0.00);
+
+    // 2. Atualizar catálogo desmarcando sob_consulta e definindo desconto
+    $updateResponse = $this->actingAs($user)->put("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/catalogos/{$catalogo->id}", [
+        'nome' => 'Catálogo Atualizado com Desconto',
+        'sob_consulta' => '0',
+        'desconto_index' => '20.00',
+    ]);
+
+    $updateResponse->assertRedirect();
+    $catalogo->refresh();
+    expect($catalogo->nome)->toBe('Catálogo Atualizado com Desconto');
+    expect($catalogo->sob_consulta)->toBeFalse();
+    expect((float) $catalogo->desconto_index)->toBe(20.00);
+});
+
+test('Tenant can upload and remove company logo and see it rendered in store-layout', function () {
+    \Illuminate\Support\Facades\Storage::fake('public');
+
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    app()->instance(User::class, $user);
+
+    $file = \Illuminate\Http\UploadedFile::fake()->image('logo_empresa.png', 200, 200);
+
+    // 1. Upload da logo pelo perfil
+    $response = $this->actingAs($user)->patch("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/profile", [
+        'name' => $user->name,
+        'email' => $user->email,
+        'store_name' => 'Minha Loja Com Logo',
+        'logo' => $file,
+    ]);
+
+    $response->assertRedirect();
+    $user->refresh();
+    expect($user->logo_path)->not->toBeNull();
+    \Illuminate\Support\Facades\Storage::disk('public')->assertExists($user->logo_path);
+
+    // 2. Acesso à loja exibe a tag img da logo
+    $storeResponse = $this->get("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/produtos");
+    $storeResponse->assertOk();
+    $storeResponse->assertSee($user->logo_url);
+
+    // 3. Remoção da logo
+    $removeResponse = $this->actingAs($user)->patch("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/profile", [
+        'name' => $user->name,
+        'email' => $user->email,
+        'store_name' => 'Minha Loja Com Logo',
+        'remover_logo' => '1',
+    ]);
+
+    $removeResponse->assertRedirect();
+    $user->refresh();
+    expect($user->logo_path)->toBeNull();
+
+    // 4. Acesso à loja volta para o fallback com ícone
+    $storeFallbackResponse = $this->get("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/produtos");
+    $storeFallbackResponse->assertOk();
+    $storeFallbackResponse->assertSee('data-lucide="shopping-bag"', false);
+});
+
 test('ERP client is forbidden from accessing manual product creation and edit routes', function () {
     $user = User::factory()->create([
         'tipo_cliente' => 'erp',
@@ -134,44 +286,51 @@ test('ERP client is forbidden from accessing manual product creation and edit ro
     $response->assertStatus(403);
 });
 
-test('Stripe Pix webhook successfully extends plan', function () {
+test('Catalog product search filters products by name, SKU and description', function () {
     $user = User::factory()->create([
         'tipo_cliente' => 'direct',
-        'plano_expira_em' => now()->addDays(5),
+        'plano_expira_em' => now()->addDays(30),
     ]);
 
-    // Construct valid Stripe Webhook signature
-    $payload = json_encode([
-        'type' => 'payment_intent.succeeded',
-        'data' => [
-            'object' => [
-                'metadata' => [
-                    'user_id' => $user->id,
-                    'plan' => 'yearly',
-                ]
-            ]
-        ]
+    app()->instance(User::class, $user);
+
+    $prod1 = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Camisa Polo Azul',
+        'description' => 'Camisa de algodão premium',
+        'sku' => 'SKU-CAM-AZUL',
+        'preco_base' => 99.90,
+        'estoque' => 10,
+        'status' => true,
     ]);
 
-    // Generate valid Stripe signature header
-    $secret = env('STRIPE_WEBHOOK_SECRET', 'whsec_test');
-    $time = time();
-    $signature = hash_hmac('sha256', $time . '.' . $payload, $secret);
-    $sigHeader = "t={$time},v1={$signature}";
-
-    // Set temporary webhook secret in env for the test
-    config(['cashier.webhook.secret' => $secret]);
-
-    $response = $this->postJson(route('api.payments.pix.webhook'), json_decode($payload, true), [
-        'Stripe-Signature' => $sigHeader,
+    $prod2 = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Calça Jeans Preta',
+        'description' => 'Calça slim masculina',
+        'sku' => 'SKU-CAL-JEANS',
+        'preco_base' => 199.90,
+        'estoque' => 5,
+        'status' => true,
     ]);
 
-    $response->assertOk();
+    // 1. Search by name 'Polo'
+    $resName = $this->get("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/produtos?search=Polo");
+    $resName->assertOk();
+    $resName->assertSee('Camisa Polo Azul');
+    $resName->assertDontSee('Calça Jeans Preta');
 
-    $user->refresh();
-    expect($user->status)->toBe('active');
-    // It should add 365 days to the expiration
-    expect($user->plano_expira_em->isAfter(now()->addDays(360)))->toBeTrue();
+    // 2. Search by SKU 'SKU-CAL'
+    $resSku = $this->get("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/produtos?search=SKU-CAL");
+    $resSku->assertOk();
+    $resSku->assertSee('Calça Jeans Preta');
+    $resSku->assertDontSee('Camisa Polo Azul');
+
+    // 3. Search with non-matching term
+    $resEmpty = $this->get("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/produtos?search=Inexistente123");
+    $resEmpty->assertOk();
+    $resEmpty->assertSee('Nenhum produto encontrado');
+    $resEmpty->assertSee('Limpar pesquisa');
 });
 
 

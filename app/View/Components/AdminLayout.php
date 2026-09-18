@@ -23,6 +23,7 @@ class AdminLayout extends Component
     public function render(): View
     {
         $theme = app(User::class)->theme_name;
-        return view('components.admin-layout', compact('theme'));
+        $logoUrl = app(User::class)->logo_url;
+        return view('components.admin-layout', compact('theme', 'logoUrl'));
     }
 }

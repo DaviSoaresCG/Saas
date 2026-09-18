@@ -17,6 +17,7 @@ class ProdutoController extends Controller
     {
         $user = app(User::class);
         $selectedGrupo = $request->query('grupo');
+        $search = trim((string) $request->query('search', ''));
 
         $query = Products::with(['atributos', 'productImages', 'grupos'])->where('status', true);
 
@@ -26,10 +27,18 @@ class ProdutoController extends Controller
             });
         }
 
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('nome', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%")
+                  ->orWhere('sku', 'LIKE', "%{$search}%");
+            });
+        }
+
         $products = $query->get();
         $grupos = Grupo::all();
 
-        return view('products.index', compact('user', 'products', 'grupos', 'selectedGrupo'));
+        return view('products.index', compact('user', 'products', 'grupos', 'selectedGrupo', 'search'));
     }
 
     public function show($slug, $id)

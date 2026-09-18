@@ -27,6 +27,8 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'store_name' => ['required', 'string', 'max:255', 'min:3'],
             'modal_carrinho' => ['nullable', 'boolean'],
+            'logo' => ['nullable', 'mimes:jpeg,png,jpg,webp,svg,avif', 'max:3000'],
+            'remover_logo' => ['nullable', 'boolean'],
         ];
     }
 }

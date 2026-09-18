@@ -11,7 +11,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 lg:grid-cols-3" x-data="{ editMode: false, editId: null, editNome: '', editDesconto: '', updateUrl: '' }">
+    <div class="grid gap-6 lg:grid-cols-3" x-data="{ editMode: false, editId: null, editNome: '', editDesconto: '', editSobConsulta: false, isSobConsulta: {{ old('sob_consulta') ? 'true' : 'false' }}, updateUrl: '' }">
 
         {{-- Formulário de criação/edição --}}
         <div class="lg:col-span-1">
@@ -28,13 +28,24 @@
                         <x-input-base name="nome" value="{{ old('nome') }}" type="text" icon="folder" placeholder="Ex: Clientes VIP, Atacado" label="Nome do Catálogo" required />
                     </div>
 
-                    <div>
+                    <div class="rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-card)]/50 p-3.5 transition-all">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" name="sob_consulta" value="1" x-model="isSobConsulta" {{ old('sob_consulta') ? 'checked' : '' }}
+                                class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]">
+                            <div>
+                                <span class="block text-xs font-bold text-[var(--text-base)]">Preço Sob Consulta</span>
+                                <span class="block text-xs text-[var(--text-muted)] mt-0.5">Oculta os preços e exibe "Preço Sob Consulta".</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div x-show="!isSobConsulta" x-transition>
                         <label class="block text-xs font-bold text-[var(--text-base)] mb-1">Desconto (%)</label>
                         <div class="relative rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-card)]/50 focus-within:border-[var(--color-primary)] transition-all">
                             <span class="absolute inset-y-0 left-4 flex items-center text-[var(--text-muted)]">
                                 <i data-lucide="percent" class="h-4 w-4"></i>
                             </span>
-                            <input name="desconto_index" value="{{ old('desconto_index') }}" type="number" step="0.01" min="0" max="100" placeholder="Ex: 10.00" required
+                            <input name="desconto_index" value="{{ old('desconto_index', '0.00') }}" type="number" step="0.01" min="0" max="100" placeholder="Ex: 10.00" :required="!isSobConsulta"
                                 class="w-full pl-12 pr-4 py-3 bg-transparent text-sm text-[var(--text-base)] outline-none rounded-2xl">
                         </div>
                     </div>
@@ -67,13 +78,24 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="rounded-2xl border border-amber-500/20 bg-[var(--bg-card)]/50 p-3.5 transition-all">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" name="sob_consulta" value="1" x-model="editSobConsulta"
+                                class="mt-0.5 h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-500">
+                            <div>
+                                <span class="block text-xs font-bold text-[var(--text-base)]">Preço Sob Consulta</span>
+                                <span class="block text-xs text-[var(--text-muted)] mt-0.5">Oculta os preços e exibe "Preço Sob Consulta".</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div x-show="!editSobConsulta" x-transition>
                         <label class="block text-xs font-bold text-[var(--text-base)] mb-1">Desconto (%)</label>
                         <div class="relative rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-card)]/50 focus-within:border-[var(--color-primary)] transition-all">
                             <span class="absolute inset-y-0 left-4 flex items-center text-[var(--text-muted)]">
                                 <i data-lucide="percent" class="h-4 w-4"></i>
                             </span>
-                            <input name="desconto_index" type="number" step="0.01" min="0" max="100" x-model="editDesconto" required
+                            <input name="desconto_index" type="number" step="0.01" min="0" max="100" x-model="editDesconto" :required="!editSobConsulta"
                                 class="w-full pl-12 pr-4 py-3 bg-transparent text-sm text-[var(--text-base)] outline-none rounded-2xl">
                         </div>
                     </div>
@@ -121,15 +143,23 @@
                                         </span>
                                         <div>
                                             <span class="font-bold text-sm text-[var(--text-base)] block leading-tight">{{ $cat->nome }}</span>
-                                            <span class="text-xs text-emerald-600 font-semibold">{{ number_format($cat->desconto_index, 2, ',', '.') }}% de desconto</span>
+                                            @if ($cat->sob_consulta)
+                                                <span class="inline-flex items-center gap-1 text-xs text-amber-500 font-semibold mt-0.5">
+                                                    <i data-lucide="help-circle" class="h-3.5 w-3.5"></i>
+                                                    Preço Sob Consulta
+                                                </span>
+                                            @else
+                                                <span class="text-xs text-emerald-600 font-semibold">{{ number_format($cat->desconto_index, 2, ',', '.') }}% de desconto</span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 shrink-0">
                                         <button type="button" @click="
                                             editMode = true;
                                             editId = '{{ $cat->id }}';
-                                            editNome = '{{ $cat->nome }}';
+                                            editNome = '{{ addslashes($cat->nome) }}';
                                             editDesconto = '{{ $cat->desconto_index }}';
+                                            editSobConsulta = {{ $cat->sob_consulta ? 'true' : 'false' }};
                                             updateUrl = '{{ route('catalogos.update', ['slug' => auth()->user()->slug, 'catalogo' => $cat->id]) }}';
                                             window.scrollTo({top: 0, behavior: 'smooth'});
                                         " class="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1.5 text-xs font-semibold text-amber-500 hover:bg-amber-500/20 transition-colors cursor-pointer">
@@ -137,7 +167,7 @@
                                             Editar
                                         </button>
                                         <form action="{{ route('catalogos.destroy', ['slug' => auth()->user()->slug, 'catalogo' => $cat->id]) }}" method="POST"
-                                            onsubmit="return confirm('Remover o catálogo \'{{ $cat->nome }}\'?');">
+                                            onsubmit="return confirm('Remover o catálogo \'{{ addslashes($cat->nome) }}\'?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="inline-flex items-center gap-1 rounded-lg border border-red-500/30 bg-red-500/10 px-2.5 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer">

@@ -407,6 +407,11 @@
                                                 <td class="p-2.5 font-mono text-xs">Boolean</td>
                                                 <td class="p-2.5 text-xs">Status da sincronização (atualizado para true nesta chamada)</td>
                                             </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> sob_consulta</td>
+                                                <td class="p-2.5 font-mono text-xs">Boolean</td>
+                                                <td class="p-2.5 text-xs">Indica se o pedido foi realizado a partir de um catálogo com "Preço Sob Consulta" (true/false)</td>
+                                            </tr>
                                             <tr class="bg-[var(--bg-page)]/20">
                                                 <td class="p-2.5 font-mono pl-6 text-emerald-400 font-bold flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> iten_pedido</td>
                                                 <td class="p-2.5 font-mono text-purple-400">Array de Objetos</td>
@@ -477,6 +482,7 @@
       "cliente_nome": "Maria Oliveira",
       "cliente_phone": "11988887777",
       "sync": true,
+      "sob_consulta": false,
       "iten_pedido": [
         {
           "id": 15,

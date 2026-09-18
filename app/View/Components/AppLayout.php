@@ -10,6 +10,7 @@ class AppLayout extends Component
 {
     public function __construct(
         public bool $adminShell = false,
+        public ?string $logoUrl = null,
     ) {
 
     }
@@ -20,7 +21,8 @@ class AppLayout extends Component
     public function render(): View
     {
         $theme = app(User::class)->theme_name;
+        $logoUrl = $this->logoUrl ?? app(User::class)->logo_url;
 
-        return view('layouts.app', compact('theme'));
+        return view('layouts.app', compact('theme', 'logoUrl'));
     }
 }

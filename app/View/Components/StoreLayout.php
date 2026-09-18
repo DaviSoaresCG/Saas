@@ -9,11 +9,14 @@ use Illuminate\View\View;
 class StoreLayout extends Component
 {
     public string $storeName;
+    public ?string $logoUrl = null;
 
     public function __construct(
         public ?string $pageTitle = null,
     ) {
-        $this->storeName = app(User::class)->store_name ?? 'Loja';
+        $tenantUser = app(User::class);
+        $this->storeName = $tenantUser->store_name ?? 'Loja';
+        $this->logoUrl = $tenantUser->logo_url ?? null;
     }
 
     public function render(): View
@@ -21,6 +24,7 @@ class StoreLayout extends Component
         $tenantUser = app(User::class);
         $theme = $tenantUser->theme_name;
         $modalCarrinho = (bool) ($tenantUser->modal_carrinho ?? false);
-        return view('components.store-layout', compact('theme', 'modalCarrinho'));
+        $storeLogo = $this->logoUrl;
+        return view('components.store-layout', compact('theme', 'modalCarrinho', 'storeLogo'));
     }
 }

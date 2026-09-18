@@ -15,15 +15,23 @@
             </svg>
         </button>
         <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-2 sm:gap-3">
-            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 shadow-md shadow-blue-600/30">
-                <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-            </span>
+            @php
+                $adminUser = auth()->user() ?? (app()->bound(\App\Models\User::class) ? app(\App\Models\User::class) : null);
+                $displayLogo = $logoUrl ?? $adminUser?->logo_url ?? null;
+                $adminStoreName = $adminUser?->store_name ?? 'ZapCatalogo';
+            @endphp
+            @if (!empty($displayLogo))
+                <div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full overflow-hidden shrink-0 border border-[var(--color-primary)]/30 bg-[var(--bg-card)] shadow-md">
+                    <img src="{{ $displayLogo }}" alt="{{ $adminStoreName }}" class="h-full w-full object-cover">
+                </div>
+            @else
+                <div class="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-[var(--text-on-primary)] shadow-md shadow-[var(--color-primary)]/20">
+                    <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+                </div>
+            @endif
             <span class="hidden min-w-0 sm:block">
-                <span class="block text-[10px] font-semibold uppercase tracking-wider text-[var(--text-base)]">Painel</span>
-                <span class="block truncate text-sm font-bold text-[var(--text-base)]">ZapCatalogo</span>
+                <span class="block text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">Painel</span>
+                <span class="block truncate text-sm font-bold text-[var(--text-base)]">{{ $adminStoreName }}</span>
             </span>
         </a>
     </div>

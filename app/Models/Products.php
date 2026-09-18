@@ -86,13 +86,26 @@ class Products extends Model
     }
 
     /**
-     * Backward compatibility mapping: path -> foto_url.
+     * Backward compatibility mapping: path -> foto_url (with fallback).
      */
     protected function path(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['foto_url'] ?? null,
+            get: function ($value, $attributes) {
+                $foto = $attributes['foto_url'] ?? null;
+                if (!empty($foto)) {
+                    return $foto;
+                }
+                return asset('img/noimage-original.png');
+            },
             set: fn ($value) => ['foto_url' => $value]
+        );
+    }
+
+    public function peso(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => number_format($value, 3, ',', '.') . 'kg',
         );
     }
 

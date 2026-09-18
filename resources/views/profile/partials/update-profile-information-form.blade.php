@@ -13,9 +13,61 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
+
+        <div>
+            <label class="block text-xs font-bold text-[var(--text-base)] mb-1">Logo da Empresa</label>
+            <div x-data="{
+                preview: '{{ $user->logo_url }}',
+                remover: false,
+                fileChosen(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.preview = URL.createObjectURL(file);
+                        this.remover = false;
+                    }
+                },
+                removeLogo() {
+                    this.preview = null;
+                    this.remover = true;
+                    $refs.logoInput.value = '';
+                }
+            }" class="rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-card)]/50 p-4 transition-all">
+                <input type="hidden" name="remover_logo" :value="remover ? '1' : '0'">
+                <div class="flex items-center gap-4">
+                    <div class="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[var(--color-primary)]/30 bg-[var(--bg-page)] overflow-hidden">
+                        <template x-if="preview">
+                            <img :src="preview" alt="Logo preview" class="h-full w-full object-contain p-1">
+                        </template>
+                        <template x-if="!preview">
+                            <div class="flex flex-col items-center justify-center text-[var(--text-muted)]">
+                                <i data-lucide="image" class="h-6 w-6"></i>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <label class="inline-flex items-center gap-1.5 rounded-xl bg-[var(--color-primary)] hover:opacity-90 px-3.5 py-2 text-xs font-bold text-[var(--text-on-primary)] transition-all cursor-pointer shadow-md shadow-[var(--color-primary)]/20">
+                                <i data-lucide="upload" class="h-3.5 w-3.5"></i>
+                                <span>Selecionar Logo</span>
+                                <input type="file" name="logo" accept="image/*" class="hidden" x-ref="logoInput" @change="fileChosen">
+                            </label>
+                            <button type="button" x-show="preview" @click="removeLogo"
+                                class="inline-flex items-center gap-1 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer">
+                                <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
+                                Remover
+                            </button>
+                        </div>
+                        <p class="text-xs text-[var(--text-muted)] mt-1.5">PNG, JPG, SVG ou WebP (máx. 3MB). Aparece no topo do seu catálogo.</p>
+                    </div>
+                </div>
+                @error('logo')
+                    <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p>
+                @enderror
+            </div>
+        </div>
 
         <div>
             <x-input-base name="name" type="text" icon="user" placeholder="Nome" label="Nome"

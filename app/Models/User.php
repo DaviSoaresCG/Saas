@@ -36,7 +36,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'status',
         'api_token',
         'need_change_password',
-        'modal_carrinho'
+        'modal_carrinho',
+        'logo_path',
     ];
 
     /**
@@ -91,6 +92,18 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return Attribute::make(
             get: fn ($value, $attributes) => $attributes['nome_loja'] ?? null,
             set: fn ($value) => ['nome_loja' => $value]
+        );
+    }
+
+    /**
+     * Public URL for the company logo.
+     */
+    protected function logoUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->logo_path
+                ? (str_starts_with($this->logo_path, 'http') ? $this->logo_path : asset('storage/' . $this->logo_path))
+                : null
         );
     }
 

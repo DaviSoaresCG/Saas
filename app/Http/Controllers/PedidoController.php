@@ -48,11 +48,14 @@ class PedidoController extends Controller
         $whatsapp_limpo = preg_replace('/\D/', '', $clientePhone);
 
 
+        $sobConsulta = (bool) session('sob_consulta', false);
+
         $pedido = Pedido::create([
             'user_id' => app(User::class)->id,
             'total' => $total,
             'cliente_nome' => $clienteNome,
             'cliente_phone' => $whatsapp_limpo,
+            'sob_consulta' => $sobConsulta,
         ]);
 
         $produtos = '';
@@ -74,8 +77,9 @@ class PedidoController extends Controller
 
             $msgAtributos = ! empty($atributosTexto) ? "\nAtributos: " . $atributosTexto : '';
             $msgObs = ! empty($observacaoTexto) ? "\nObs: " . $observacaoTexto : '';
+            $msgValor = $sobConsulta ? "\n*Valor:* Preço Sob Consulta" : "\n*Valor:* R$ ".number_format($product['value'], 2, ',', '.');
 
-            $produtos .= "\n\n*Produto:* ".$product['name'].' #'.$product['id']."\n*Valor:* R$ ".number_format($product['value'], 2, ',', '.')."\n*Quantidade:* ".$product['quantity'].$msgAtributos.$msgObs;
+            $produtos .= "\n\n*Produto:* ".$product['name'].' #'.$product['id'].$msgValor."\n*Quantidade:* ".$product['quantity'].$msgAtributos.$msgObs;
         }
 
         // uma so ida no banco
@@ -92,7 +96,8 @@ class PedidoController extends Controller
             $clientDetails .= "\n*WhatsApp/Contato:* " . $clientePhone;
         }
 
-        $mensagem = "Olá, acabei de finalizar o pedido *#{$pedido->id}*." . $clientDetails . "\n*Total:* R$ {$total}" . $produtos;
+        $totalTexto = $sobConsulta ? "Sob Consulta" : "R$ ".number_format($total, 2, ',', '.');
+        $mensagem = "Olá, acabei de finalizar o pedido *#{$pedido->id}*." . $clientDetails . "\n*Total:* {$totalTexto}" . $produtos;
 
         // Monta a URL do WhatsApp
         $url = "https://wa.me/{$tenantPhone}?text=".urlencode($mensagem);
