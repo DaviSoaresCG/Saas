@@ -388,9 +388,14 @@
                                                 <td class="p-2.5 text-xs">ID único do pedido no ZapCatálogo</td>
                                             </tr>
                                             <tr>
+                                                <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> user_id</td>
+                                                <td class="p-2.5 font-mono text-xs">Integer</td>
+                                                <td class="p-2.5 text-xs">ID do lojista / usuário dono do catálogo</td>
+                                            </tr>
+                                            <tr>
                                                 <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> total</td>
                                                 <td class="p-2.5 font-mono text-xs">String</td>
-                                                <td class="p-2.5 text-xs">Valor total do pedido (ex: "159.80")</td>
+                                                <td class="p-2.5 text-xs">Valor total do pedido formatado em moeda (ex: "899,90")</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> cliente_nome</td>
@@ -400,27 +405,42 @@
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> cliente_phone</td>
                                                 <td class="p-2.5 font-mono text-xs">String</td>
-                                                <td class="p-2.5 text-xs">WhatsApp / Telefone do cliente</td>
+                                                <td class="p-2.5 text-xs">WhatsApp / Telefone de contato do cliente</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> sync</td>
                                                 <td class="p-2.5 font-mono text-xs">Boolean</td>
-                                                <td class="p-2.5 text-xs">Status da sincronização (atualizado para true nesta chamada)</td>
+                                                <td class="p-2.5 text-xs">false na resposta do payload (marcado como true no banco nesta chamada)</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> sob_consulta</td>
                                                 <td class="p-2.5 font-mono text-xs">Boolean</td>
-                                                <td class="p-2.5 text-xs">Indica se o pedido foi realizado a partir de um catálogo com "Preço Sob Consulta" (true/false)</td>
+                                                <td class="p-2.5 text-xs">Indica se o pedido foi originado de um catálogo com "Preço Sob Consulta"</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> created_at / updated_at</td>
+                                                <td class="p-2.5 font-mono text-xs">String (ISO-8601)</td>
+                                                <td class="p-2.5 text-xs">Timestamp de criação e atualização do pedido</td>
                                             </tr>
                                             <tr class="bg-[var(--bg-page)]/20">
                                                 <td class="p-2.5 font-mono pl-6 text-emerald-400 font-bold flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> iten_pedido</td>
                                                 <td class="p-2.5 font-mono text-purple-400">Array de Objetos</td>
-                                                <td class="p-2.5 text-xs">Itens comprados neste pedido</td>
+                                                <td class="p-2.5 text-xs">Lista de itens comprados no pedido</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> id</td>
                                                 <td class="p-2.5 font-mono text-xs">Integer</td>
                                                 <td class="p-2.5 text-xs">ID do item do pedido</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> pedido_id</td>
+                                                <td class="p-2.5 font-mono text-xs">Integer</td>
+                                                <td class="p-2.5 text-xs">ID do pedido pai</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> product_id</td>
+                                                <td class="p-2.5 font-mono text-xs">Integer</td>
+                                                <td class="p-2.5 text-xs">ID interno do produto no ZapCatálogo</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> quantidade</td>
@@ -430,17 +450,32 @@
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> value</td>
                                                 <td class="p-2.5 font-mono text-xs">String</td>
-                                                <td class="p-2.5 text-xs">Valor unitário do item (ex: "79,90")</td>
+                                                <td class="p-2.5 text-xs">Valor unitário do item formatado (ex: "899,90")</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> atributos</td>
+                                                <td class="p-2.5 font-mono text-xs">String / Array</td>
+                                                <td class="p-2.5 text-xs">Variações e atributos selecionados pelo cliente</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> observacao</td>
+                                                <td class="p-2.5 font-mono text-xs">String</td>
+                                                <td class="p-2.5 text-xs">Observações do item adicionadas pelo cliente</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-10 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> created_at / updated_at</td>
+                                                <td class="p-2.5 font-mono text-xs">String (ISO-8601)</td>
+                                                <td class="p-2.5 text-xs">Timestamps do item</td>
                                             </tr>
                                             <tr class="bg-[var(--bg-page)]/20">
                                                 <td class="p-2.5 font-mono pl-10 text-emerald-400 font-bold flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> product</td>
                                                 <td class="p-2.5 font-mono text-purple-400">Objeto</td>
-                                                <td class="p-2.5 text-xs">Dados do produto vinculado</td>
+                                                <td class="p-2.5 text-xs">Dados completos do produto vinculado</td>
                                             </tr>
                                             <tr class="bg-purple-500/10 font-bold">
                                                 <td class="p-2.5 font-mono pl-14 text-purple-400 flex items-center gap-1"><span class="text-purple-400">↳</span> erp_id</td>
                                                 <td class="p-2.5 font-mono text-purple-300">String / Integer</td>
-                                                <td class="p-2.5 text-xs text-purple-300 font-bold">ID do produto correspondente no seu ERP (cadastrado no sync-products)</td>
+                                                <td class="p-2.5 text-xs text-purple-300 font-bold">ID do produto no seu ERP (utilizado para baixa no estoque)</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> sku</td>
@@ -451,6 +486,31 @@
                                                 <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> nome</td>
                                                 <td class="p-2.5 font-mono text-xs">String</td>
                                                 <td class="p-2.5 text-xs">Nome do produto no catálogo</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> preco_base</td>
+                                                <td class="p-2.5 font-mono text-xs">String</td>
+                                                <td class="p-2.5 text-xs">Preço unitário base formatado (ex: "899,90")</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> peso</td>
+                                                <td class="p-2.5 font-mono text-xs">String</td>
+                                                <td class="p-2.5 text-xs">Peso do produto formatado (ex: "0,514kg")</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> estoque</td>
+                                                <td class="p-2.5 font-mono text-xs">Integer</td>
+                                                <td class="p-2.5 text-xs">Estoque atual registrado</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> foto_url</td>
+                                                <td class="p-2.5 font-mono text-xs">String</td>
+                                                <td class="p-2.5 text-xs">URL da imagem principal</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> description</td>
+                                                <td class="p-2.5 font-mono text-xs">String</td>
+                                                <td class="p-2.5 text-xs">Descrição do produto</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -476,27 +536,41 @@
 {
   "pedidos": [
     {
-      "id": 1,
+      "id": 5,
       "user_id": {{ auth()->user()->id }},
-      "total": "159.80",
-      "cliente_nome": "Maria Oliveira",
-      "cliente_phone": "11988887777",
-      "sync": true,
+      "total": "899,90",
+      "cliente_nome": "Davi",
+      "cliente_phone": "66621212312",
+      "sync": false,
       "sob_consulta": false,
+      "created_at": "2026-09-18T18:17:03.000000Z",
+      "updated_at": "2026-09-18T18:17:03.000000Z",
       "iten_pedido": [
         {
-          "id": 15,
-          "pedido_id": 1,
-          "product_id": 5,
-          "quantidade": 2,
-          "value": "79,90",
+          "id": 5,
+          "pedido_id": 5,
+          "product_id": 4,
+          "value": "899,90",
+          "quantidade": 1,
+          "atributos": "",
+          "observacao": "observacao1",
+          "created_at": "2026-09-18T18:17:03.000000Z",
+          "updated_at": "2026-09-18T18:17:03.000000Z",
           "product": {
-            "id": 5,
-            "erp_id": "101",
-            "sku": "CAM-001",
-            "nome": "Camisa Polo Masculina",
-            "preco_base": "79.90",
-            "peso": "0.35"
+            "id": 4,
+            "erp_id": "erp-prod-104",
+            "sku": "HEADPHONE-ANC",
+            "nome": "Fone Bluetooth ANC",
+            "preco_base": "899,90",
+            "peso": "0,514kg",
+            "estoque": 25,
+            "status": 1,
+            "slug": "fone-bluetooth-anc",
+            "foto_url": "https://images.unsplash.com/...",
+            "description": "Fone de ouvido Bluetooth Over-Ear...",
+            "user_id": {{ auth()->user()->id }},
+            "created_at": "2026-09-15T23:07:36.000000Z",
+            "updated_at": "2026-09-15T23:07:36.000000Z"
           }
         }
       ]

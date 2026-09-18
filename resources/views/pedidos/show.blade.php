@@ -24,6 +24,7 @@
             <table class="w-full text-sm text-left">
                 <thead class="text-xs font-semibold uppercase tracking-wide text-[var(--text-on-primary)] bg-[var(--color-primary)]/80 border-b border-[var(--color-primary)]/80">
                     <tr>
+                        <th scope="col" class="px-4 sm:px-6 py-4">SKU</th>
                         <th scope="col" class="px-4 sm:px-6 py-4">Produto</th>
                         <th scope="col" class="px-4 sm:px-6 py-4">Preço</th>
                         <th scope="col" class="px-4 sm:px-6 py-4">Qtd.</th>
@@ -35,6 +36,7 @@
                         @continue(!$item->product)
                         <tr class="hover:bg-[var(--color-primary)]/10 transition-colors cursor-pointer group"
                             onclick="window.location='{{ route('products.show', ['product' => $item->product->id]) }}'">
+                            <td class="px-4 sm:px-6 py-4 font-semibold text-[var(--text-base)]">{{ $item->product->sku }}</td>
                             <td class="px-4 sm:px-6 py-4 font-semibold text-[var(--text-base)]">{{ $item->product->name }}</td>
                             <td class="px-4 sm:px-6 py-4 text-emerald-600 font-medium">R$ {{ $item->value }}</td>
                             <td class="px-4 sm:px-6 py-4 text-[var(--text-base)] tabular-nums">{{ $item->quantidade }}</td>
