@@ -50,7 +50,7 @@
                         <i data-lucide="x" class="h-3 w-3"></i>
                     </a>
                 </span>
-                <span class="text-[var(--text-muted)]">({{ $products->count() }} {{ $products->count() === 1 ? 'produto encontrado' : 'produtos encontrados' }})</span>
+                <span class="text-[var(--text-muted)]">({{ $products->total() }} {{ $products->total() === 1 ? 'produto encontrado' : 'produtos encontrados' }})</span>
             </div>
         @endif
     </div>
@@ -96,7 +96,7 @@
                     <span>Todos os produtos</span>
                 @endif
                 <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[var(--color-primary)]/10 text-[var(--text-base)] border border-[var(--color-primary)]/20">
-                    {{ $products->count() }}
+                    {{ $products->total() }}
                 </span>
             </h2>
             <p class="text-sm text-[var(--text-base)] mt-1">Toque em um item para ver detalhes.</p>
@@ -135,5 +135,11 @@
                 <x-produto-card :produto="$product" :user="$user" />
             @endforeach
         </div>
+
+        @if ($products->hasPages())
+            <div class="mt-8">
+                {{ $products->links() }}
+            </div>
+        @endif
     @endif
 </x-store-layout>

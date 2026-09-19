@@ -105,7 +105,7 @@ class Products extends Model
     public function peso(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => number_format($value, 3, ',', '.') . 'kg',
+            get: fn($value) => (float) $value > 0 ? intval($value * 1000) . 'g' : 'Sem Peso',
         );
     }
 
