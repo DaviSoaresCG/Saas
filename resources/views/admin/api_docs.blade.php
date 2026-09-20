@@ -219,7 +219,7 @@
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> peso</td>
                                                 <td class="p-2.5 font-mono text-xs">Numeric</td>
-                                                <td class="p-2.5 text-xs font-semibold text-red-400">Obrigatório. Peso em KG (ex: 0.500)</td>
+                                                <td class="p-2.5 text-xs font-semibold text-red-400">Obrigatório. Peso em gramas (ex: 1382.32 ou 350.00)</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-6 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> status</td>
@@ -276,7 +276,7 @@
       "id": 101,
       "sku": "CAM-001",
       "status": true,
-      "peso": 0.350,
+      "peso": 1382.32,
       "name": "Camisa Polo Masculina",
       "description": "Camisa polo em algodão piquet",
       "price": 79.90,
@@ -495,7 +495,7 @@
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> peso</td>
                                                 <td class="p-2.5 font-mono text-xs">String</td>
-                                                <td class="p-2.5 text-xs">Peso do produto formatado (ex: "0,514kg")</td>
+                                                <td class="p-2.5 text-xs">Peso do produto formatado em gramas (ex: "1.382,32g")</td>
                                             </tr>
                                             <tr>
                                                 <td class="p-2.5 font-mono pl-14 flex items-center gap-1"><span class="text-[var(--text-muted)]">↳</span> estoque</td>
@@ -562,7 +562,7 @@
             "sku": "HEADPHONE-ANC",
             "nome": "Fone Bluetooth ANC",
             "preco_base": "899,90",
-            "peso": "0,514kg",
+            "peso": "1.382,32g",
             "estoque": 25,
             "status": 1,
             "slug": "fone-bluetooth-anc",
@@ -625,7 +625,7 @@ curl --location '{{ url('/api/sync-products') }}' \
       "id": 101,
       "sku": "CAM-001",
       "status": true,
-      "peso": 0.350,
+      "peso": 1382.32,
       "name": "Camisa Polo Masculina",
       "description": "Camisa polo em algodão",
       "price": 79.90,
@@ -653,7 +653,7 @@ $response = $client->request('POST', '{{ url('/api/sync-products') }}', [
         'id' => 101,
         'sku' => 'CAM-001',
         'status' => true,
-        'peso' => 0.350,
+        'peso' => 1382.32,
         'name' => 'Camisa Polo Masculina',
         'description' => 'Camisa polo em algodão',
         'price' => 79.90,
@@ -680,7 +680,7 @@ const raw = JSON.stringify({
       "id": 101,
       "sku": "CAM-001",
       "status": true,
-      "peso": 0.350,
+      "peso": 1382.32,
       "name": "Camisa Polo Masculina",
       "description": "Camisa polo em algodão",
       "price": 79.90,

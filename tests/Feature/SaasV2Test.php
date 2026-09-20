@@ -75,7 +75,7 @@ test('SigaDezAPI syncProducts route creates products for authenticated user', fu
                 'description' => 'Descrição do produto SigaDez',
                 'price' => 250.00,
                 'status' => true,
-                'peso' => 0.5,
+                'peso' => 1382.32,
                 'group' => [
                     'id' => 1,
                     'name' => 'Geral',
@@ -91,6 +91,7 @@ test('SigaDezAPI syncProducts route creates products for authenticated user', fu
     expect($product)->not->toBeNull();
     expect($product->user_id)->toBe($user->id);
     expect($product->nome)->toBe('Produto SigaDez API');
+    expect($product->peso)->toBe('1.382,32g');
 });
 
 test('Accessing variant catalog applies discount and does not redirect', function () {
