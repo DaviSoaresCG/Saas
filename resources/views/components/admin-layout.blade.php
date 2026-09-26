@@ -127,6 +127,14 @@
                                 class="h-4 w-4 shrink-0 {{ $active === 'profile' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Configurações
                         </a>
+                        @if (auth()->check() && auth()->user()->isSuperAdmin())
+                            <div class="my-2 border-t border-[var(--color-primary)]/20"></div>
+                            <a href="{{ route('superadmin.index') }}" {!! $navClick !!}
+                                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all hover:scale-105">
+                                <i data-lucide="crown" class="h-4 w-4 shrink-0 text-amber-400"></i>
+                                Painel Super Admin
+                            </a>
+                        @endif
                     </nav>
                 </div>
                 <a href="{{ $catalogUrl }}" {!! $navClick !!} target="_blank" rel="noopener noreferrer"

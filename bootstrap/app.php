@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'api.token' => \App\Http\Middleware\VerifyApiToken::class,
             'password.reset.forced' => \App\Http\Middleware\CheckForcedPasswordReset::class,
             'client.direct' => \App\Http\Middleware\EnsureDirectClient::class,
+            'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

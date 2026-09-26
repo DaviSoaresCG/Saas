@@ -41,6 +41,13 @@
             class="hidden rounded-lg px-2.5 py-2 text-sm font-semibold text-[var(--text-base)] hover:bg-[var(--color-primary)] hover:text-[var(--text-on-primary)] md:inline-flex transition-all">
             Catálogo
         </a>
+        @if(auth()->check() && auth()->user()->isSuperAdmin())
+            <a href="{{ route('superadmin.index') }}"
+                class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-all">
+                <i data-lucide="crown" class="h-3.5 w-3.5 text-amber-400"></i>
+                Super Admin
+            </a>
+        @endif
         @auth
             <div class="relative" x-data="{ userOpen: false }" @click.outside="userOpen = false">
                 <button type="button" @click="userOpen = !userOpen"
@@ -54,6 +61,12 @@
                 </button>
                 <div x-show="userOpen" x-cloak x-transition
                     class="absolute right-0 z-[70] mt-2 w-52 overflow-hidden rounded-xl bg-[var(--color-primary)] py-1 shadow-xl shadow-black/40">
+                    @if(auth()->user()->isSuperAdmin())
+                        <a href="{{ route('superadmin.index') }}"
+                            class="block px-4 py-2.5 text-sm font-bold text-amber-300 hover:scale-105 transition-all">
+                            👑 Super Admin
+                        </a>
+                    @endif
                     <a href="{{ route('profile.edit') }}"
                         class="block px-4 py-2.5 text-sm font-medium text-[var(--text-on-primary)] hover:scale-105 transition-all">Perfil</a>
                     <form method="POST" action="{{ route('logout') }}">

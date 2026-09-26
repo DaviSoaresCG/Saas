@@ -108,11 +108,60 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     }
 
     /**
+     * Check if user is Super Administrator.
+     */
+    public function isSuperAdmin(): bool
+    {
+        $superAdminEmail = env('SUPER_ADMIN_EMAIL', 'davisoaresgigante@gmail.com');
+        return strtolower(trim($this->email ?? '')) === strtolower(trim($superAdminEmail));
+    }
+
+    /**
      * User's catalogs.
      */
     public function catalogos()
     {
         return $this->hasMany(Catalogo::class);
+    }
+
+    /**
+     * User's products.
+     */
+    public function products()
+    {
+        return $this->hasMany(Products::class, 'user_id');
+    }
+
+    /**
+     * User's orders (pedidos).
+     */
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'user_id');
+    }
+
+    /**
+     * User's product categories/groups.
+     */
+    public function grupos()
+    {
+        return $this->hasMany(Grupo::class, 'user_id');
+    }
+
+    /**
+     * User's custom attributes.
+     */
+    public function atributos()
+    {
+        return $this->hasMany(Atributo::class, 'user_id');
+    }
+
+    /**
+     * User's product clicks / views.
+     */
+    public function productClicks()
+    {
+        return $this->hasMany(ProductClick::class, 'user_id');
     }
 }
 

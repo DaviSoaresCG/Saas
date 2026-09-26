@@ -13,8 +13,26 @@ use App\Http\Controllers\PixPaymentController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\CounponsController;
 use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\SuperAdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Super Admin Routes (Exclusivo para davisoaresgigante@gmail.com)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::get('/', [SuperAdminController::class, 'index'])->name('index');
+    Route::get('/users/{user}', [SuperAdminController::class, 'showUser'])->name('users.show');
+    Route::delete('/users/{user}/products', [SuperAdminController::class, 'deleteProducts'])->name('users.delete-products');
+    Route::delete('/users/{user}/pedidos', [SuperAdminController::class, 'deletePedidos'])->name('users.delete-pedidos');
+    Route::delete('/users/{user}/grupos', [SuperAdminController::class, 'deleteGrupos'])->name('users.delete-grupos');
+    Route::delete('/users/{user}/catalogos', [SuperAdminController::class, 'deleteCatalogos'])->name('users.delete-catalogos');
+    Route::delete('/users/{user}/atributos', [SuperAdminController::class, 'deleteAtributos'])->name('users.delete-atributos');
+    Route::delete('/users/{user}/wipe', [SuperAdminController::class, 'wipeAll'])->name('users.wipe');
+    Route::delete('/users/{user}/account', [SuperAdminController::class, 'deleteUserAccount'])->name('users.delete-account');
+});
 
 /*
 |--------------------------------------------------------------------------

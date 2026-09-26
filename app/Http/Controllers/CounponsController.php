@@ -105,7 +105,7 @@ class CounponsController extends Controller
            return redirect()->route('subscription.success');
         }
 
-        return redirect()->route('checkout.index')->with('error', 'Cupom inválido!');
+        return redirect()->back()->with('error', 'Cupom inválido!')->withInput();
     }
 
     /**

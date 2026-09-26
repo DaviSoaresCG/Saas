@@ -93,7 +93,8 @@
                         @csrf
                         <input type="submit" value="Logout" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 hover:scale-105">
                     </form>
-                    @if(auth()->user()->email == 'davisoaresgigante@gmail.com')
+                    @if(auth()->user()->isSuperAdmin())
+                        <a href="{{ route('superadmin.index') }}" class="text-amber-400 font-bold flex items-center gap-1">👑 Super Admin</a>
                         <a href="{{ route('counpons.index') }}" class="text-blue-500">Cupons</a>
                     @endif
                 @endauth
