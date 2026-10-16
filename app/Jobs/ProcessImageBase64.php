@@ -50,10 +50,13 @@ class ProcessImageBase64 implements ShouldQueue
                 [, $raw] = explode(';base64,', $raw, 2);
             }
 
-            // 2. Remove quebras de linha e espaços que corrompem o Base64
-            $cleanBase64 = preg_replace('/\s+/', '', $raw);
+            // 2. Remove quebras de linha e tabs
+            $raw = str_replace(["\r", "\n", "\t"], '', $raw);
 
-            // 3. Decodifica para binário bruto
+            // 3. Converte espaços em '+' (em requisições HTTP form-data ou urlencoded o '+' vira espaço e corrompe o Base64)
+            $cleanBase64 = str_replace(' ', '+', $raw);
+
+            // 4. Decodifica para binário bruto
             $binaryData = base64_decode($cleanBase64, true);
 
             // Se o base64_decode retornar falso ou vazio, tenta os dados brutos
