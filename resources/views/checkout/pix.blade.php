@@ -145,23 +145,43 @@
           </ol>
         </div>
 
-        {{-- <!-- Simulação Local (Ambiente de Teste) -->
-        <div class="p-6 rounded-3xl border border-amber-500/30 bg-amber-500/5 text-center mb-8">
+        @if (!empty($payment['invoice_url']))
+        <!-- Opção de Cartão de Crédito -->
+        <div class="mb-8 p-5 rounded-2xl bg-slate-800/80 border border-slate-700 text-center shadow-lg">
+          <div class="flex items-center justify-center gap-2 text-sm font-semibold text-gray-200 mb-1">
+            <i data-lucide="credit-card" class="h-4 w-4 text-blue-400"></i>
+            <span>Prefere pagar com Cartão de Crédito?</span>
+          </div>
+          <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+            Pague com segurança no Checkout do Asaas. A cobrança da assinatura será debitada no seu cartão.
+          </p>
+          <a href="{{ $payment['invoice_url'] }}" target="_blank" class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-600/20">
+            <span>Abrir Checkout de Cartão no Asaas</span>
+            <i data-lucide="external-link" class="h-3.5 w-3.5"></i>
+          </a>
+        </div>
+        @endif
+
+        @if(config('app.env') === 'local' || config('services.asaas.env') === 'sandbox')
+        <!-- Simulação Local / Sandbox (Ambiente de Teste) -->
+        <div class="p-6 rounded-3xl border border-amber-500/30 bg-amber-500/5 text-center mb-8 shadow-xl">
           <div class="flex items-center justify-center gap-2 text-amber-400 mb-2">
-            <i data-lucide="alert-triangle" class="h-5 w-5"></i>
-            <span class="text-sm font-bold uppercase tracking-wider">Área de Simulação Local</span>
+            <i data-lucide="zap" class="h-5 w-5 text-amber-400"></i>
+            <span class="text-sm font-bold uppercase tracking-wider">Simulação Sandbox / Local</span>
           </div>
           <p class="text-xs text-gray-400 mb-5 leading-relaxed">
-            Você está em ambiente de desenvolvimento. Clique no botão abaixo para simular a resposta positiva do Webhook e ativar imediatamente a sua loja.
+            Você está em ambiente de desenvolvimento. Você <strong>NÃO precisa pagar nada real</strong>! Clique no botão abaixo para aprovar instantaneamente o pagamento e ativar sua loja.
           </p>
           
           <form action="{{ route('pagamento.simulate') }}" method="POST">
             @csrf
-            <button type="submit" class="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-lg shadow-amber-600/10 transition-all cursor-pointer">
-              Confirmar Pagamento Simulado
+            <button type="submit" class="w-full py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition-all cursor-pointer flex items-center justify-center gap-2">
+              <i data-lucide="check-circle" class="h-4 w-4"></i>
+              <span>Simular Pagamento Aprovado</span>
             </button>
           </form>
-        </div> --}}
+        </div>
+        @endif
 
         <div class="text-center">
           <a href="{{ route('pagamento.pending') }}" class="text-xs text-gray-500 hover:text-gray-300 transition-colors flex items-center justify-center gap-1">

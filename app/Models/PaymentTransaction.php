@@ -9,11 +9,13 @@ class PaymentTransaction extends Model
     protected $fillable = [
         'user_id',
         'payment_id',
+        'subscription_id',
         'amount',
         'plan',
         'status',
         'qr_code',
         'qr_code_base64',
+        'invoice_url',
     ];
 
     public function user()

@@ -43,6 +43,19 @@ return [
     'mercadopago' => [
         'access_token' => env('MERCADO_PAGO_ACCESS_TOKEN'),
         'public_key' => env('MERCADO_PAGO_PUBLIC_KEY'),
-    ]
+    ],
+
+    'asaas' => [
+        'env' => env('ASAAS_ENV', 'sandbox'),
+        'api_key' => env('ASAAS_ENV', 'sandbox') === 'production'
+            ? env('ASAAS_API_TOKEN')
+            : (env('ASAAS_SANDBOX_API_TOKEN') ?: env('ASAAS_API_TOKEN')),
+        'webhook_token' => env('ASAAS_ENV', 'sandbox') === 'production'
+            ? env('ASAAS_WEBHOOK_TOKEN')
+            : (env('ASAAS_SANDBOX_WEBHOOK_TOKEN') ?: env('ASAAS_WEBHOOK_TOKEN')),
+        'base_url' => env('ASAAS_ENV', 'sandbox') === 'production'
+            ? 'https://api.asaas.com/v3'
+            : 'https://sandbox.asaas.com/api/v3',
+    ],
 
 ];

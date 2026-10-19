@@ -13,10 +13,59 @@
         'other' => ['label' => 'Outro status', 'class' => 'bg-slate-500 text-slate-300 border-slate-500/40'],
     ];
     $badge = $subLabels[$subscriptionStatus] ?? $subLabels['other'];
+    $authUser = auth()->user();
+    $diasRestantes = ($authUser && $authUser->plano_expira_em && $authUser->plano_expira_em->isFuture()) 
+        ? (int) ceil(now()->diffInDays($authUser->plano_expira_em, false)) 
+        : null;
 @endphp
 
 <x-admin-layout active="dashboard" :show-back-bar="false">
     <div class="space-y-8">
+        {{-- Banner de Boas-Vindas pós-assinatura --}}
+        @if (session('welcome') || session('success') || request('welcome'))
+            <div id="welcomeBanner" class="relative overflow-hidden rounded-3xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/80 via-slate-900 to-blue-950/80 p-5 sm:p-7 md:p-8 shadow-2xl backdrop-blur-md transition-all duration-300">
+                {{-- Decorative Glow Elements --}}
+                <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-emerald-500/20 blur-3xl"></div>
+                <div class="pointer-events-none absolute -left-12 -bottom-12 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl"></div>
+
+                {{-- Botão Fechar no canto superior direito (padrão UX limpo) --}}
+                <button type="button" onclick="document.getElementById('welcomeBanner').remove()" 
+                    class="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer shadow-sm" 
+                    title="Fechar aviso">
+                    <i data-lucide="x" class="h-4 w-4"></i>
+                </button>
+
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 pr-8 sm:pr-10 lg:pr-0">
+                    <div class="flex items-start gap-3.5 sm:gap-5">
+                        <div class="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/30">
+                            <i data-lucide="party-popper" class="h-6 w-6 sm:h-7 sm:w-7 text-white"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-3 py-0.5 text-xs font-bold text-emerald-400 border border-emerald-500/30">
+                                    <i data-lucide="check-circle" class="h-3.5 w-3.5"></i> Assinatura Confirmada
+                                </span>
+                                <span class="text-xs text-slate-400">• Loja Ativada</span>
+                            </div>
+                            <h2 class="text-lg sm:text-2xl font-extrabold text-white tracking-tight break-words">
+                                Seja muito bem-vindo ao ZapCatálogo, {{ auth()->user()->name }}! 🎉
+                            </h2>
+                            <p class="mt-1 text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+                                Sua assinatura foi confirmada com sucesso e sua loja já está ativa no ar. Agora você pode cadastrar seus produtos, criar catálogos temáticos e começar a vender pelo WhatsApp!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 shrink-0 w-full sm:w-auto">
+                        <a href="{{ route('products.create') }}" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-5 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer">
+                            <i data-lucide="plus" class="h-4 w-4"></i>
+                            <span>Cadastrar 1º Produto</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
                 <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text-base)]">
@@ -34,10 +83,10 @@
                     <i data-lucide="plus" class="h-4 w-4"></i>
                     Criar produto
                 </a>
-                    <a href="{{ route('pagamento.pending') }}"
-                        class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-4 py-2.5 text-sm font-semibold text-slate-200 transition-colors">
-                        <i data-lucide="settings" class="h-4 w-4"></i>
-                        Renovar plano / Pix
+                    <a href="{{ route('subscription.renew') }}"
+                        class="inline-flex items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-4 py-2.5 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-700">
+                        <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                        Renovar plano
                     </a>
                 @endif
             </div>
@@ -162,34 +211,117 @@
         </div>
 
         @if (auth()->user()->tipo_cliente === 'direct')
-        <section id="assinatura" class="rounded-2xl border border-[var(--color-primary)]/80 bg-[var(--bg-card)] overflow-hidden shadow-xl shadow-black/15 hover:scale-[1.02] transition-all scroll-mt-24">
-            <div class="flex items-center justify-between bg-[var(--color-primary)] px-5 py-4 border-b border-[var(--color-primary)]/80">
-                <h2 class="text-lg font-bold text-[var(--text-on-primary)] flex items-center gap-2">
-                    <i data-lucide="credit-card" class="h-5 w-5 text-[var(--text-on-primary)]"></i>
-                    Sua Assinatura (Pix)
-                </h2>
-                <a href="{{ route('pagamento.pending') }}"
-                    class="sm:text-sm text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-base)] p-2 rounded-lg">
-                    Renovar plano
+        <section id="assinatura" class="relative overflow-hidden rounded-3xl border border-[var(--color-primary)]/40 bg-[var(--bg-card)] shadow-2xl transition-all duration-300 scroll-mt-24">
+            {{-- Brilho de fundo decorativo suave --}}
+            <div class="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[var(--color-primary)]/10 blur-3xl"></div>
+
+            {{-- Header do Card com Flexbox 100% Responsivo (Mobile & Desktop) --}}
+            <div class="p-5 sm:p-6 border-b border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary)]/10 via-transparent to-transparent flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-primary)] text-[var(--text-on-primary)] shadow-md shadow-[var(--color-primary)]/25">
+                        <i data-lucide="credit-card" class="h-5 w-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="text-base sm:text-lg font-bold text-[var(--text-base)]">
+                                Sua Assinatura
+                            </h2>
+                            <span class="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)]/15 border border-[var(--color-primary)]/30 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-primary)]">
+                                Asaas
+                            </span>
+                        </div>
+                        <p class="text-xs text-[var(--text-muted)] mt-0.5">
+                            Gerencie sua assinatura e métodos de pagamento (Pix & Cartão).
+                        </p>
+                    </div>
+                </div>
+
+                <a href="{{ route('subscription.renew') }}"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-xs sm:text-sm font-bold text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/25 hover:brightness-110 active:scale-95 transition-all w-full sm:w-auto shrink-0 cursor-pointer">
+                    <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                    <span>Renovar ou Alterar Plano</span>
                 </a>
             </div>
 
-            <div class="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 p-4">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-2">Status da Loja</p>
-                    <span class="inline-flex items-center rounded-lg border px-3 py-1 text-sm font-bold {{ $badge['class'] }}">
-                        {{ $badge['label'] }}
-                    </span>
+            {{-- Grade Adaptativa: 1 coluna em mobile, 2 colunas a partir de tablets (md) --}}
+            <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                {{-- Bloco 1: Status da Loja --}}
+                <div class="flex flex-col justify-between rounded-2xl border border-[var(--color-primary)]/25 bg-[var(--color-primary)]/5 p-4 sm:p-5 transition-colors hover:border-[var(--color-primary)]/40">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">Status da Loja</span>
+                            @if ($subscriptionStatus === 'active')
+                                <span class="relative flex h-2.5 w-2.5" title="Loja Online">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                            <span class="inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-1.5 text-sm font-extrabold {{ $badge['class'] }}">
+                                @if ($subscriptionStatus === 'active')
+                                    <i data-lucide="check-circle" class="h-4 w-4"></i>
+                                @else
+                                    <i data-lucide="alert-circle" class="h-4 w-4"></i>
+                                @endif
+                                {{ $badge['label'] }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
+                        @if ($subscriptionStatus === 'active')
+                            Sua loja está online, visível para clientes e recebendo pedidos normalmente pelo WhatsApp.
+                        @else
+                            Sua loja está atualmente inativa. Renove sua assinatura para liberá-la imediatamente.
+                        @endif
+                    </p>
                 </div>
                 
-                <div class="rounded-xl border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 p-4">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-2">Plano Expira Em</p>
-                    @if ($subscriptionEnd)
-                        <p class="text-lg font-bold text-[var(--text-base)]">{{ $subscriptionEnd }}</p>
-                        <p class="text-xs text-[var(--text-muted)] mt-1">Sua loja ficará indisponível automaticamente após esta data se não for renovada.</p>
-                    @else
-                        <p class="text-sm text-[var(--text-muted)]">Nenhum pagamento registrado ainda.</p>
-                    @endif
+                {{-- Bloco 2: Validade do Plano e Dias Restantes --}}
+                <div class="flex flex-col justify-between rounded-2xl border border-[var(--color-primary)]/25 bg-[var(--color-primary)]/5 p-4 sm:p-5 transition-colors hover:border-[var(--color-primary)]/40">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">Plano Expira Em</span>
+                            @if ($diasRestantes !== null)
+                                @if ($diasRestantes > 5)
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 text-xs font-bold">
+                                        <i data-lucide="clock" class="h-3 w-3"></i>
+                                        {{ $diasRestantes }} {{ $diasRestantes === 1 ? 'dia restante' : 'dias restantes' }}
+                                    </span>
+                                @elseif ($diasRestantes > 0)
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 text-xs font-bold animate-pulse">
+                                        <i data-lucide="alert-triangle" class="h-3 w-3"></i>
+                                        Expira em {{ $diasRestantes }} {{ $diasRestantes === 1 ? 'dia' : 'dias' }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-0.5 text-xs font-bold">
+                                        <i data-lucide="alert-circle" class="h-3 w-3"></i>
+                                        Vence hoje
+                                    </span>
+                                @endif
+                            @endif
+                        </div>
+
+                        @if ($subscriptionEnd)
+                            <div class="flex items-baseline gap-2 mb-1">
+                                <p class="text-lg sm:text-xl font-extrabold text-[var(--text-base)] tracking-tight">
+                                    {{ $subscriptionEnd }}
+                                </p>
+                            </div>
+                        @else
+                            <p class="text-sm font-semibold text-[var(--text-muted)]">Nenhum pagamento registrado ainda.</p>
+                        @endif
+                    </div>
+
+                    <p class="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
+                        @if ($subscriptionEnd)
+                            Sua loja permanecerá ativa até esta data. Renovações antecipadas são somadas ao tempo restante sem qualquer perda de dias.
+                        @else
+                            Ative seu plano para liberar seu catálogo e subdomínio próprio.
+                        @endif
+                    </p>
                 </div>
             </div>
         </section>

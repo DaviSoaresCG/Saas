@@ -426,13 +426,9 @@
               </ul>
 
               @auth
-                <form action="{{ route('pagamento.generate') }}" method="POST">
-                  @csrf
-                  <input type="hidden" name="plan" value="monthly">
-                  <button type="submit" class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">
-                    Selecionar Mensal
-                  </button>
-                </form>
+                <a href="{{ route('pagamento.pending', ['plan' => 'monthly']) }}" class="w-full block py-3 px-6 rounded-lg text-sm font-bold text-center transition-all bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-lg shadow-blue-600/20">
+                  Selecionar Mensal
+                </a>
               @else
                 <a href="{{ route('register') }}">
                   <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white">
@@ -492,13 +488,9 @@
               </ul>
 
               @auth
-                <form action="{{ route('pagamento.generate') }}" method="POST">
-                  @csrf
-                  <input type="hidden" name="plan" value="yearly">
-                  <button type="submit" class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 cursor-pointer">
-                    Selecionar Anual
-                  </button>
-                </form>
+                <a href="{{ route('pagamento.pending', ['plan' => 'yearly']) }}" class="w-full block py-3 px-6 rounded-lg text-sm font-bold text-center transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 cursor-pointer">
+                  Selecionar Anual
+                </a>
               @else
                 <a href="{{ route('register') }}">
                   <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25">

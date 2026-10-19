@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
@@ -31,6 +32,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'store_name',
         'theme_name',
         'documento',
+        'asaas_customer_id',
         'tipo_cliente',
         'plano_expira_em',
         'status',
@@ -162,6 +164,29 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function productClicks()
     {
         return $this->hasMany(ProductClick::class, 'user_id');
+    }
+
+    /**
+     * Generate a unique slug based on store name.
+     */
+    public static function generateUniqueSlug(string $name, ?int $ignoreUserId = null): string
+    {
+        $baseSlug = Str::slug(trim($name));
+        if (empty($baseSlug)) {
+            $baseSlug = 'loja';
+        }
+
+        $slug = $baseSlug;
+        $count = 1;
+
+        while (static::where('slug', $slug)
+            ->when($ignoreUserId, fn ($query) => $query->where('id', '!=', $ignoreUserId))
+            ->exists()) {
+            $slug = "{$baseSlug}-{$count}";
+            $count++;
+        }
+
+        return $slug;
     }
 }
 

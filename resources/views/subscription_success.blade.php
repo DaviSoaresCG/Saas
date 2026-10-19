@@ -76,7 +76,7 @@
                     $dashboardSlug = $slug ?? auth()->user()->slug;
                 @endphp
                 <a
-                    href="{{ route('dashboard', ['slug' => $dashboardSlug]) }}"
+                    href="{{ route('dashboard', ['slug' => $dashboardSlug, 'welcome' => 1]) }}"
                     class="inline-flex items-center justify-center w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-xl text-base font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/30 hover:scale-[1.02]"
                 >
                     Ir para o dashboard

@@ -58,51 +58,52 @@ class AdminController extends Controller
         if (! $user->isLojaAtiva()) {
             return view('subscription_pending');
         } elseif (empty($user->slug)) {
-
-            $store_name = str_replace(' ', '', $user->nome_loja);
-            $slug = Str::slug($store_name);
-            $unique_slug = $this->generateUniqueSlug($slug);
-            $user->slug = $unique_slug;
-
-            $user->updateStripeCustomer([
-                'preferred_locales' => ['pt-BR'],
-            ]);
+            $user->slug = User::generateUniqueSlug($user->nome_loja ?: 'loja', $user->id);
             $user->save();
+
             // email de boas vindas
             Mail::to($user->email)->queue(new WelcomeEmail($user));
         }
 
-        // antes de cirar o subdominio, verifico se ja exite
-        $checkResponse = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
-            ->get('https://api.cloudflare.com/client/v4/zones/'.env('CLOUDFLARE_ZONE_ID').'/dns_records', [
-                'type' => 'A',
-                'name' => "{$user->slug}.zapcatalago.com.br",
-            ]);
-            Log::info("Check Response: {$checkResponse->body()}");
+        // Criação de subdomínio na Cloudflare (se configurado)
+        $cloudflareToken = env('CLOUDFLARE_API_TOKEN');
+        $cloudflareZoneId = env('CLOUDFLARE_ZONE_ID');
+        $baseDomain = env('APP_DOMAIN', 'zapcatalogo.com.br');
 
-        $registros_encontrados = $checkResponse->json('result');
-        if (! empty($registros_encontrados)) {
-            Log::info("Subdominio ja existe: {$user->slug}");
-        } else {
-            Log::info("Subdominio nao existe: {$user->slug}, criando...");
+        if ($cloudflareToken && $cloudflareZoneId && !empty($user->slug)) {
+            $recordName = "{$user->slug}.{$baseDomain}";
 
-            // criação do subdominio
-            $response = Http::withToken(env('CLOUDFLARE_API_TOKEN'))
-                ->post('https://api.cloudflare.com/client/v4/zones/'.env('CLOUDFLARE_ZONE_ID').'/dns_records', [
-                    'type' => 'A',
-                    'name' => $user->slug,
-                    'content' => env('SERVER_IP'),
-                    'proxied' => true,
-                ]);
+            try {
+                $checkResponse = Http::withToken($cloudflareToken)
+                    ->get("https://api.cloudflare.com/client/v4/zones/{$cloudflareZoneId}/dns_records", [
+                        'type' => 'A',
+                        'name' => $recordName,
+                    ]);
+                Log::info("Cloudflare Check Response: {$checkResponse->body()}");
 
-            if ($response->successful()) {
-                Log::info('Subdominio '.$user->slug.'.zapcatalago.com.br Criado com sucesso');
-            } else {
-                Log::error('Erro ao criar subdomínio na Cloudflare: '.$response->body());
+                $registros_encontrados = $checkResponse->json('result');
+                if (!empty($registros_encontrados)) {
+                    Log::info("Subdomínio já existe na Cloudflare: {$recordName}");
+                } else {
+                    Log::info("Subdomínio não existe na Cloudflare: {$recordName}, criando...");
 
-                return 'Erro ao criar o subdominio, entre em contato com a equipe técnica: 63 991055232';
+                    $response = Http::withToken($cloudflareToken)
+                        ->post("https://api.cloudflare.com/client/v4/zones/{$cloudflareZoneId}/dns_records", [
+                            'type' => 'A',
+                            'name' => $user->slug,
+                            'content' => env('SERVER_IP'),
+                            'proxied' => true,
+                        ]);
+
+                    if ($response->successful()) {
+                        Log::info("Subdomínio {$recordName} criado com sucesso na Cloudflare.");
+                    } else {
+                        Log::error("Erro ao criar subdomínio na Cloudflare: " . $response->body());
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error("Exceção ao comunicar com Cloudflare: " . $e->getMessage());
             }
-
         }
 
         return view('subscription_success', ['slug' => $user->slug]);
@@ -120,10 +121,7 @@ class AdminController extends Controller
 
     public function generateUniqueSlug($slug)
     {
-        $count = User::where('slug', 'LIKE', "{$slug}%")->count();
-
-        // se count retornar um numero, $slug-n
-        return $count ? "{$slug}-{$count}" : $slug;
+        return User::generateUniqueSlug($slug, Auth::id());
     }
 
     public function gerarSlugUnicoPost(Request $request)
@@ -138,18 +136,10 @@ class AdminController extends Controller
             return redirect()->back()->withErrors(['slug_request' => 'O subdominio é o mesmo'])->with('error', 'O subdominio é o mesmo');
         }
 
-        $slug = $request->slug;
-        $original_slug = $request->slug;
-        $count = 1;
-        while ($user->where('slug', $slug)->exists()) {
-            $slug = $original_slug.'-'.$count++;
-        }
-
-        $user->slug = $slug;
+        $user->slug = User::generateUniqueSlug($request->slug, $user->id);
         $user->save();
 
-        return redirect()->away('https://'.$slug.'.'.env('APP_DOMAIN').'/profile');
-
+        return redirect()->away('https://'.$user->slug.'.'.env('APP_DOMAIN').'/profile');
     }
 
     public function dashboard()

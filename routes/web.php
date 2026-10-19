@@ -9,6 +9,7 @@ use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\ErpApiController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PixPaymentController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\CounponsController;
@@ -146,14 +147,19 @@ Route::domain(env('APP_DOMAIN'))->group(function () {
     Route::post('validar-cupom', [CounponsController::class, 'validar'])->name('counpons.validate')->middleware(['auth']);
 });
 
-// Fluxo de pagamento (Acessível de qualquer subdomínio ou ambiente local)
+// Fluxo de pagamento e gestão de assinaturas (Acessível de qualquer subdomínio ou ambiente local)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['payment.incomplete'])->group(function () {
-        Route::get('/pagamento/pendente', [PixPaymentController::class, 'pending'])->name('pagamento.pending');
-        Route::post('/pagamento/gerar', [PixPaymentController::class, 'generate'])->name('pagamento.generate');
-        Route::get('/pagamento/checkout', [PixPaymentController::class, 'checkout'])->name('pagamento.checkout');
-        Route::get('/pagamento/status', [PixPaymentController::class, 'checkStatus'])->name('pagamento.status');
+        Route::get('/pagamento/pendente', [SubscriptionController::class, 'pending'])->name('pagamento.pending');
+        Route::post('/pagamento/gerar', [SubscriptionController::class, 'generate'])->name('pagamento.generate');
+        Route::get('/pagamento/checkout', [SubscriptionController::class, 'checkout'])->name('pagamento.checkout');
+        Route::get('/pagamento/status', [SubscriptionController::class, 'checkStatus'])->name('pagamento.status');
+        Route::post('/pagamento/simular', [SubscriptionController::class, 'simulateSuccess'])->name('pagamento.simulate');
     });
+
+    // Gestão e Renovação de Assinatura
+    Route::get('/assinatura/renovar', [SubscriptionController::class, 'renew'])->name('subscription.renew');
+    Route::post('/assinatura/cancelar', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 
     // Status da Assinatura (Unificado)
     Route::get('/subscription/success', [AdminController::class, 'subscriptionSuccess'])->name('subscription.success');
@@ -166,7 +172,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::post('/api/erp/onboarding', [ErpApiController::class, 'onboarding'])->name('api.erp.onboarding');
-Route::post('/api/payments/pix/webhook', [PixPaymentController::class, 'webhook'])->name('api.payments.pix.webhook');
+Route::post('/api/asaas/webhook', [SubscriptionController::class, 'webhook'])->name('api.asaas.webhook');
+Route::post('/api/payments/pix/webhook', [SubscriptionController::class, 'webhook'])->name('api.payments.pix.webhook');
 
 Route::middleware(['api.token'])->prefix('api')->group(function () {
     Route::post('/products/sync', [ErpApiController::class, 'syncProducts'])->name('api.products.sync');

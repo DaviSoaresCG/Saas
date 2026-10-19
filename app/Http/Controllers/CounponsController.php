@@ -94,9 +94,11 @@ class CounponsController extends Controller
             'code' => 'string|required|max:20',
         ]);
 
-        $counpon = Counpons::where('code', mb_strtoupper(trim($request->code), 'UTF-8'))->first();
+        $counpon = Counpons::where('code', mb_strtoupper(trim($request->code), 'UTF-8'))
+            ->where('active', 1)
+            ->first();
 
-        if($counpon){
+        if ($counpon) {
            $user = auth()->user();
            $user->slug = $this->generateUniqueSlug($user->nome_loja);
            $user->tipo_cliente = 'erp';

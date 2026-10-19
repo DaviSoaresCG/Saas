@@ -19,7 +19,7 @@ class EnsureSubscriptionActive
         if ($user && !$user->isLojaAtiva()) {
             return $user->tipo_cliente === 'erp'
                 ? response("Acesso restrito: conta suspensa pelo ERP.", 403)
-                : redirect()->route('pagamento.pendente');
+                : redirect()->route('pagamento.pending');
         }
 
         return $next($request);

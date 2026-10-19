@@ -16,10 +16,16 @@ class RedirectIfPaymentComplete
     {
         $user = Auth::user();
 
+        // Se a requisição for para renovação, seleção de plano ou pagamento direto, permite prosseguir
+        if ($request->has('renew') || $request->has('plan') || $request->is('pagamento/*') || $request->is('assinatura/*')) {
+            return $next($request);
+        }
+
         if ($user && $user->isLojaAtiva()) {
             if (!empty($user->slug)) {
                 $scheme = $request->secure() ? 'https://' : 'http://';
-                return redirect()->away($scheme . $user->slug . '.' . env('APP_DOMAIN') . '/dashboard');
+                $port = $request->getPort() && !in_array($request->getPort(), [80, 443]) ? ':' . $request->getPort() : '';
+                return redirect()->away($scheme . $user->slug . '.' . env('APP_DOMAIN') . $port . '/dashboard');
             }
             
             return redirect()->route('dashboard', ['slug' => $user->slug]);
