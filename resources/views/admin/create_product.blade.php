@@ -1,9 +1,9 @@
 <x-admin-layout active="products-create" title="Novo produto" subtitle="Preencha os dados para publicar no catálogo.">
     <div class="max-w-2xl rounded-3xl border border-[var(--color-primary)]/15 bg-[var(--bg-card)] p-6 sm:p-8 shadow-2xl shadow-black/5">
-        
+
         <form id="product-form" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
-            
+
             <div>
                 <label for="name" class="block text-sm font-bold text-[var(--text-base)] mb-2">Nome do produto</label>
                 <input type="text" name="name" value="{{ old('name') }}" id="name" required
@@ -11,7 +11,7 @@
                     placeholder="Ex: Camiseta básica">
                 @error('name') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
             </div>
-            
+
             <div>
                 <label for="description" class="block text-sm font-bold text-[var(--text-base)] mb-2">Descrição</label>
                 <input type="text" name="description" id="description" value="{{ old('description') }}" required
@@ -19,7 +19,7 @@
                     placeholder="Breve descrição">
                 @error('description') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
             </div>
-            
+
             <div>
                 <x-input-label for="value" :value="__('Valor (R$)')" class="!text-[var(--text-base)] !font-bold !mb-2" />
                 <x-text-input id="value" type="tel" name="value" :value="old('value')" required placeholder="0,00" x-data x-mask:dynamic="$money($input, ',', '.')"
@@ -45,7 +45,7 @@
                     <span class="text-sm text-[var(--text-muted)]">Clique ou arraste as imagens aqui</span>
                     <span class="text-xs text-[var(--text-muted)] opacity-60">JPG, PNG, WebP — máx. 10 MB por imagem</span>
                     <input type="file" id="images-input" multiple accept="image/png,image/jpeg,image/webp"
-                        class="hidden" onchange="addFiles(this.files)">
+                        class="hidden" onchange="addFiles(this.files)" require>
                 </label>
 
                 {{-- Grid de previews (sortável) --}}

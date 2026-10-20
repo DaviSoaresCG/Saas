@@ -16,18 +16,19 @@ class RedirectIfPaymentComplete
     {
         $user = Auth::user();
 
-        // Se a requisição for para renovação, seleção de plano ou pagamento direto, permite prosseguir
-        if ($request->has('renew') || $request->has('plan') || $request->is('pagamento/*') || $request->is('assinatura/*')) {
+        // Se a requisição for para renovação voluntária ou endpoints de transação/simulação, permite prosseguir
+        if ($request->has('renew') || $request->has('plan') || $request->routeIs('pagamento.generate') || $request->routeIs('pagamento.status') || $request->routeIs('pagamento.simulate')) {
             return $next($request);
         }
 
         if ($user && $user->isLojaAtiva()) {
+            $baseDomain = config('app.domain', env('APP_DOMAIN', 'lvh.me'));
             if (!empty($user->slug)) {
                 $scheme = $request->secure() ? 'https://' : 'http://';
                 $port = $request->getPort() && !in_array($request->getPort(), [80, 443]) ? ':' . $request->getPort() : '';
-                return redirect()->away($scheme . $user->slug . '.' . env('APP_DOMAIN') . $port . '/dashboard');
+                return redirect()->away($scheme . $user->slug . '.' . $baseDomain . $port . '/dashboard');
             }
-            
+
             return redirect()->route('dashboard', ['slug' => $user->slug]);
         }
 

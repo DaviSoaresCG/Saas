@@ -19,19 +19,24 @@ class ResolveTenant
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $baseDomain = config('app.domain', env('APP_DOMAIN', 'lvh.me'));
+        $scheme = $request->secure() ? 'https://' : 'http://';
+        $port = $request->getPort() && !in_array($request->getPort(), [80, 443]) ? ':' . $request->getPort() : '';
+        $lojaIndisponivelUrl = "{$scheme}{$baseDomain}{$port}/loja-indisponivel";
+
         // 1. Resolve via hash do catálogo no domínio principal (ex: saas.test/{hash})
         $hash = $request->route('hash');
         if ($hash) {
             $catalogo = Catalogo::where('hash', $hash)->first();
 
             if (!$catalogo) {
-                return redirect()->away('http://' . env('APP_DOMAIN') . '/loja-indisponivel');
+                return redirect()->away($lojaIndisponivelUrl);
             }
 
             $user = $catalogo->user;
 
             if (!$user || !$user->isLojaAtiva()) {
-                return redirect()->away('http://' . env('APP_DOMAIN') . '/loja-indisponivel');
+                return redirect()->away($lojaIndisponivelUrl);
             }
 
             // Ativa a sessão do catálogo
@@ -54,9 +59,8 @@ class ResolveTenant
         $slug = $request->route('slug');
         if (!$slug) {
             $host = $request->getHost();
-            $base = env('APP_DOMAIN');
-            $slug = str_replace('.' . $base, '', $host);
-            if ($slug == $host) {
+            $slug = str_replace('.' . $baseDomain, '', $host);
+            if ($slug == $host || $slug === 'www' || in_array($host, ['localhost', '127.0.0.1'])) {
                 $slug = null;
             }
         }
@@ -64,8 +68,22 @@ class ResolveTenant
         if ($slug) {
             $user = User::where('slug', $slug)->first();
 
-            if (!$user || !$user->isLojaAtiva()) {
-                return redirect()->away('http://' . env('APP_DOMAIN') . '/loja-indisponivel');
+            if (!$user) {
+                return redirect()->away($lojaIndisponivelUrl);
+            }
+
+            // Se a loja não estiver ativa, visitantes da vitrine pública são redirecionados,
+            // mas o lojista ainda pode acessar login, logout e painel (onde o middleware de assinatura o levará ao pagamento).
+            if (!$user->isLojaAtiva()) {
+                $isAdminOrAuthRoute = $request->is('dashboard*')
+                    || $request->is('profile*')
+                    || $request->is('login')
+                    || $request->is('logout')
+                    || $request->is('password*');
+
+                if (!$isAdminOrAuthRoute) {
+                    return redirect()->away($lojaIndisponivelUrl);
+                }
             }
 
             // Acesso direto ao subdomínio limpa a sessão de desconto e sob consulta do catálogo

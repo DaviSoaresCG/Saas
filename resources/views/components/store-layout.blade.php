@@ -1,6 +1,6 @@
 @push('styles')
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-   
+
 @endpush
 
 @push('scripts')
@@ -18,13 +18,13 @@
 <x-app-layout>
     <div class="min-h-[calc(100vh-4rem)] bg-[var(--bg-page)] font-sans antialiased ">
         <header class="sticky top-0 z-20 bg-[var(--bg-page)] backdrop-blur-md">
-            <div class="mx-auto h-16 flex items-center justify-between gap-4">
+            <div class="mx-auto h-16 flex items-center justify-between gap-4 mb-4">
                 <div class="flex items-center gap-3 min-w-0">
                     @php
                         $displayLogo = $storeLogo ?? $logoUrl ?? null;
                     @endphp
                     @if (!empty($displayLogo))
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full overflow-hidden shrink-0 border-2 border-[var(--color-primary)]/30 bg-[var(--bg-card)] shadow-sm">
+                        <div class="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full overflow-hidden shrink-0 border-2 border-[var(--color-primary)]/30 bg-[var(--bg-card)] shadow-sm">
                             <img src="{{ $displayLogo }}" alt="{{ $storeName }}" class="h-full w-full object-cover">
                         </div>
                     @else
@@ -33,7 +33,7 @@
                         </div>
                     @endif
                     <div class="min-w-0">
-                        <p class="text-xs font-medium text-[var(--text-base)] uppercase tracking-wide truncate">{{ $storeName }}</p>
+                        <p class="text-sm font-medium text-[var(--text-base)] tracking-wide truncate">{{ $storeName }}</p>
                         @if ($pageTitle)
                             <p class="text-sm font-bold text-[var(--text-base)] truncate">{{ $pageTitle }}</p>
                         @else
@@ -57,16 +57,16 @@
                 </nav>
             </div>
         </header>
-            
+
         {{ $slot }}
-        
+
     </div>
 
     @if (!empty($modalCarrinho))
         <!-- Modal Adicionar Produto ao Carrinho -->
         <div id="add-to-cart-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300 ease-out">
             <div id="add-to-cart-modal-content" class="relative w-full max-w-md bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)] transform scale-95 opacity-0 transition-all duration-300 ease-out">
-                
+
                 <button type="button" id="close-add-modal-btn" class="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-base)] transition-colors cursor-pointer">
                     <i data-lucide="x" class="h-6 w-6"></i>
                 </button>
@@ -77,7 +77,7 @@
                     </div>
                     <h3 id="add-modal-product-name" class="text-xl font-bold text-[var(--text-base)]">Adicionar ao Carrinho</h3>
                     <p id="add-modal-product-price" class="text-base font-extrabold text-emerald-600 mt-1"></p>
-                    
+
                     <div id="add-modal-erp-info" class="hidden my-2 pt-2 text-center">
                         <p id="add-modal-product-sku" class="text-[var(--text-base)] font-medium text-sm"></p>
                         <p id="add-modal-product-peso" class="text-[var(--text-muted)] font-medium text-sm"></p>

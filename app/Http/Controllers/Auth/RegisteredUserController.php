@@ -54,6 +54,7 @@ class RegisteredUserController extends Controller
             'whatsapp' => $whatsapp_limpo,
             'email' => $request->email,
             'nome_loja' => $request->store_name,
+            'slug' => User::generateUniqueSlug($request->store_name ?: $request->name),
             'password' => Hash::make($request->password),
         ]);
 

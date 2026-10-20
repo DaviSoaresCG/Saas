@@ -1,4 +1,4 @@
-<x-superadmin-layout title="Painel Super Admin - Usuários e Lojas">
+<x-super-admin-layout title="Painel Super Admin - Usuários e Lojas">
     <div class="space-y-8">
 
         <!-- Header -->
@@ -328,4 +328,4 @@
         </div>
 
     </div>
-</x-superadmin-layout>
+</x-super-admin-layout>

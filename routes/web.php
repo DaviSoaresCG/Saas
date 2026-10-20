@@ -68,7 +68,9 @@ if (!function_exists('registerPublicCatalogRoutes')) {
 | 1. Rotas de Variante de Catálogo (Domínio Principal com Hash)
 |--------------------------------------------------------------------------
 */
-Route::domain(env('APP_DOMAIN'))->prefix('{hash}')->where(['hash' => '[a-zA-Z0-9]{12}'])->middleware(['tenant'])->group(function () {
+$appDomain = config('app.domain', env('APP_DOMAIN', 'lvh.me'));
+
+Route::domain($appDomain)->prefix('{hash}')->where(['hash' => '[a-zA-Z0-9]{12}'])->middleware(['tenant'])->group(function () {
     Route::get('/', fn ($hash) => redirect()->route('variant.products.index', ['hash' => $hash]));
     registerPublicCatalogRoutes(true);
 });
@@ -78,14 +80,14 @@ Route::domain(env('APP_DOMAIN'))->prefix('{hash}')->where(['hash' => '[a-zA-Z0-9
 | 2. Rotas de Subdomínio do Tenant (Catálogo e Área Administrativa)
 |--------------------------------------------------------------------------
 */
-Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware(['tenant'])->group(function () {
+Route::domain('{slug}.' . $appDomain)->middleware(['tenant'])->group(function () {
     Route::get('/', fn () => redirect()->route('products.index'));
 
     // Catálogo público no subdomínio
     registerPublicCatalogRoutes(false);
 
     // Área Administrativa do Lojista
-    Route::middleware(['auth', 'tenant.member', 'password.reset.forced'])->group(function () {
+    Route::middleware(['auth', 'tenant.member', 'subscription.active', 'password.reset.forced'])->group(function () {
 
         Route::prefix('dashboard')->group(function () {
             Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -139,7 +141,7 @@ Route::domain('{slug}.' . env('APP_DOMAIN'))->middleware(['tenant'])->group(func
 | 3. Rotas do Domínio Principal (Pagamentos, Onboarding e Home)
 |--------------------------------------------------------------------------
 */
-Route::domain(env('APP_DOMAIN'))->group(function () {
+Route::domain($appDomain)->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/plans', [HomeController::class, 'plans'])->name('plans');
     Route::get('/loja-indisponivel', fn () => view('errors.loja-indisponivel'))->name('loja-indisponivel');

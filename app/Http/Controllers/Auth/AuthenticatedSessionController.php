@@ -28,37 +28,67 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         $host = $request->getHost();
-        $baseDomain = env('APP_DOMAIN');
+        $baseDomain = config('app.domain', env('APP_DOMAIN', 'lvh.me'));
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if($baseDomain === $host){
-            return redirect()->route('dashboard', ['slug' => $user->slug]);
+        // 1. Redirecionamento exclusivo para Super Admin
+        if ($user->isSuperAdmin()) {
+            return redirect()->route('superadmin.index');
         }
-        
-        //tira o saas.test
+
+        // Garante que o usuário possua um slug válido
+        if (empty($user->slug)) {
+            $user->slug = \App\Models\User::generateUniqueSlug($user->nome_loja ?: $user->name, $user->id);
+            $user->save();
+        }
+
+        // 2. Identifica se está no domínio principal / localhost / www
+        $isBaseDomain = ($host === $baseDomain || $host === 'www.' . $baseDomain || in_array($host, ['localhost', '127.0.0.1']));
+
+        if ($isBaseDomain) {
+            if ($user->isLojaAtiva()) {
+                return redirect()->route('dashboard', ['slug' => $user->slug]);
+            }
+
+            // Conta suspensa pelo ERP
+            if ($user->tipo_cliente === 'erp') {
+                Auth::logout();
+                return redirect()->route('login')->withErrors(['email' => 'Acesso restrito: sua conta está suspensa pelo ERP.']);
+            }
+
+            // Cliente direto com assinatura expirada ou pendente
+            return redirect()->route('pagamento.pending')->with('warning', 'Sua assinatura precisa ser renovada para acessar o painel.');
+        }
+
+        // 3. Acesso via subdomínio
         $currentSlug = str_replace('.' . $baseDomain, '', $host);
 
-        //se for o dominio principal, redireciona para o admin
-        if($currentSlug === $host){
-            return redirect()->intended('admin');
-        }
-        
-        if($user->isLojaAtiva()){
-            //se o slug do site for diferente do slug do usuario autenticado
-            if($user->slug !== $currentSlug){
-                Auth::logout();
-                return redirect()->back()->withErrors(['email' => 'Você não tem acesso à esse domínio']);
-            }else{
-            return redirect()->route('dashboard', ['slug' => $user->slug]);
-
-            }
-         }else{
+        // Se estiver tentando acessar o subdomínio de outro lojista
+        if ($user->slug !== $currentSlug) {
             Auth::logout();
-            return redirect()->back()->withErrors(['email' => 'Sua inscrição expirou']);
-         }
+            $port = $request->getPort() && !in_array($request->getPort(), [80, 443]) ? ':' . $request->getPort() : '';
+            $scheme = $request->secure() ? 'https://' : 'http://';
+            $correctUrl = "{$scheme}{$user->slug}.{$baseDomain}{$port}/login";
 
-        return redirect()->intended();
+            return redirect()->back()->withErrors([
+                'email' => "Você não tem acesso a este catálogo. Acesse o painel da sua loja em: {$correctUrl}"
+            ]);
+        }
+
+        // Subdomínio correto do próprio usuário
+        if ($user->isLojaAtiva()) {
+            return redirect()->route('dashboard', ['slug' => $user->slug]);
+        }
+
+        // Subdomínio correto, mas com loja inativa / expirada
+        if ($user->tipo_cliente === 'erp') {
+            Auth::logout();
+            return redirect()->back()->withErrors(['email' => 'Acesso restrito: sua conta está suspensa pelo ERP.']);
+        }
+
+        return redirect()->route('pagamento.pending')->with('warning', 'Sua assinatura expirou. Efetue o pagamento para reativar seu catálogo.');
     }
 
     /**

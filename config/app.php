@@ -54,6 +54,10 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'domain' => env('APP_DOMAIN', 'lvh.me'),
+
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL', 'davisoaresgigante@gmail.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

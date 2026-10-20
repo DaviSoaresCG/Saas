@@ -27,7 +27,7 @@ class CheckForcedPasswordReset
             ];
 
             if (!in_array($currentRoute, $allowedRoutes)) {
-                return redirect()->route('profile.edit')
+                return redirect()->route('profile.edit', ['slug' => $user->slug])
                     ->with('warning', 'Atenção: Você deve alterar a sua senha inicial (CPF/CNPJ) antes de prosseguir.');
             }
         }

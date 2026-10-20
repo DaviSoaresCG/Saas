@@ -17,7 +17,7 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('dashboard', ['slug' => $user->slug]));
 });
 
 test('users can not authenticate with invalid password', function () {
@@ -29,6 +29,37 @@ test('users can not authenticate with invalid password', function () {
     ]);
 
     $this->assertGuest();
+});
+
+test('super admin is redirected to superadmin index', function () {
+    $superAdminEmail = config('app.super_admin_email', 'davisoaresgigante@gmail.com');
+    $user = User::factory()->create([
+        'email' => $superAdminEmail,
+        'plano_expira_em' => null,
+    ]);
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('superadmin.index'));
+});
+
+test('expired user is kept authenticated and redirected to pending payment', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->subDay(),
+    ]);
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('pagamento.pending'));
 });
 
 test('users can logout', function () {

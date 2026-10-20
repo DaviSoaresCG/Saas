@@ -16,10 +16,14 @@ class EnsureSubscriptionActive
     {
         $user = Auth::user();
 
+        if ($user && $user->isSuperAdmin()) {
+            return $next($request);
+        }
+
         if ($user && !$user->isLojaAtiva()) {
             return $user->tipo_cliente === 'erp'
                 ? response("Acesso restrito: conta suspensa pelo ERP.", 403)
-                : redirect()->route('pagamento.pending');
+                : redirect()->route('pagamento.pending')->with('warning', 'Sua assinatura expirou. Renove seu plano para continuar.');
         }
 
         return $next($request);

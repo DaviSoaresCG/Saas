@@ -22,6 +22,7 @@ test('profile information can be updated', function () {
         ->patch($url, [
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'store_name' => 'Loja Teste',
         ]);
 
     $response
@@ -44,6 +45,7 @@ test('email verification status is unchanged when the email address is unchanged
         ->patch($url, [
             'name' => 'Test User',
             'email' => $user->email,
+            'store_name' => $user->nome_loja ?: 'Loja Teste',
         ]);
 
     $response

@@ -21,6 +21,10 @@ class ProdutoController extends Controller
 
         $query = Products::with(['atributos', 'productImages', 'grupos'])->where('status', true);
 
+        if ($user->isErp()) {
+            $query->orderBy('sku');
+        }
+
         if ($selectedGrupo) {
             $query->whereHas('grupos', function ($q) use ($selectedGrupo) {
                 $q->where('grupos.id', $selectedGrupo);

@@ -22,24 +22,33 @@ class EnsureUserBelongsToTenant
             return $next($request);
         }
 
-        //Subdomínio Atual
-        $host = $request->getHost();
-        $baseDomain = env('APP_DOMAIN'); // ex: saas.test
-        $currentSlug = str_replace('.' . $baseDomain, '', $host);
-
-
-        //se estiver dentro do app principal
-        if ($currentSlug === $host || $currentSlug === 'www') {
-             return $next($request);
+        // Super Admin possui acesso irrestrito para suporte e auditoria
+        if ($user->isSuperAdmin()) {
+            return $next($request);
         }
 
-        //verifica se o tenant está dentro do app dele
-        if ($user->slug !== $currentSlug) {
+        // Subdomínio Atual
+        $host = $request->getHost();
+        $baseDomain = config('app.domain', env('APP_DOMAIN', 'lvh.me'));
+        $currentSlug = str_replace('.' . $baseDomain, '', $host);
 
+        // Se estiver dentro do app principal ou www
+        if ($currentSlug === $host || $currentSlug === 'www' || in_array($host, ['localhost', '127.0.0.1'])) {
+            return $next($request);
+        }
+
+        // Verifica se o usuário autenticado pertence ao tenant deste subdomínio
+        if ($user->slug !== $currentSlug) {
             Auth::guard('web')->logout();
-            // Redirecionar para login do tenant correto
-            return redirect()->route('login')
-                ->withErrors(['email' => 'Você não acesso este painel.']);
+
+            $port = $request->getPort() && !in_array($request->getPort(), [80, 443]) ? ':' . $request->getPort() : '';
+            $scheme = $request->secure() ? 'https://' : 'http://';
+            $correctLoginUrl = !empty($user->slug)
+                ? "{$scheme}{$user->slug}.{$baseDomain}{$port}/login"
+                : "{$scheme}{$baseDomain}{$port}/login";
+
+            return redirect()->away($correctLoginUrl)
+                ->withErrors(['email' => 'Você não tem acesso a este painel administrativo.']);
         }
 
         return $next($request);

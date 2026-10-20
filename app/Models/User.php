@@ -68,6 +68,11 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         ];
     }
 
+    public function isErp(): bool
+    {
+        return $this->tipo_cliente === 'erp';
+    }
+
     /**
      * Verifies if the store is active based on its client type and billing.
      */
@@ -109,12 +114,21 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         );
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if (empty($user->slug) && (!empty($user->nome_loja) || !empty($user->name))) {
+                $user->slug = static::generateUniqueSlug($user->nome_loja ?: $user->name);
+            }
+        });
+    }
+
     /**
      * Check if user is Super Administrator.
      */
     public function isSuperAdmin(): bool
     {
-        $superAdminEmail = env('SUPER_ADMIN_EMAIL', 'davisoaresgigante@gmail.com');
+        $superAdminEmail = config('app.super_admin_email', env('SUPER_ADMIN_EMAIL', 'davisoaresgigante@gmail.com'));
         return strtolower(trim($this->email ?? '')) === strtolower(trim($superAdminEmail));
     }
 

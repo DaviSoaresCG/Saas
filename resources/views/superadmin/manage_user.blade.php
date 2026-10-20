@@ -1,4 +1,4 @@
-<x-superadmin-layout title="Gerenciar Dados: {{ $user->store_name ?? $user->name }}">
+<x-super-admin-layout title="Gerenciar Dados: {{ $user->store_name ?? $user->name }}">
     <div class="space-y-8" x-data="{
         modalOpen: false,
         modalTitle: '',
@@ -611,4 +611,4 @@
         </div>
 
     </div>
-</x-superadmin-layout>
+</x-super-admin-layout>
