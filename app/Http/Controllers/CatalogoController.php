@@ -24,10 +24,12 @@ class CatalogoController extends Controller
     public function store(Request $request, $slug = null)
     {
         $sobConsulta = $request->boolean('sob_consulta');
+        $mostrarNome = $request->has('mostrar_nome') ? $request->boolean('mostrar_nome') : true;
 
         $rules = [
             'nome' => 'required|string|max:255',
             'sob_consulta' => 'nullable|boolean',
+            'mostrar_nome' => 'nullable|boolean',
         ];
 
         if (!$sobConsulta) {
@@ -54,6 +56,7 @@ class CatalogoController extends Controller
             'hash' => $hash,
             'desconto_index' => $sobConsulta ? 0.00 : ($request->desconto_index ?? 0.00),
             'sob_consulta' => $sobConsulta,
+            'mostrar_nome' => $mostrarNome,
         ]);
 
         return redirect()->route('catalogos.index', ['slug' => Auth::user()->slug])
@@ -71,10 +74,12 @@ class CatalogoController extends Controller
 
         $catalogo = Auth::user()->catalogos()->findOrFail($id);
         $sobConsulta = $request->boolean('sob_consulta');
+        $mostrarNome = $request->has('mostrar_nome') ? $request->boolean('mostrar_nome') : $catalogo->mostrar_nome;
 
         $rules = [
             'nome' => 'required|string|max:255',
             'sob_consulta' => 'nullable|boolean',
+            'mostrar_nome' => 'nullable|boolean',
         ];
 
         if (!$sobConsulta) {
@@ -95,6 +100,7 @@ class CatalogoController extends Controller
             'nome' => $request->nome,
             'desconto_index' => $sobConsulta ? 0.00 : ($request->desconto_index ?? 0.00),
             'sob_consulta' => $sobConsulta,
+            'mostrar_nome' => $mostrarNome,
         ]);
 
         return redirect()->route('catalogos.index', ['slug' => Auth::user()->slug])

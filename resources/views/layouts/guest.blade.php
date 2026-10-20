@@ -7,7 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ !empty($title) ? $title : config('app.name', 'ZapCatálogo') }}</title>
+
+    <!-- Favicon / Ícone da Aba -->
+    @if (!empty($logoUrl))
+        <link rel="icon" href="{{ $logoUrl }}">
+        <link rel="apple-touch-icon" href="{{ $logoUrl }}">
+    @else
+        <link rel="icon" href="{{ asset('favicon.ico') }}">
+    @endif
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <!-- Fonts -->

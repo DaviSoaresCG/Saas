@@ -9,6 +9,7 @@ use Illuminate\View\View;
 class AdminLayout extends Component
 {
     public string $catalogUrl;
+    public string $tabTitle;
 
     public function __construct(
         public string $active = 'dashboard',
@@ -17,13 +18,21 @@ class AdminLayout extends Component
         public bool $showBackBar = true,
     ) {
         $tenant = app(User::class);
-        $this->catalogUrl = 'https://'.$tenant->slug.'.'.env('APP_DOMAIN');
+        $baseDomain = config('app.domain', env('APP_DOMAIN', 'lvh.me'));
+        $this->catalogUrl = 'https://'.$tenant->slug.'.'.$baseDomain;
+        $storeName = $tenant->store_name ?? 'Painel';
+
+        $this->tabTitle = !empty($this->title)
+            ? "{$this->title} - {$storeName}"
+            : "Painel Administrativo - {$storeName}";
     }
 
     public function render(): View
     {
-        $theme = app(User::class)->theme_name;
-        $logoUrl = app(User::class)->logo_url;
-        return view('components.admin-layout', compact('theme', 'logoUrl'));
+        $tenant = app(User::class);
+        $theme = $tenant->theme_name;
+        $logoUrl = $tenant->logo_url;
+        $tabTitle = $this->tabTitle;
+        return view('components.admin-layout', compact('theme', 'logoUrl', 'tabTitle'));
     }
 }

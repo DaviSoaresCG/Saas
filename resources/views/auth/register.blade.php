@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Criar Conta">
     <h1 class="text-2xl font-bold text-center mb-4 text-[var(--text-base)]">Criar conta</h1>
     <form method="POST" action="{{ route('register') }}">
         @csrf

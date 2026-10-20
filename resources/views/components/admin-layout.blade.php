@@ -36,7 +36,7 @@
     $navClick = '@click="adminMenuOpen = false"';
 @endphp
 
-<x-app-layout :admin-shell="true">
+<x-app-layout :admin-shell="true" :title="$tabTitle ?? $title ?? null" :logo-url="$logoUrl ?? null">
     <div
         class="relative min-h-[calc(100vh-3.5rem)] w-full bg-[var(--bg-page)]  font-sans text-[var(--text-base)] antialiased selection:bg-[var(--color-primary)] selection:text-[var(--text-base)]">
         <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">

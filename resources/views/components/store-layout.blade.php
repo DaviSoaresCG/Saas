@@ -15,10 +15,10 @@
 @props(['slug'])
 
 
-<x-app-layout>
+<x-app-layout :title="$tabTitle ?? $title ?? null" :logo-url="$storeLogo ?? $logoUrl ?? null">
     <div class="min-h-[calc(100vh-4rem)] bg-[var(--bg-page)] font-sans antialiased ">
         <header class="sticky top-0 z-20 bg-[var(--bg-page)] backdrop-blur-md">
-            <div class="mx-auto h-16 flex items-center justify-between gap-4 mb-4">
+            <div class="mx-auto h-16 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3 min-w-0">
                     @php
                         $displayLogo = $storeLogo ?? $logoUrl ?? null;
@@ -56,6 +56,11 @@
                     </a>
                 </nav>
             </div>
+            @if(!empty($catalogoName))
+            <div class="w-full text-center py-1 rounded-lg ">
+                <h3 class="text-[var(--text-base)] font-bold text-lg">{{ $catalogoName }}</h3>
+            </div>
+            @endif
         </header>
 
         {{ $slot }}

@@ -11,7 +11,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 lg:grid-cols-3" x-data="{ editMode: false, editId: null, editNome: '', editDesconto: '', editSobConsulta: false, isSobConsulta: {{ old('sob_consulta') ? 'true' : 'false' }}, updateUrl: '' }">
+    <div class="grid gap-6 lg:grid-cols-3" x-data="{ editMode: false, editId: null, editNome: '', editDesconto: '', editSobConsulta: false, isSobConsulta: {{ old('sob_consulta') ? 'true' : 'false' }}, editMostrarNome: true, isMostrarNome: {{ old('mostrar_nome', '1') ? 'true' : 'false' }}, updateUrl: '' }">
 
         {{-- Formulário de criação/edição --}}
         <div class="lg:col-span-1">
@@ -35,6 +35,18 @@
                             <div>
                                 <span class="block text-xs font-bold text-[var(--text-base)]">Preço Sob Consulta</span>
                                 <span class="block text-xs text-[var(--text-muted)] mt-0.5">Oculta os preços e exibe "Preço Sob Consulta".</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-card)]/50 p-3.5 transition-all">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="hidden" name="mostrar_nome" :value="isMostrarNome ? '1' : '0'">
+                            <input type="checkbox" value="1" x-model="isMostrarNome" {{ old('mostrar_nome', '1') ? 'checked' : '' }}
+                                class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]">
+                            <div>
+                                <span class="block text-xs font-bold text-[var(--text-base)]">Mostrar nome do Catálogo</span>
+                                <span class="block text-xs text-[var(--text-muted)] mt-0.5">Mostra o nome do catálogo no cabeçalho da vitrine.</span>
                             </div>
                         </label>
                     </div>
@@ -85,6 +97,17 @@
                             <div>
                                 <span class="block text-xs font-bold text-[var(--text-base)]">Preço Sob Consulta</span>
                                 <span class="block text-xs text-[var(--text-muted)] mt-0.5">Oculta os preços e exibe "Preço Sob Consulta".</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="rounded-2xl border border-amber-500/20 bg-[var(--bg-card)]/50 p-3.5 transition-all">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="hidden" name="mostrar_nome" :value="editMostrarNome ? '1' : '0'">
+                            <input type="checkbox" value="1" x-model="editMostrarNome"
+                                class="mt-0.5 h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-500">
+                            <div>
+                                <span class="block text-xs font-bold text-[var(--text-base)]">Mostrar nome do Catálogo</span>
+                                <span class="block text-xs text-[var(--text-muted)] mt-0.5">Mostra o nome do catálogo no cabeçalho da vitrine.</span>
                             </div>
                         </label>
                     </div>
@@ -142,7 +165,15 @@
                                             <i data-lucide="folder" class="h-3.5 w-3.5 text-[var(--color-primary)]"></i>
                                         </span>
                                         <div>
-                                            <span class="font-bold text-sm text-[var(--text-base)] block leading-tight">{{ $cat->nome }}</span>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <span class="font-bold text-sm text-[var(--text-base)] block leading-tight">{{ $cat->nome }}</span>
+                                                @if (!$cat->mostrar_nome)
+                                                    <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-400 bg-gray-500/10 px-2 py-0.5 rounded-full border border-gray-500/20" title="Nome do catálogo oculto na loja">
+                                                        <i data-lucide="eye-off" class="h-3 w-3"></i>
+                                                        Nome oculto
+                                                    </span>
+                                                @endif
+                                            </div>
                                             @if ($cat->sob_consulta)
                                                 <span class="inline-flex items-center gap-1 text-xs text-amber-500 font-semibold mt-0.5">
                                                     <i data-lucide="help-circle" class="h-3.5 w-3.5"></i>
@@ -160,6 +191,7 @@
                                             editNome = '{{ addslashes($cat->nome) }}';
                                             editDesconto = '{{ $cat->desconto_index }}';
                                             editSobConsulta = {{ $cat->sob_consulta ? 'true' : 'false' }};
+                                            editMostrarNome = {{ $cat->mostrar_nome ? 'true' : 'false' }};
                                             updateUrl = '{{ route('catalogos.update', ['slug' => auth()->user()->slug, 'catalogo' => $cat->id]) }}';
                                             window.scrollTo({top: 0, behavior: 'smooth'});
                                         " class="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1.5 text-xs font-semibold text-amber-500 hover:bg-amber-500/20 transition-colors cursor-pointer">

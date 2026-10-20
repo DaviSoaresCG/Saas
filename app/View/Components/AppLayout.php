@@ -11,6 +11,7 @@ class AppLayout extends Component
     public function __construct(
         public bool $adminShell = false,
         public ?string $logoUrl = null,
+        public ?string $title = null,
     ) {
 
     }
@@ -20,9 +21,11 @@ class AppLayout extends Component
      */
     public function render(): View
     {
-        $theme = app(User::class)->theme_name;
-        $logoUrl = $this->logoUrl ?? app(User::class)->logo_url;
+        $tenant = app(User::class);
+        $theme = $tenant->theme_name ?? 'default';
+        $logoUrl = $this->logoUrl ?? $tenant->logo_url ?? null;
+        $title = $this->title ?? ($tenant->store_name ? $tenant->store_name . ' - Catálogo Online' : config('app.name', 'ZapCatálogo'));
 
-        return view('layouts.app', compact('theme', 'logoUrl'));
+        return view('layouts.app', compact('theme', 'logoUrl', 'title'));
     }
 }

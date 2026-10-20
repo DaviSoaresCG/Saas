@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Recuperar Senha">
     <div class="mb-4 text-sm text-[var(--text-base)]">
         {{ __('Esqueceu a sua senha? Sem problemas. Apenas digite seu endereço de email e vamos enviar um email com o link para resetar a sua senha. ') }}
     </div>
