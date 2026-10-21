@@ -10,7 +10,7 @@
         <a href="{{ tenant_route('products.show', ['product' => $produto->id]) }}" class="block h-full">
             <img class="h-full w-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
                 src="{{ str_starts_with($produto->path ?? '', 'http') ? $produto->path : asset('storage/' . $produto->path) }}" alt="" loading="lazy" />
-                
+
         </a>
     </div>
     <div class="p-3.5 sm:p-5">
@@ -24,7 +24,7 @@
                 <p class="text-[var(--text-muted)] font-medium text-xs sm:text-sm">Peso: {{ $produto->peso }}</p>
             </div>
         @endif
-        
+
         <div class="mt-2.5 sm:mt-3 flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
             @if (session('sob_consulta'))
                 <span class="text-sm sm:text-lg font-bold text-amber-500">Preço Sob Consulta</span>
@@ -46,7 +46,7 @@
             <button type="submit"
                 class="mt-3 sm:mt-4 flex w-full items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-[var(--color-primary)] px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-[var(--text-on-primary)] shadow-md shadow-blue-600/20 transition-colors cursor-pointer hover:opacity-90">
                 <i data-lucide="shopping-cart" class="h-3.5 w-3.5 sm:hidden"></i>
-                <span class="truncate">Adicionar ao carrinho</span>
+                <span class="truncate hidden sm:inline">Adicionar ao carrinho</span>
             </button>
         </form>
     </div>

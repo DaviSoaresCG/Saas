@@ -39,7 +39,7 @@ class ProdutoController extends Controller
             });
         }
 
-        $products = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(25)->withQueryString();
         $grupos = Grupo::all();
 
         return view('products.index', compact('user', 'products', 'grupos', 'selectedGrupo', 'search'));

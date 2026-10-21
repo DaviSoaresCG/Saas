@@ -56,11 +56,13 @@
                     </a>
                 </nav>
             </div>
-            @if(!empty($catalogoName) && ($mostrarNome ?? true))
             <div class="w-full text-center py-1 rounded-lg ">
+            @if(!empty($catalogoName) && ($mostrarNome ?? true))
                 <h3 class="text-[var(--text-base)] font-bold text-lg">{{ $catalogoName }}</h3>
-            </div>
+            @else
+                <h3 class="text-[var(--text-base)] font-bold text-lg mt-4"></h3>
             @endif
+            </div>
         </header>
 
         {{ $slot }}
