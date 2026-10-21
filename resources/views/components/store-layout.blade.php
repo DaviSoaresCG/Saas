@@ -17,14 +17,14 @@
 
 <x-app-layout :title="$tabTitle ?? $title ?? null" :logo-url="$storeLogo ?? $logoUrl ?? null">
     <div class="min-h-screen bg-[var(--bg-page)] font-sans antialiased flex flex-col">
-        <header class="sticky top-0 z-20 w-full bg-[var(--bg-page)]/95 backdrop-blur-md border-b border-[var(--color-primary)]/10 shadow-xs">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-                <div class="flex items-center gap-3 min-w-0">
+        <header class="sticky top-0 z-20 w-full bg-[var(--bg-page)]/95 ">
+            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3 min-w-0 sm:mt-6">
                     @php
                         $displayLogo = $storeLogo ?? $logoUrl ?? null;
                     @endphp
                     @if (!empty($displayLogo))
-                        <div class="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full overflow-hidden shrink-0 border-2 border-[var(--color-primary)]/30 bg-[var(--bg-card)] shadow-sm">
+                        <div class="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full overflow-hidden shrink-0 border-2 border-[var(--color-primary)]/30 bg-[var(--bg-card)] shadow-sm" >
                             <img src="{{ $displayLogo }}" alt="{{ $storeName }}" class="h-full w-full object-cover">
                         </div>
                     @else
