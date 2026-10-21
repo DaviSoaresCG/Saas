@@ -45,6 +45,7 @@ class ResolveTenant
                 'catalog_nome' => $catalogo->nome,
                 'desconto_index' => $catalogo->desconto_index,
                 'sob_consulta' => (bool) $catalogo->sob_consulta,
+                'catalog_mostrar_nome' => (bool) $catalogo->mostrar_nome,
             ]);
 
             app()->instance(User::class, $user);
@@ -88,7 +89,7 @@ class ResolveTenant
             }
 
             // Acesso direto ao subdomínio limpa a sessão de desconto e sob consulta do catálogo
-            session()->forget(['catalog_hash', 'catalog_nome', 'desconto_index', 'sob_consulta']);
+            session()->forget(['catalog_hash', 'catalog_nome', 'desconto_index', 'sob_consulta', 'catalog_mostrar_nome']);
 
             app()->instance(User::class, $user);
             URL::defaults(['slug' => $slug]);

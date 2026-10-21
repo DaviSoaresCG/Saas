@@ -116,3 +116,79 @@ test('admin catalogos index renders mostrar_nome checkbox and badges', function 
     $response->assertSee('Catálogo Oculto');
     $response->assertSee('Nome oculto');
 });
+
+test('visiting catalog with mostrar_nome true stores session and renders catalog name in store header', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $catalogo = Catalogo::create([
+        'user_id' => $user->id,
+        'nome' => 'Catálogo Especial de Verão',
+        'hash' => 'verao1234512',
+        'desconto_index' => 10.00,
+        'sob_consulta' => false,
+        'mostrar_nome' => true,
+    ]);
+
+    \App\Models\Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Camiseta Verão',
+        'preco_base' => 50.00,
+        'sku' => 'SKU-VERAO',
+        'estoque' => 5,
+        'description' => 'Camiseta fresca de algodão',
+    ]);
+
+    $response = $this->get("http://" . env('APP_DOMAIN', 'saas.test') . "/{$catalogo->hash}/produtos");
+
+    $response->assertOk();
+    $response->assertSessionHas('catalog_mostrar_nome', true);
+    $response->assertSee('Catálogo Especial de Verão');
+});
+
+test('visiting catalog with mostrar_nome false stores session and hides catalog name in store header', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $catalogo = Catalogo::create([
+        'user_id' => $user->id,
+        'nome' => 'Catálogo Oculto Secreto',
+        'hash' => 'secreto12345',
+        'desconto_index' => 10.00,
+        'sob_consulta' => false,
+        'mostrar_nome' => false,
+    ]);
+
+    \App\Models\Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Camiseta Secreta',
+        'preco_base' => 50.00,
+        'sku' => 'SKU-SECRETA',
+        'estoque' => 5,
+        'description' => 'Camiseta exclusiva',
+    ]);
+
+    $response = $this->get("http://" . env('APP_DOMAIN', 'saas.test') . "/{$catalogo->hash}/produtos");
+
+    $response->assertOk();
+    $response->assertSessionHas('catalog_mostrar_nome', false);
+    $response->assertDontSee('Catálogo Oculto Secreto');
+});
+
+test('direct subdomain access clears catalog_mostrar_nome from session', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    // Simula uma sessão anterior com catálogo
+    $response = $this->withSession(['catalog_mostrar_nome' => false])
+        ->get("http://{$user->slug}." . env('APP_DOMAIN', 'saas.test') . "/produtos");
+
+    $response->assertOk();
+    $response->assertSessionMissing('catalog_mostrar_nome');
+});

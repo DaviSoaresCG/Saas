@@ -13,6 +13,7 @@ class StoreLayout extends Component
     public ?string $catalogoName = null;
     public ?string $logoUrl = null;
     public string $tabTitle;
+    public bool $mostrarNome = true;
 
     public function __construct(
         public ?string $pageTitle = null,
@@ -27,14 +28,19 @@ class StoreLayout extends Component
 
         if ($hash) {
             $this->catalogoName = session('catalog_nome');
+            $this->mostrarNome = session()->has('catalog_mostrar_nome')
+                ? (bool) session('catalog_mostrar_nome')
+                : true;
+
             if (empty($this->catalogoName)) {
                 $catalogo = Catalogo::where('hash', $hash)->first();
                 $this->catalogoName = $catalogo?->nome;
+                $this->mostrarNome = (bool) ($catalogo?->mostrar_nome ?? true);
             }
         }
 
         // Título dinâmico para a guia do navegador
-        if (!empty($this->catalogoName)) {
+        if (!empty($this->catalogoName) && $this->mostrarNome) {
             $this->tabTitle = "{$this->catalogoName} - {$this->storeName}";
         } elseif (!empty($this->pageTitle)) {
             $this->tabTitle = "{$this->pageTitle} - {$this->storeName}";

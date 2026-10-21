@@ -4,9 +4,9 @@
 
 **Blocked by:** 01 — Gerenciar visibilidade do nome do catálogo no Painel Admin
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Na sessão do visitante/tenant, a flag de visibilidade do catálogo ativo é carregada e disponibilizada para a camada de visualização.
-- [ ] O componente de layout da loja esconde o nome e cabeçalho do catálogo quando a configuração estiver desmarcada.
-- [ ] O componente de layout da loja exibe o nome e cabeçalho normalmente quando a configuração estiver marcada.
-- [ ] Testes automatizados cobrem a renderização da loja pública com e sem o cabeçalho do catálogo.
+- [x] Na sessão do visitante/tenant, a flag de visibilidade do catálogo ativo é carregada e disponibilizada para a camada de visualização.
+- [x] O componente de layout da loja esconde o nome e cabeçalho do catálogo quando a configuração estiver desmarcada.
+- [x] O componente de layout da loja exibe o nome e cabeçalho normalmente quando a configuração estiver marcada.
+- [x] Testes automatizados cobrem a renderização da loja pública com e sem o cabeçalho do catálogo.
