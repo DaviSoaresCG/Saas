@@ -79,6 +79,12 @@
                                 class="h-4 w-4 shrink-0 {{ $active === 'theme' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
                             Mudar Tema
                         </a>
+                        <a href="{{ route('layout.index') }}" {!! $navClick !!}
+                            class="{{ $active === 'layout' ? $navActive : $navIdle }}">
+                            <i data-lucide="smartphone"
+                                class="h-4 w-4 shrink-0 {{ $active === 'layout' ? 'text-[var(--text-on-primary)]' : 'text-[var(--text-base)]' }}"></i>
+                            Layout Mobile
+                        </a>
                         <a href="{{ route('admin.products') }}" {!! $navClick !!}
                             class="{{ $active === 'products' ? $navActive : $navIdle }}">
                             <i data-lucide="package"

@@ -15,6 +15,7 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\CounponsController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\LayoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -105,6 +106,11 @@ Route::domain('{slug}.' . $appDomain)->middleware(['tenant'])->group(function ()
             Route::controller(ThemeController::class)->group(function () {
                 Route::get('/theme', 'index')->name('theme.index');
                 Route::post('/update-theme', 'themeUpdate')->name('theme.update');
+            });
+
+            Route::controller(LayoutController::class)->group(function () {
+                Route::get('/layout-mobile', 'index')->name('layout.index');
+                Route::post('/layout-mobile', 'update')->name('layout.update');
             });
         });
 

@@ -4,9 +4,9 @@
 
 **Blocked by:** Nenhum — pode começar imediatamente.
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] O lojista tem acesso à configuração de colunas do layout mobile no painel de administração (padrão: 1 coluna).
-- [ ] O componente de mockup de celular reage interativamente aos cliques: selecionar 1 coluna exibe a animação/disposição de feed vertical; selecionar 2 colunas exibe a grade lado a lado.
-- [ ] Ao salvar, a preferência (`colunas_mobile` = 1 ou 2) é validada e persistida nas configurações do usuário/loja.
-- [ ] A tela recarrega exibindo a opção atualmente ativa pré-selecionada no mockup.
+- [x] O lojista tem acesso à configuração de colunas do layout mobile no painel de administração (padrão: 1 coluna).
+- [x] O componente de mockup de celular reage interativamente aos cliques: selecionar 1 coluna exibe a animação/disposição de feed vertical; selecionar 2 colunas exibe a grade lado a lado.
+- [x] Ao salvar, a preferência (`colunas_mobile` = 1 ou 2) é validada e persistida nas configurações do usuário/loja.
+- [x] A tela recarrega exibindo a opção atualmente ativa pré-selecionada no mockup.
