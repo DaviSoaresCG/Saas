@@ -60,7 +60,7 @@
             <div class="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
                 {{-- Chip "Todos" --}}
                 <a href="{{ request()->fullUrlWithQuery(['grupo' => null]) }}"
-                    class="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-bold transition-all shrink-0 border {{ empty($selectedGrupo) ? 'bg-[var(--color-primary)] text-[var(--text-on-primary)] border-[var(--color-primary)] shadow-md shadow-[var(--color-primary)]/25 scale-105' : 'bg-[var(--bg-card)] text-[var(--text-base)] border-[var(--color-primary)]/20 hover:border-[var(--color-primary)]/40 hover:bg-[var(--color-primary)]/5' }}">
+                    class="inline-flex items-center gap-2 rounded-2xl px-4 ml-2 py-2.5 text-xs font-bold transition-all shrink-0 border {{ empty($selectedGrupo) ? 'bg-[var(--color-primary)] text-[var(--text-on-primary)] border-[var(--color-primary)] shadow-md shadow-[var(--color-primary)]/25 scale-105' : 'bg-[var(--bg-card)] text-[var(--text-base)] border-[var(--color-primary)]/20 hover:border-[var(--color-primary)]/40 hover:bg-[var(--color-primary)]/5' }}">
                     <i data-lucide="grid" class="h-4 w-4"></i>
                     <span>Todos os produtos</span>
                 </a>
