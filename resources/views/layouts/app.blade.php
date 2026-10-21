@@ -34,7 +34,7 @@
 </head>
 @push('styles')
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-   
+
 @endpush
 
 @push('scripts')
@@ -59,9 +59,7 @@
         </div>
     @else
         <div class="min-h-screen">
-            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {{ $slot }}
-            </main>
+            {{ $slot }}
         </div>
     @endif
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>

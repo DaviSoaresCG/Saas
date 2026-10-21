@@ -11,7 +11,7 @@ test('product catalog index paginates products and preserves query parameters', 
 
     app()->instance(User::class, $user);
 
-    for ($i = 1; $i <= 15; $i++) {
+    for ($i = 1; $i <= 30; $i++) {
         Products::create([
             'nome' => "Produto Teste Paginacao {$i}",
             'description' => "Descricao do produto {$i}",
@@ -26,9 +26,9 @@ test('product catalog index paginates products and preserves query parameters', 
     $response->assertOk();
     $response->assertViewHas('products', function ($products) {
         return $products instanceof LengthAwarePaginator
-            && $products->total() === 15
-            && $products->perPage() === 12
-            && $products->count() === 12;
+            && $products->total() === 30
+            && $products->perPage() === 25
+            && $products->count() === 25;
     });
 
     $responsePage2 = $this->get(route('products.index', ['slug' => $user->slug, 'page' => 2, 'search' => 'Paginacao']));
@@ -36,6 +36,6 @@ test('product catalog index paginates products and preserves query parameters', 
     $responsePage2->assertViewHas('products', function ($products) {
         return $products instanceof LengthAwarePaginator
             && $products->currentPage() === 2
-            && $products->count() === 3;
+            && $products->count() === 5;
     });
 });

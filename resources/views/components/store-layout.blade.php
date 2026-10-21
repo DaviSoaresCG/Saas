@@ -16,9 +16,9 @@
 
 
 <x-app-layout :title="$tabTitle ?? $title ?? null" :logo-url="$storeLogo ?? $logoUrl ?? null">
-    <div class="min-h-[calc(100vh-4rem)] bg-[var(--bg-page)] font-sans antialiased ">
-        <header class="sticky top-0 z-20 bg-[var(--bg-page)] backdrop-blur-md">
-            <div class="mx-auto h-16 flex items-center justify-between gap-4">
+    <div class="min-h-screen bg-[var(--bg-page)] font-sans antialiased flex flex-col">
+        <header class="sticky top-0 z-20 w-full bg-[var(--bg-page)]/95 backdrop-blur-md border-b border-[var(--color-primary)]/10 shadow-xs">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3 min-w-0">
                     @php
                         $displayLogo = $storeLogo ?? $logoUrl ?? null;
@@ -56,17 +56,16 @@
                     </a>
                 </nav>
             </div>
-            <div class="w-full text-center py-1 rounded-lg ">
             @if(!empty($catalogoName) && ($mostrarNome ?? true))
-                <h3 class="text-[var(--text-base)] font-bold text-lg">{{ $catalogoName }}</h3>
-            @else
-                <h3 class="text-[var(--text-base)] font-bold text-lg mt-4"></h3>
-            @endif
+            <div class="w-full text-center py-1.5 border-t border-[var(--color-primary)]/5 bg-[var(--color-primary)]/5">
+                <h3 class="text-[var(--text-base)] font-bold text-sm sm:text-base">{{ $catalogoName }}</h3>
             </div>
+            @endif
         </header>
 
-        {{ $slot }}
-
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full flex-1">
+            {{ $slot }}
+        </main>
     </div>
 
     @if (!empty($modalCarrinho))
