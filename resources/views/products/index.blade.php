@@ -130,7 +130,11 @@
             @endif
         </div>
     @else
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        @php
+            $colunasMobile = (int) ($user->colunas_mobile ?? 1);
+            $gridMobileCols = $colunasMobile === 2 ? 'grid-cols-2 gap-2.5 sm:gap-4' : 'grid-cols-1 gap-4';
+        @endphp
+        <div class="grid {{ $gridMobileCols }} sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-mobile-cols="{{ $colunasMobile }}">
             @foreach ($products as $product)
                 <x-produto-card :produto="$product" :user="$user" />
             @endforeach

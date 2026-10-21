@@ -4,10 +4,10 @@
 
 **Blocked by:** 03 — Painel de Configuração do Layout Mobile com Preview Interativo (Stitch)
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A listagem pública de produtos consulta a configuração de layout mobile da loja/tenant.
-- [ ] Em dispositivos mobile, quando configurado para 1 coluna, os cards de produtos ocupam a largura total em fila vertical (`grid-cols-1`).
-- [ ] Em dispositivos mobile, quando configurado para 2 colunas, os cards de produtos são dispostos em grade de dois itens por linha (`grid-cols-2`).
-- [ ] Telas desktop (`md:`, `lg:`) continuam exibindo a grade responsiva desktop normal sem regressão visual.
-- [ ] Testes automatizados cobrem a alternância de classes e a renderização nos dois modos.
+- [x] A listagem pública de produtos consulta a configuração de layout mobile da loja/tenant.
+- [x] Em dispositivos mobile, quando configurado para 1 coluna, os cards de produtos ocupam a largura total em fila vertical (`grid-cols-1`).
+- [x] Em dispositivos mobile, quando configurado para 2 colunas, os cards de produtos são dispostos em grade de dois itens por linha (`grid-cols-2`).
+- [x] Telas desktop (`md:`, `lg:`) continuam exibindo a grade responsiva desktop normal sem regressão visual.
+- [x] Testes automatizados cobrem a alternância de classes e a renderização nos dois modos.
