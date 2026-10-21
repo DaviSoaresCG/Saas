@@ -113,7 +113,7 @@
                             </div>
 
                             <p class="text-xs text-[var(--text-muted)] leading-relaxed">
-                                Cards grandes e imersivos em linha única reta. Ideal para destacar fotos detalhadas, títulos descritivos, avaliações e botão de compra rápida destacado.
+                                Cards grandes e imersivos em linha única reta. Ideal para destacar fotos detalhadas, títulos descritivos e visualização ampla dos produtos.
                             </p>
 
                             <div class="pt-2 border-t border-[var(--color-primary)]/10">
@@ -303,9 +303,6 @@
                                     <div :class="selectedColunas === 1 ? 'h-36' : 'h-24'"
                                         class="w-full bg-[var(--color-primary)]/10 flex items-center justify-center relative overflow-hidden transition-all duration-300">
                                         <i data-lucide="package" class="h-8 w-8 text-[var(--color-primary)]/60"></i>
-                                        <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-red-500 text-white text-[9px] font-bold">
-                                            -20%
-                                        </span>
                                     </div>
                                     <div class="p-2.5 flex flex-col justify-between flex-1 gap-1.5">
                                         <div>
@@ -317,18 +314,12 @@
                                                 Amortecimento de alta resposta e leveza.
                                             </p>
                                         </div>
-                                        <div class="flex items-center justify-between pt-1">
-                                            <div>
-                                                <span x-show="selectedColunas === 1" class="text-[9px] text-[var(--text-muted)] line-through block">R$ 299,00</span>
-                                                <span class="font-extrabold text-[var(--color-primary)]"
-                                                    :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
-                                                    R$ 239,90
-                                                </span>
-                                            </div>
-                                            <button type="button" class="px-2 py-1 rounded-lg bg-[var(--color-primary)] text-[var(--text-on-primary)] text-[10px] font-bold flex items-center gap-1 shadow-xs">
-                                                <i data-lucide="plus" class="h-2.5 w-2.5"></i>
-                                                <span x-show="selectedColunas === 1">Comprar</span>
-                                            </button>
+                                        <div class="pt-1">
+                                            <span x-show="selectedColunas === 1" class="text-[9px] text-[var(--text-muted)] line-through block">R$ 299,00</span>
+                                            <span class="font-extrabold text-[var(--color-primary)]"
+                                                :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
+                                                R$ 239,90
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -338,9 +329,6 @@
                                     <div :class="selectedColunas === 1 ? 'h-36' : 'h-24'"
                                         class="w-full bg-[var(--color-primary)]/10 flex items-center justify-center relative overflow-hidden transition-all duration-300">
                                         <i data-lucide="watch" class="h-8 w-8 text-[var(--color-primary)]/60"></i>
-                                        <span class="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-[var(--color-primary)] text-[var(--text-on-primary)] text-[9px] font-bold">
-                                            NOVO
-                                        </span>
                                     </div>
                                     <div class="p-2.5 flex flex-col justify-between flex-1 gap-1.5">
                                         <div>
@@ -352,17 +340,11 @@
                                                 Monitoramento cardíaco e bateria 10 dias.
                                             </p>
                                         </div>
-                                        <div class="flex items-center justify-between pt-1">
-                                            <div>
-                                                <span class="font-extrabold text-[var(--color-primary)]"
-                                                    :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
-                                                    R$ 489,00
-                                                </span>
-                                            </div>
-                                            <button type="button" class="px-2 py-1 rounded-lg bg-[var(--color-primary)] text-[var(--text-on-primary)] text-[10px] font-bold flex items-center gap-1 shadow-xs">
-                                                <i data-lucide="plus" class="h-2.5 w-2.5"></i>
-                                                <span x-show="selectedColunas === 1">Comprar</span>
-                                            </button>
+                                        <div class="pt-1">
+                                            <span class="font-extrabold text-[var(--color-primary)]"
+                                                :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
+                                                R$ 489,00
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -383,17 +365,11 @@
                                                 Cancelamento ativo de ruído estéreo.
                                             </p>
                                         </div>
-                                        <div class="flex items-center justify-between pt-1">
-                                            <div>
-                                                <span class="font-extrabold text-[var(--color-primary)]"
-                                                    :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
-                                                    R$ 349,00
-                                                </span>
-                                            </div>
-                                            <button type="button" class="px-2 py-1 rounded-lg bg-[var(--color-primary)] text-[var(--text-on-primary)] text-[10px] font-bold flex items-center gap-1 shadow-xs">
-                                                <i data-lucide="plus" class="h-2.5 w-2.5"></i>
-                                                <span x-show="selectedColunas === 1">Comprar</span>
-                                            </button>
+                                        <div class="pt-1">
+                                            <span class="font-extrabold text-[var(--color-primary)]"
+                                                :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
+                                                R$ 349,00
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -414,17 +390,11 @@
                                                 Compartimento acolchoado para notebook.
                                             </p>
                                         </div>
-                                        <div class="flex items-center justify-between pt-1">
-                                            <div>
-                                                <span class="font-extrabold text-[var(--color-primary)]"
-                                                    :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
-                                                    R$ 199,90
-                                                </span>
-                                            </div>
-                                            <button type="button" class="px-2 py-1 rounded-lg bg-[var(--color-primary)] text-[var(--text-on-primary)] text-[10px] font-bold flex items-center gap-1 shadow-xs">
-                                                <i data-lucide="plus" class="h-2.5 w-2.5"></i>
-                                                <span x-show="selectedColunas === 1">Comprar</span>
-                                            </button>
+                                        <div class="pt-1">
+                                            <span class="font-extrabold text-[var(--color-primary)]"
+                                                :class="selectedColunas === 1 ? 'text-xs' : 'text-[11px]'">
+                                                R$ 199,90
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
