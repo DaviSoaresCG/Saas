@@ -17,7 +17,7 @@
 
 <x-app-layout :title="$tabTitle ?? $title ?? null" :logo-url="$storeLogo ?? $logoUrl ?? null">
     <div class="min-h-screen bg-[var(--bg-page)] font-sans antialiased flex flex-col">
-        <header class="sticky top-0 z-20 w-full bg-[var(--bg-page)]/95 ">
+        <header class="sticky top-0 z-20 h-20 sm:h-24 w-full bg-[var(--bg-page)]/95 ">
             <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3 min-w-0 sm:mt-6 mt-2">
                     @php
