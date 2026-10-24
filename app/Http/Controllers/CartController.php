@@ -110,6 +110,8 @@ class CartController extends Controller
                 $item_total = $cart[$produto_id]['value'] * $quantidade;
                 $item_subtotal_formatado = number_format($item_total, 2, ',', '.');
 
+                $cartCounter = (int) array_sum(array_column($cart, 'quantity'));
+
                 session()->put('cart', $cart);
 
                 return response()->json([
@@ -118,7 +120,7 @@ class CartController extends Controller
                     'new_total' => $total_formatado,
                     'item_subtotal' => $item_subtotal_formatado,
                     'quantity' => $quantidade,
-                    'cartCounter' => count($cart),
+                    'cartCounter' => $cartCounter,
                 ]);
             } else {
                 unset($cart[$produto_id]);
@@ -132,6 +134,7 @@ class CartController extends Controller
 
                 // formata o total do carrinho
                 $total_formatado = number_format($total, 2, ',', '.');
+                $cartCounter = (int) array_sum(array_column($cart, 'quantity'));
 
                 session()->put('cart', $cart);
 
@@ -139,7 +142,7 @@ class CartController extends Controller
                     'success' => true,
                     'message' => 'removido',
                     'new_total' => $total_formatado,
-                    'cartCounter' => count($cart),
+                    'cartCounter' => $cartCounter,
                 ]);
             }
         }

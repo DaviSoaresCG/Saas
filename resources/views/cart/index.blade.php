@@ -252,6 +252,18 @@
                             if (summaryTotalEl) summaryTotalEl.innerText = 'R$ ' + data.new_total;
                         }
 
+                        const cartBadge = document.getElementById('cart-badge');
+                        if (cartBadge && typeof data.cartCounter !== 'undefined') {
+                            const count = parseInt(data.cartCounter, 10) || 0;
+                            if (count > 0) {
+                                cartBadge.innerText = count > 99 ? '99+' : count;
+                                cartBadge.classList.remove('hidden');
+                            } else {
+                                cartBadge.innerText = '0';
+                                cartBadge.classList.add('hidden');
+                            }
+                        }
+
                         if (itemElement) {
                             if (quantity <= 0) {
                                 itemElement.parentElement.style.transition = 'opacity 0.3s ease-out';

@@ -56,6 +56,13 @@ class StoreLayout extends Component
         $modalCarrinho = (bool) ($tenantUser->modal_carrinho ?? false);
         $storeLogo = $this->logoUrl;
         $tabTitle = $this->tabTitle;
-        return view('components.store-layout', compact('theme', 'modalCarrinho', 'storeLogo', 'tabTitle'));
+
+        $cart = session()->get('cart', []);
+        $cartCount = 0;
+        if (is_array($cart)) {
+            $cartCount = (int) array_sum(array_column($cart, 'quantity'));
+        }
+
+        return view('components.store-layout', compact('theme', 'modalCarrinho', 'storeLogo', 'tabTitle', 'cartCount'));
     }
 }

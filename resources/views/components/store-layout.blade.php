@@ -50,8 +50,14 @@
                     </a>
                 @endif
                     <a href="{{ Route::is('variant.*') ? route('variant.cart.index', ['slug' => $slug]) : route('cart.index') }}"
-                        class="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-3 py-2 text-sm text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/20 font-medium transition-colors">
-                        <i data-lucide="shopping-cart" class="h-4 w-4"></i>
+                        class="relative inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-3 py-2 text-sm text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/20 font-medium transition-colors">
+                        <span class="relative inline-flex items-center">
+                            <i data-lucide="shopping-cart" class="h-4 w-4"></i>
+                            <span id="cart-badge"
+                                class="{{ ($cartCount ?? 0) > 0 ? '' : 'hidden ' }}absolute -top-2 -right-2.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-[var(--color-primary)] leading-none">
+                                {{ ($cartCount ?? 0) > 99 ? '99+' : ($cartCount ?? 0) }}
+                            </span>
+                        </span>
                         <span class="hidden sm:inline">Carrinho</span>
                     </a>
                 </nav>
