@@ -45,7 +45,7 @@
                 <nav class="flex items-center gap-2 sm:gap-3 shrink-0">
                     <a href="{{ route('dashboard') }}"
                         class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] transition-colors shadow-lg shadow-[var(--color-primary)]/20">
-                        <i data-lucide="layout-grid" class="h-4 w-4"></i>
+                        <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
                         <span class="hidden sm:inline">Dashboard</span>
                     </a>
                 @endif
@@ -54,11 +54,10 @@
                         <span class="relative inline-flex items-center">
                             <i data-lucide="shopping-cart" class="h-4 w-4"></i>
                             <span id="cart-badge"
-                                class="{{ ($cartCount ?? 0) > 0 ? '' : 'hidden ' }}absolute -top-2 -right-2.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-[var(--color-primary)] leading-none">
+                                class="{{ ($cartCount ?? 0) > 0 ? '' : 'hidden ' }}absolute -top-3 -right-3.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-[var(--color-primary)] leading-none">
                                 {{ ($cartCount ?? 0) > 99 ? '99+' : ($cartCount ?? 0) }}
                             </span>
                         </span>
-                        <span class="hidden sm:inline">Carrinho</span>
                     </a>
                 </nav>
             </div>
