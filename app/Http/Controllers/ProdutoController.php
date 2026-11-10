@@ -49,11 +49,16 @@ class ProdutoController extends Controller
 
     public function show($slug, $id)
     {
-        $product = Products::with(['atributos', 'productImages', 'grupos'])->findOrFail($id);
+        $user = app(User::class);
+        $query = Products::with(['atributos', 'productImages', 'grupos']);
+
+        if (!auth()->check() || (int) auth()->id() !== (int) $user->id) {
+            $query->where('status', true);
+        }
+
+        $product = $query->findOrFail($id);
 
         ProductClick::recordProductView($product);
-        $user = app(User::class);
-
 
         return view('products.show', compact('product', 'user'));
     }
@@ -251,6 +256,19 @@ class ProdutoController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products', ['slug' => $request->slug]);
+    }
+
+    /** Alterna o status do produto entre Ativo (true) e Inativo (false) */
+    public function toggleStatus($slug, $id)
+    {
+        $product = Products::findOrFail($id);
+        $product->update([
+            'status' => !$product->status,
+        ]);
+
+        $label = $product->status ? 'ativado' : 'inativado';
+
+        return redirect()->back()->with('success', "Produto \"{$product->nome}\" {$label} com sucesso!");
     }
 
     /** Regras de validação compartilhadas entre criação e atualização de produto */

@@ -1,4 +1,11 @@
 <x-admin-layout active="products" title="Seus produtos" subtitle="Busque, edite ou publique novos itens.">
+    @if (session('success'))
+        <div
+            class="mb-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 font-medium">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div
         class="rounded-2xl border border-[var(--color-primary)]/15 bg-[var(--bg-card)] overflow-hidden shadow-xl shadow-black/15">
 
@@ -34,6 +41,7 @@
                     <tr>
                         <th scope="col" class="px-4 sm:px-6 py-4">Nome</th>
                         <th scope="col" class="px-4 sm:px-6 py-4">Preço</th>
+                        <th scope="col" class="px-4 sm:px-6 py-4">Status</th>
                         <th scope="col" class="px-4 sm:px-6 py-4 text-right">Ações</th>
                     </tr>
                 </thead>
@@ -48,8 +56,37 @@
                             </td>
                             <td class="px-4 sm:px-6 py-4 text-emerald-600 font-medium tabular-nums">R$ {{ $product->value }}
                             </td>
-                            <td class="px-4 sm:px-6 py-4">
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                @if ($product->status)
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 text-xs font-bold text-emerald-600">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                        Ativo
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 px-2.5 py-1 text-xs font-bold text-amber-600">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                                        Inativo
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-4 sm:px-6 py-4" onclick="event.stopPropagation()">
                                 <div class="flex flex-wrap items-center justify-end gap-2">
+                                    <form action="{{ route('products.toggle-status', ['product' => $product->id]) }}"
+                                        method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        @if ($product->status)
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-600 hover:bg-amber-500 hover:text-white transition-colors cursor-pointer">
+                                                Inativar
+                                            </button>
+                                        @else
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-600 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer">
+                                                Ativar
+                                            </button>
+                                        @endif
+                                    </form>
                                     @if (auth()->user()->tipo_cliente === 'direct')
                                         <a href="{{ route('products.edit', ['product' => $product->id]) }}"
                                             class="inline-flex items-center gap-1 rounded-lg border border-[var(--color-primary)]/40 bg-[var(--color-primary)]/10 px-3 py-1.5 text-xs font-semibold text-[var(--text-base)] hover:bg-[var(--color-primary)]/20 transition-colors">

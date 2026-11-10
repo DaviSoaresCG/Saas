@@ -25,6 +25,13 @@ class Products extends Model
         'slug'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'status' => 'boolean',
+        ];
+    }
+
     protected static function booted()
     {
         static::saving(function ($product) {

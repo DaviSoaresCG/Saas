@@ -4,11 +4,11 @@
 
 **Blocked by:** 01 — Corrigir validações, integridade transacional e formulário de criação de produtos
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A listagem de produtos do painel do lojista exibe visualmente se cada produto está `Ativo` ou `Inativo`.
-- [ ] Cada produto na listagem administrativa possui um botão de ação para inativar (quando ativo) ou ativar (quando inativo) o item.
-- [ ] Produtos inativados deixam imediatamente de aparecer na vitrine pública e nas buscas do catálogo, mas permanecem visíveis na listagem administrativa do lojista.
-- [ ] Apenas o lojista proprietário do produto consegue alternar seu status de ativação.
-- [ ] Testes automatizados cobrem a alternância de status do produto e a ocultação de produtos inativos na vitrine pública.
+- [x] A listagem de produtos do painel do lojista exibe visualmente se cada produto está `Ativo` ou `Inativo`.
+- [x] Cada produto na listagem administrativa possui um botão de ação para inativar (quando ativo) ou ativar (quando inativo) o item.
+- [x] Produtos inativados deixam imediatamente de aparecer na vitrine pública e nas buscas do catálogo, mas permanecem visíveis na listagem administrativa do lojista.
+- [x] Apenas o lojista proprietário do produto consegue alternar seu status de ativação.
+- [x] Testes automatizados cobrem a alternância de status do produto e a ocultação de produtos inativos na vitrine pública.
 

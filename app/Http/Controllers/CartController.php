@@ -22,7 +22,7 @@ class CartController extends Controller
 
     public function add(Request $request, $slug, $id)
     {
-        $product = Products::findOrFail($id);
+        $product = Products::where('status', true)->findOrFail($id);
 
         $cart = session()->get('cart', []);
 

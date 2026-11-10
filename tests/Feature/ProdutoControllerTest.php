@@ -420,6 +420,98 @@ test('ProcessImageBase64 job synchronizes cover image with product_images table'
     expect($galleryImage->path)->toBe($coverPath);
 });
 
+test('merchant can toggle product active status and inactive products are hidden from public storefront', function () {
+    $tenantA = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'slug' => 'loja-toggle-status',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $tenantB = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'slug' => 'loja-outro-lojista',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    app()->instance(User::class, $tenantA);
+    $baseUrlA = 'http://' . $tenantA->slug . '.' . env('APP_DOMAIN', 'saas.test');
+
+    $product = Products::create([
+        'nome' => 'Jaqueta Jeans Vintage',
+        'slug' => 'jaqueta-jeans-vintage',
+        'description' => 'Jaqueta clássica',
+        'preco_base' => 199.90,
+        'status' => true,
+        'user_id' => $tenantA->id,
+    ]);
+
+    // 1. Admin list shows product as Ativo and button to Inativar
+    $adminListResponse = $this->actingAs($tenantA)->get("{$baseUrlA}/dashboard/products");
+    $adminListResponse->assertOk();
+    $adminListResponse->assertSee('Jaqueta Jeans Vintage');
+    $adminListResponse->assertSee('Ativo');
+    $adminListResponse->assertSee('Inativar');
+
+    // 2. Toggle status to inactive
+    $toggleOffResponse = $this->actingAs($tenantA)
+        ->from("{$baseUrlA}/dashboard/products")
+        ->patch("{$baseUrlA}/products/{$product->id}/toggle-status");
+
+    $toggleOffResponse->assertRedirect("{$baseUrlA}/dashboard/products");
+    $product->refresh();
+    expect((bool) $product->status)->toBeFalse();
+
+    // 3. Inactive product remains visible in merchant admin list with Inativo badge and Ativar button
+    $adminListAfterOff = $this->actingAs($tenantA)->get("{$baseUrlA}/dashboard/products");
+    $adminListAfterOff->assertOk();
+    $adminListAfterOff->assertSee('Jaqueta Jeans Vintage');
+    $adminListAfterOff->assertSee('Inativo');
+    $adminListAfterOff->assertSee('Ativar');
+
+    // 4. Inactive product is hidden from public storefront, public search, direct public URL and cart add
+    $this->actingAs($tenantA)->get("{$baseUrlA}/produtos/{$product->id}")->assertOk();
+
+    auth()->logout();
+
+    $publicIndexResponse = $this->get("{$baseUrlA}/produtos");
+    $publicIndexResponse->assertOk();
+    $publicIndexResponse->assertDontSee('Jaqueta Jeans Vintage');
+
+    $publicSearchResponse = $this->get("{$baseUrlA}/produtos?search=Jaqueta");
+    $publicSearchResponse->assertOk();
+    $publicSearchResponse->assertDontSee('Jaqueta Jeans Vintage');
+
+    $this->get("{$baseUrlA}/produtos/{$product->id}")->assertNotFound();
+    $this->post("{$baseUrlA}/cart/add/{$product->id}")->assertNotFound();
+
+    // 5. Another merchant (Tenant B) cannot toggle Tenant A's product status
+    app()->instance(User::class, $tenantB);
+    $baseUrlB = 'http://' . $tenantB->slug . '.' . env('APP_DOMAIN', 'saas.test');
+
+    $this->actingAs($tenantB)
+        ->patch("{$baseUrlB}/products/{$product->id}/toggle-status")
+        ->assertNotFound();
+
+    expect((bool) $product->fresh()->status)->toBeFalse();
+
+    // 6. Tenant A can reactivate the product
+    app()->instance(User::class, $tenantA);
+    $toggleOnResponse = $this->actingAs($tenantA)
+        ->from("{$baseUrlA}/dashboard/products")
+        ->patch("{$baseUrlA}/products/{$product->id}/toggle-status");
+
+    $toggleOnResponse->assertRedirect("{$baseUrlA}/dashboard/products");
+    expect((bool) $product->fresh()->status)->toBeTrue();
+
+    $this->actingAs($tenantA)->get("{$baseUrlA}/dashboard/products")->assertOk();
+
+    // 7. Visible again in public storefront
+    $this->get("{$baseUrlA}/produtos")
+        ->assertOk()
+        ->assertSee('Jaqueta Jeans Vintage');
+});
+
+
 
 
 

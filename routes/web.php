@@ -116,6 +116,9 @@ Route::domain('{slug}.' . $appDomain)->middleware(['tenant'])->group(function ()
             });
         });
 
+        // Alternar status (Ativo/Inativo) de Produto
+        Route::patch('/products/{product}/toggle-status', [ProdutoController::class, 'toggleStatus'])->name('products.toggle-status');
+
         // CRUD de Produtos e Atributos (Apenas Clientes Diretos)
         Route::middleware(['client.direct'])->group(function () {
             Route::resource('products', ProdutoController::class)->except(['index', 'show', 'destroy']);
