@@ -64,6 +64,25 @@ class Products extends Model
     }
 
     /**
+     * Returns the next zero-based order index for a new product image.
+     */
+    public function nextImageOrder(): int
+    {
+        $maxOrdem = $this->productImages()->max('ordem');
+
+        return is_null($maxOrdem) ? 0 : ((int) $maxOrdem + 1);
+    }
+
+    /**
+     * Synchronizes products.path (foto_url) with the first ordered gallery image.
+     */
+    public function syncCover(): void
+    {
+        $first = $this->productImages()->orderBy('ordem')->first();
+        $this->update(['path' => $first?->path]);
+    }
+
+    /**
      * Parse a monetary value (e.g. "1.234,56" or "1234.56") into a float, or null if invalid.
      */
     public static function parseMonetaryValue(mixed $value): ?float

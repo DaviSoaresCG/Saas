@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ProductImage;
 use App\Models\Products;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -34,7 +35,9 @@ class ProcessImageBase64 implements ShouldQueue
      */
     public function handle(): void
     {
-        $product = Products::find($this->productId);
+        $product = Products::withoutGlobalScopes()
+            ->where('user_id', $this->userId)
+            ->find($this->productId);
         if (!$product) {
             return;
         }
@@ -95,10 +98,20 @@ class ProcessImageBase64 implements ShouldQueue
                 Storage::disk('public')->delete($caminhoAntigo);
             }
 
-            // 10. Atualiza o banco com a nova URL
+            // 10. Atualiza o banco com a nova URL e sincroniza com a galeria
             $product->update([
                 'foto_url' => $caminhoRelativo
             ]);
+
+            ProductImage::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'ordem' => 0,
+                ],
+                [
+                    'path' => $caminhoRelativo,
+                ]
+            );
 
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error("ProcessImageBase64: Falha ao processar imagem do produto SKU: '{$product->sku}' (ID: {$product->id}). Motivo: " . $e->getMessage(), [

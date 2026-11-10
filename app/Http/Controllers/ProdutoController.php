@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProdutoController extends Controller
 {
@@ -111,7 +112,7 @@ class ProdutoController extends Controller
                 }
 
                 // Primeira imagem = capa
-                $this->syncCover($product);
+                $product->syncCover();
 
                 // Associa grupos
                 $product->grupos()->sync($request->input('grupos', []));
@@ -155,7 +156,7 @@ class ProdutoController extends Controller
 
             // Adiciona novas imagens (ordem continua de onde parou)
             if ($request->hasFile('images')) {
-                $proximaOrdem = $product->productImages()->max('ordem') + 1;
+                $proximaOrdem = $product->nextImageOrder();
 
                 foreach ($request->file('images') as $i => $file) {
                     $path = $file->store('path', 'public');
@@ -166,7 +167,7 @@ class ProdutoController extends Controller
                     ]);
                 }
 
-                $this->syncCover($product);
+                $product->syncCover();
             }
 
             $product->grupos()->sync($request->input('grupos', []));
@@ -179,13 +180,14 @@ class ProdutoController extends Controller
     /** Remove uma imagem individual do produto */
     public function destroyImage(Request $request)
     {
-        $image = ProductImage::findOrFail($request->image);
+        $imageId = $request->route('image') ?? $request->image;
+        $image = ProductImage::whereHas('product')->findOrFail($imageId);
         $product = $image->product;
         Storage::disk('public')->delete($image->path);
         $image->delete();
 
         // Sincroniza capa após remoção
-        $this->syncCover($product);
+        $product->syncCover();
 
         return redirect()->back()->with('success', 'Imagem removida.');
     }
@@ -202,7 +204,7 @@ class ProdutoController extends Controller
         $file = $request->file('image');
         $path = $file->store('path', 'public');
 
-        $proximaOrdem = $product->productImages()->max('ordem') + 1;
+        $proximaOrdem = $product->nextImageOrder();
 
         $image = ProductImage::create([
             'product_id' => $product->id,
@@ -210,7 +212,7 @@ class ProdutoController extends Controller
             'ordem'      => $proximaOrdem,
         ]);
 
-        $this->syncCover($product);
+        $product->syncCover();
 
         return response()->json([
             'ok' => true,
@@ -232,7 +234,7 @@ class ProdutoController extends Controller
                 ->update(['ordem' => $ordem]);
         }
 
-        $this->syncCover($product);
+        $product->syncCover();
 
         return response()->json(['ok' => true]);
     }
@@ -251,16 +253,11 @@ class ProdutoController extends Controller
         return redirect()->route('admin.products', ['slug' => $request->slug]);
     }
 
-    /** Mantém products.path sincronizado com a 1ª imagem */
-    private function syncCover(Products $product): void
-    {
-        $first = $product->productImages()->orderBy('ordem')->first();
-        $product->update(['path' => $first?->path]);
-    }
-
     /** Regras de validação compartilhadas entre criação e atualização de produto */
     private function productValidationRules(bool $requireImages): array
     {
+        $tenantId = app()->bound(User::class) ? app(User::class)->id : auth()->id();
+
         return [
             'name'        => 'required|string|min:3|max:255',
             'value'       => ['required', function (string $attribute, mixed $value, \Closure $fail) {
@@ -274,6 +271,8 @@ class ProdutoController extends Controller
             'description' => 'required|string|min:3|max:255',
             'images'      => $requireImages ? 'required|array|min:1' : 'nullable|array',
             'images.*'    => 'image|mimes:jpeg,png,jpg,webp|max:10240',
+            'grupos'      => 'nullable|array',
+            'grupos.*'    => ['integer', Rule::exists('grupos', 'id')->where('user_id', $tenantId)],
         ];
     }
 

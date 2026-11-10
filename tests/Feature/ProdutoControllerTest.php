@@ -229,18 +229,198 @@ test('product creation rolls back database and deletes stored files on transacti
     app()->instance(User::class, $user);
     $baseUrl = 'http://' . $user->slug . '.' . env('APP_DOMAIN', 'saas.test');
 
-    // Passa um grupo inexistente para forçar falha de integridade dentro da transação após criar o produto e salvar a imagem
-    $this->actingAs($user)->post("{$baseUrl}/products", [
-        'name' => 'Produto Com Falha Transacional',
-        'value' => '99,90',
-        'description' => 'Deve sofrer rollback completo',
-        'images' => [UploadedFile::fake()->image('rollback.jpg')],
-        'grupos' => [999999],
-    ])->assertStatus(500);
+    // Simula falha após salvar o arquivo no disco durante a criação de ProductImage
+    \App\Models\ProductImage::creating(function () {
+        throw new \RuntimeException('Falha simulada ao salvar imagem no banco');
+    });
+
+    try {
+        $this->actingAs($user)->post("{$baseUrl}/products", [
+            'name' => 'Produto Com Falha Transacional',
+            'value' => '99,90',
+            'description' => 'Deve sofrer rollback completo',
+            'images' => [UploadedFile::fake()->image('rollback.jpg')],
+        ])->assertStatus(500);
+    } finally {
+        \App\Models\ProductImage::flushEventListeners();
+    }
 
     expect(Products::where('user_id', $user->id)->count())->toBe(0);
     expect(Storage::disk('public')->allFiles('path'))->toBeEmpty();
 });
+
+test('product creation, update and image deletion enforce strict multi-tenant isolation', function () {
+    Storage::fake('public');
+
+    $tenantA = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'slug' => 'loja-tenant-a',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $tenantB = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'slug' => 'loja-tenant-b',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $grupoTenantB = Grupo::withoutGlobalScopes()->create([
+        'user_id' => $tenantB->id,
+        'nome' => 'Grupo Secreto Tenant B',
+    ]);
+
+    $productTenantB = Products::withoutGlobalScopes()->create([
+        'nome' => 'Produto Tenant B',
+        'slug' => 'produto-tenant-b',
+        'description' => 'Pertence ao Tenant B',
+        'preco_base' => 100.00,
+        'status' => true,
+        'path' => 'path/img_b.jpg',
+        'user_id' => $tenantB->id,
+    ]);
+
+    Storage::disk('public')->put('path/img_b.jpg', 'fake-image-content');
+    $imageTenantB = \App\Models\ProductImage::create([
+        'product_id' => $productTenantB->id,
+        'path' => 'path/img_b.jpg',
+        'ordem' => 0,
+    ]);
+
+    app()->instance(User::class, $tenantA);
+    $baseUrlA = 'http://' . $tenantA->slug . '.' . env('APP_DOMAIN', 'saas.test');
+
+    // 1. Tenant A cannot create product linked to Tenant B's group
+    $this->actingAs($tenantA)->post("{$baseUrlA}/products", [
+        'name' => 'Produto Tenant A',
+        'value' => '50,00',
+        'description' => 'Tentando usar grupo alheio',
+        'images' => [UploadedFile::fake()->image('a.jpg')],
+        'grupos' => [$grupoTenantB->id],
+    ])->assertSessionHasErrors(['grupos.0']);
+
+    // 2. Tenant A cannot update product linked to Tenant B's group
+    $productTenantA = Products::create([
+        'nome' => 'Produto Próprio Tenant A',
+        'slug' => 'produto-proprio-tenant-a',
+        'description' => 'Pertence ao Tenant A',
+        'preco_base' => 60.00,
+        'status' => true,
+        'user_id' => $tenantA->id,
+    ]);
+
+    $this->actingAs($tenantA)->patch("{$baseUrlA}/products/{$productTenantA->id}", [
+        'product' => $productTenantA->id,
+        'name' => 'Produto Próprio Tenant A',
+        'value' => '60,00',
+        'description' => 'Tentando vincular grupo do Tenant B no update',
+        'grupos' => [$grupoTenantB->id],
+    ])->assertSessionHasErrors(['grupos.0']);
+
+    // 3. Tenant A cannot delete Tenant B's product image
+    $this->actingAs($tenantA)->delete("{$baseUrlA}/products/images/{$imageTenantB->id}", [
+        'image' => $imageTenantB->id,
+    ])->assertNotFound();
+
+    expect(\App\Models\ProductImage::find($imageTenantB->id))->not->toBeNull();
+    Storage::disk('public')->assertExists('path/img_b.jpg');
+});
+
+test('image upload on product without images starts order at zero and edit view places delete forms outside main form', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'slug' => 'loja-galeria-ordem',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    app()->instance(User::class, $user);
+    $baseUrl = 'http://' . $user->slug . '.' . env('APP_DOMAIN', 'saas.test');
+
+    $product = Products::create([
+        'nome' => 'Produto Sem Imagens',
+        'slug' => 'produto-sem-imagens',
+        'description' => 'Produto que teve imagens removidas',
+        'preco_base' => 75.00,
+        'status' => true,
+        'path' => null,
+        'user_id' => $user->id,
+    ]);
+
+    // 1. Instant upload via uploadImage when product has 0 images should start at ordem = 0
+    $uploadResponse = $this->actingAs($user)->postJson("{$baseUrl}/products/{$product->id}/update-image", [
+        'image' => UploadedFile::fake()->image('nova-capa.jpg', 300, 300),
+    ]);
+
+    $uploadResponse->assertOk()->assertJson(['ok' => true]);
+    $firstImage = $product->productImages()->first();
+    expect($firstImage)->not->toBeNull();
+    expect($firstImage->ordem)->toBe(0);
+    expect($product->fresh()->getRawOriginal('foto_url'))->toBe($firstImage->path);
+
+    // Remove the image and test that form update with images also starts at ordem = 0
+    $this->actingAs($user)->delete("{$baseUrl}/products/images/{$firstImage->id}", [
+        'image' => $firstImage->id,
+    ])->assertRedirect();
+
+    expect($product->productImages()->count())->toBe(0);
+
+    $this->actingAs($user)->patch("{$baseUrl}/products/{$product->id}", [
+        'product' => $product->id,
+        'name' => $product->nome,
+        'value' => '75,00',
+        'description' => $product->description,
+        'images' => [UploadedFile::fake()->image('capa-via-update.jpg', 300, 300)],
+    ])->assertRedirect();
+
+    $imageViaUpdate = $product->productImages()->first();
+    expect($imageViaUpdate)->not->toBeNull();
+    expect($imageViaUpdate->ordem)->toBe(0);
+    expect($product->fresh()->getRawOriginal('foto_url'))->toBe($imageViaUpdate->path);
+
+    // 2. Edit view appends dynamic delete forms outside #product-form
+    $editResponse = $this->actingAs($user)->get("{$baseUrl}/products/{$product->id}/edit");
+    $editResponse->assertOk();
+    $editResponse->assertDontSee("document.getElementById('product-form').appendChild(form)", false);
+    $editResponse->assertSee('delete-image-forms-container', false);
+});
+
+test('ProcessImageBase64 job synchronizes cover image with product_images table', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create([
+        'tipo_cliente' => 'erp',
+        'slug' => 'loja-erp-image-sync',
+    ]);
+
+    app()->instance(User::class, $user);
+
+    $product = Products::create([
+        'nome' => 'Produto ERP Base64',
+        'sku' => 'SKU-B64-01',
+        'description' => 'Produto vindo do ERP',
+        'preco_base' => 120.00,
+        'status' => true,
+        'user_id' => $user->id,
+    ]);
+
+    // 1x1 transparent PNG in base64
+    $base64Png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+    $job = new \App\Jobs\ProcessImageBase64($product->id, $user->id, $base64Png);
+    $job->handle();
+
+    $product->refresh();
+    $coverPath = $product->getRawOriginal('foto_url');
+    expect($coverPath)->not->toBeNull();
+    Storage::disk('public')->assertExists($coverPath);
+
+    $galleryImage = $product->productImages()->where('ordem', 0)->first();
+    expect($galleryImage)->not->toBeNull();
+    expect($galleryImage->path)->toBe($coverPath);
+});
+
+
 
 
 

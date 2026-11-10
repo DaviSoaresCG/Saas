@@ -143,15 +143,17 @@
             </div>
         </form>
 
-        @if ($product->productImages->isNotEmpty())
-            @foreach ($product->productImages as $img)
-                <form id="delete-image-form-{{ $img->id }}" action="{{ route('products.image.destroy', ['slug' => auth()->user()->slug, 'image' => $img->id]) }}" method="POST" class="hidden">
-                    @csrf
-                    @method('DELETE')
-                    <input type="hidden" name="image" value="{{ $img->id }}">
-                </form>
-            @endforeach
-        @endif
+        <div id="delete-image-forms-container">
+            @if ($product->productImages->isNotEmpty())
+                @foreach ($product->productImages as $img)
+                    <form id="delete-image-form-{{ $img->id }}" action="{{ route('products.image.destroy', ['slug' => auth()->user()->slug, 'image' => $img->id]) }}" method="POST" class="hidden">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" name="image" value="{{ $img->id }}">
+                    </form>
+                @endforeach
+            @endif
+        </div>
     </div>
 
     {{-- SortableJS (CDN leve, ~45 KB) --}}
@@ -303,7 +305,7 @@
                         `;
                         tempDiv.replaceWith(realDiv);
 
-                        // 4. Cria o form de exclusão correspondente dinamicamente
+                        // 4. Cria o form de exclusão correspondente dinamicamente (fora do #product-form)
                         const form = document.createElement('form');
                         form.id = `delete-image-form-${data.id}`;
                         form.action = @js(route('products.image.destroy', ['slug' => auth()->user()->slug, 'image' => 'PLACEHOLDER'])).replace('PLACEHOLDER', data.id);
@@ -314,7 +316,7 @@
                             @method('DELETE')
                             <input type="hidden" name="image" value="${data.id}">
                         `;
-                        document.getElementById('product-form').appendChild(form);
+                        document.getElementById('delete-image-forms-container').appendChild(form);
 
                         // 5. Atualiza o badge de capa e a ordem do backend
                         updateCapaBadge();
