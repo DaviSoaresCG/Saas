@@ -14,9 +14,9 @@
 
             <div>
                 <label for="description" class="block text-sm font-bold text-[var(--text-base)] mb-2">Descrição</label>
-                <input type="text" name="description" id="description" value="{{ old('description') }}" required
-                    class="w-full rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/50 px-4 py-3.5 text-sm text-[var(--text-base)] placeholder-[var(--text-muted)]/70 outline-none transition-all focus:border-[var(--color-primary)]/50 focus:ring-4 focus:ring-[var(--color-primary)]/10 shadow-inner"
-                    placeholder="Breve descrição">
+                <textarea name="description" id="description" rows="3" maxlength="255" required
+                    class="w-full rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/50 px-4 py-3.5 text-sm text-[var(--text-base)] placeholder-[var(--text-muted)]/70 outline-none transition-all focus:border-[var(--color-primary)]/50 focus:ring-4 focus:ring-[var(--color-primary)]/10 shadow-inner resize-y"
+                    placeholder="Breve descrição">{{ old('description') }}</textarea>
                 @error('description') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
             </div>
 
@@ -45,14 +45,14 @@
                     <span class="text-sm text-[var(--text-muted)]">Clique ou arraste as imagens aqui</span>
                     <span class="text-xs text-[var(--text-muted)] opacity-60">JPG, PNG, WebP — máx. 10 MB por imagem</span>
                     <input type="file" id="images-input" multiple accept="image/png,image/jpeg,image/webp"
-                        class="hidden" onchange="addFiles(this.files)" require>
+                        class="hidden" onchange="addFiles(this.files); this.value = '';">
                 </label>
 
                 {{-- Grid de previews (sortável) --}}
                 <div id="preview-grid" class="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-3" style="display:none"></div>
 
                 {{-- Input hidden real para o form --}}
-                <input type="file" id="images-real" name="images[]" multiple accept="image/png,image/jpeg,image/webp" class="hidden" required>
+                <input type="file" id="images-real" name="images[]" multiple accept="image/png,image/jpeg,image/webp" class="hidden">
 
                 @error('images') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
                 @error('images.*') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
@@ -101,6 +101,7 @@
     <script>
     // ── Gerenciador de arquivos (mantém a ordem correta) ────────────────
     let fileList = []; // Array de File objects na ordem atual
+    let previewObjectUrls = [];
 
     function addFiles(newFiles) {
         Array.from(newFiles).forEach(f => fileList.push(f));
@@ -114,12 +115,16 @@
     }
 
     function renderPreviews() {
+        previewObjectUrls.forEach(url => URL.revokeObjectURL(url));
+        previewObjectUrls = [];
+
         const grid = document.getElementById('preview-grid');
         grid.innerHTML = '';
         grid.style.display = fileList.length ? 'grid' : 'none';
 
         fileList.forEach((file, i) => {
             const url = URL.createObjectURL(file);
+            previewObjectUrls.push(url);
             const div = document.createElement('div');
             div.className = 'sortable-item relative group rounded-xl overflow-hidden aspect-square border-2 border-[var(--color-primary)]/20 bg-[var(--bg-page)]/30 cursor-grab active:cursor-grabbing';
             div.dataset.index = i;

@@ -15,7 +15,7 @@
             
             <div>
                 <label for="description" class="block text-sm font-bold text-[var(--text-base)] mb-2">Descrição</label>
-                <textarea name="description" id="description" rows="3" required
+                <textarea name="description" id="description" rows="3" maxlength="255" required
                     class="w-full rounded-2xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/50 px-4 py-3.5 text-sm text-[var(--text-base)] outline-none transition-all focus:border-[var(--color-primary)]/50 focus:ring-4 focus:ring-[var(--color-primary)]/10 shadow-inner resize-y">{{ old('description', $product->description) }}</textarea>
                 @error('description') <p class="mt-2 text-sm font-medium text-red-600 ml-1">{{ $message }}</p> @enderror
             </div>

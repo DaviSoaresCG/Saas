@@ -64,12 +64,47 @@ class Products extends Model
     }
 
     /**
+     * Parse a monetary value (e.g. "1.234,56" or "1234.56") into a float, or null if invalid.
+     */
+    public static function parseMonetaryValue(mixed $value): ?float
+    {
+        if (is_int($value) || is_float($value)) {
+            return (float) $value;
+        }
+
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return null;
+        }
+
+        // Formato BR com vírgula decimal (ex: "1.234,56" ou "1234,56")
+        if (str_contains($trimmed, ',')) {
+            if (!preg_match('/^(?:\d{1,3}(?:\.\d{3})+|\d+),\d{1,2}$/', $trimmed)) {
+                return null;
+            }
+            $normalized = str_replace(['.', ','], ['', '.'], $trimmed);
+            return (float) $normalized;
+        }
+
+        // Formato numérico padrão (ex: "1234.56" ou "1234")
+        if (preg_match('/^\d+(?:\.\d{1,2})?$/', $trimmed)) {
+            return (float) $trimmed;
+        }
+
+        return null;
+    }
+
+    /**
      * Format preco_base as money.
      */
     protected function precoBase(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => is_numeric($value) ? $value : str_replace(['.', ','], ['', '.'], $value),
+            set: fn ($value) => self::parseMonetaryValue($value) ?? (is_numeric($value) ? $value : str_replace(['.', ','], ['', '.'], $value)),
             get: fn ($value) => number_format($value, 2, ',', '.')
         );
     }

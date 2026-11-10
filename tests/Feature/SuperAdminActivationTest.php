@@ -94,7 +94,7 @@ test('super admin pages display activation and deactivation buttons', function (
     $this->actingAs($superAdmin)
         ->get(route('superadmin.index'))
         ->assertOk()
-        ->assertSee('Ativar Indeterminado');
+        ->assertSee('Ativar cliente por tempo indeterminado');
 
     $this->actingAs($superAdmin)
         ->get(route('superadmin.users.show', $inactiveClient))

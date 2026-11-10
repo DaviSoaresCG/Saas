@@ -318,7 +318,7 @@
                                                             class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-300 bg-emerald-500/10 hover:bg-emerald-600 hover:text-white border border-emerald-500/30 transition-all cursor-pointer"
                                                             title="Ativar cliente por tempo indeterminado">
                                                         <i data-lucide="infinity" class="h-3.5 w-3.5"></i>
-                                                        Ativar Indeterminado
+                                                        Ativar
                                                     </button>
                                                 </form>
                                             @endif

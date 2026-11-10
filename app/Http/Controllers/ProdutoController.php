@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Atributo;
 use App\Models\Grupo;
 use App\Models\ProductClick;
 use App\Models\ProductImage;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProdutoController extends Controller
 {
@@ -70,103 +71,106 @@ class ProdutoController extends Controller
 
     public function create($slug)
     {
-        $atributos = Atributo::all();
         $grupos = Grupo::all();
 
-        return view('admin.create_product', compact('atributos', 'grupos'));
+        return view('admin.create_product', compact('grupos'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name'        => 'required|min:3|max:255',
-            'value'       => 'required',
-            'description' => 'required|min:3',
-            'images'      => 'required|array|min:1',
-            'images.*'    => 'image|mimes:jpeg,png,jpg,webp|max:10240',
-        ], [
-            'images.required'  => 'Envie ao menos uma imagem.',
-            'images.*.image'   => 'Arquivo não suportado.',
-            'images.*.mimes'   => 'Tipo de imagem não suportado.',
-            'images.*.max'     => 'Tamanho da imagem excedido (10 MB).',
-        ]);
+        $request->validate(
+            $this->productValidationRules(requireImages: true),
+            $this->productValidationMessages()
+        );
 
-        // Salva o produto; path = primeira imagem (capa)
-        $product = Products::create([
-            'nome'        => $request->name,
-            'preco_base'       => $request->value,
-            'description' => $request->description,
-            'path'        => null,
-            'user_id'     => app(User::class)->id,
-        ]);
+        $parsedPrice = Products::parseMonetaryValue($request->value);
+        $storedPaths = [];
 
-        $files = $request->file('images');
-        foreach ($files as $ordem => $file) {
-            $path = $file->store('path', 'public');
-            ProductImage::create([
-                'product_id' => $product->id,
-                'path'       => $path,
-                'ordem'      => $ordem,
-            ]);
+        try {
+            DB::transaction(function () use ($request, $parsedPrice, &$storedPaths) {
+                // Salva o produto; path = primeira imagem (capa)
+                $product = Products::create([
+                    'nome'        => $request->name,
+                    'slug'        => Str::slug($request->name),
+                    'preco_base'  => $parsedPrice,
+                    'description' => $request->description,
+                    'status'      => true,
+                    'path'        => null,
+                    'user_id'     => app(User::class)->id,
+                ]);
+
+                $files = $request->file('images');
+                foreach ($files as $ordem => $file) {
+                    $path = $file->store('path', 'public');
+                    $storedPaths[] = $path;
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'path'       => $path,
+                        'ordem'      => $ordem,
+                    ]);
+                }
+
+                // Primeira imagem = capa
+                $this->syncCover($product);
+
+                // Associa grupos
+                $product->grupos()->sync($request->input('grupos', []));
+            });
+        } catch (\Throwable $e) {
+            foreach ($storedPaths as $path) {
+                Storage::disk('public')->delete($path);
+            }
+            throw $e;
         }
-
-        // Primeira imagem = capa
-        $this->syncCover($product);
-
-        // Associa atributos e grupos
-        $product->atributos()->sync($request->input('atributos', []));
-        $product->grupos()->sync($request->input('grupos', []));
 
         return redirect()->route('dashboard');
     }
 
     public function edit($slug, $id)
     {
-        $product = Products::with(['atributos', 'productImages', 'grupos'])->findOrFail($id);
-        $atributos = Atributo::all();
-        $atributosVinculados = $product->atributos->pluck('id')->toArray();
+        $product = Products::with(['productImages', 'grupos'])->findOrFail($id);
         $grupos = Grupo::all();
         $gruposVinculados = $product->grupos->pluck('id')->toArray();
 
-        return view('admin.edit_product', compact('product', 'atributos', 'atributosVinculados', 'grupos', 'gruposVinculados'));
+        return view('admin.edit_product', compact('product', 'grupos', 'gruposVinculados'));
     }
 
     public function update($slug, Request $request)
     {
-        $request->validate([
-            'name'        => 'required|min:3|max:255',
-            'value'       => 'required',
-            'description' => 'required|min:3',
-            'images'      => 'nullable|array',
-            'images.*'    => 'image|mimes:jpeg,png,jpg,webp|max:10240',
-        ]);
+        $request->validate(
+            $this->productValidationRules(requireImages: false),
+            $this->productValidationMessages()
+        );
 
         $product = Products::findOrFail($request->product);
+        $parsedPrice = Products::parseMonetaryValue($request->value);
 
-        $product->update([
-            'nome'        => $request->name,
-            'preco_base'       => $request->value,
-            'description' => $request->description,
-        ]);
+        DB::transaction(function () use ($request, $product, $parsedPrice) {
+            $product->update([
+                'nome'        => $request->name,
+                'slug'        => $product->slug ?: Str::slug($request->name),
+                'preco_base'  => $parsedPrice,
+                'description' => $request->description,
+            ]);
 
-        // Adiciona novas imagens (ordem continua de onde parou)
-        if ($request->hasFile('images')) {
-            $proximaOrdem = $product->productImages()->max('ordem') + 1;
+            // Adiciona novas imagens (ordem continua de onde parou)
+            if ($request->hasFile('images')) {
+                $proximaOrdem = $product->productImages()->max('ordem') + 1;
 
-            foreach ($request->file('images') as $i => $file) {
-                $path = $file->store('path', 'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'path'       => $path,
-                    'ordem'      => $proximaOrdem + $i,
-                ]);
+                foreach ($request->file('images') as $i => $file) {
+                    $path = $file->store('path', 'public');
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'path'       => $path,
+                        'ordem'      => $proximaOrdem + $i,
+                    ]);
+                }
+
+                $this->syncCover($product);
             }
 
-            $this->syncCover($product);
-        }
-
-        $product->atributos()->sync($request->input('atributos', []));
-        $product->grupos()->sync($request->input('grupos', []));
+            $product->grupos()->sync($request->input('grupos', []));
+        });
 
         return redirect()->route('admin.products', ['slug' => auth()->user()->slug])
             ->with('success', 'Produto atualizado com sucesso!');
@@ -252,5 +256,36 @@ class ProdutoController extends Controller
     {
         $first = $product->productImages()->orderBy('ordem')->first();
         $product->update(['path' => $first?->path]);
+    }
+
+    /** Regras de validação compartilhadas entre criação e atualização de produto */
+    private function productValidationRules(bool $requireImages): array
+    {
+        return [
+            'name'        => 'required|string|min:3|max:255',
+            'value'       => ['required', function (string $attribute, mixed $value, \Closure $fail) {
+                $parsed = Products::parseMonetaryValue($value);
+                if ($parsed === null || $parsed <= 0) {
+                    $fail('Informe um valor válido maior que zero.');
+                } elseif ($parsed > 99999999.99) {
+                    $fail('O valor informado excede o limite máximo permitido.');
+                }
+            }],
+            'description' => 'required|string|min:3|max:255',
+            'images'      => $requireImages ? 'required|array|min:1' : 'nullable|array',
+            'images.*'    => 'image|mimes:jpeg,png,jpg,webp|max:10240',
+        ];
+    }
+
+    /** Mensagens customizadas de validação de produto */
+    private function productValidationMessages(): array
+    {
+        return [
+            'description.max'  => 'A descrição deve ter no máximo 255 caracteres.',
+            'images.required'  => 'Envie ao menos uma imagem.',
+            'images.*.image'   => 'Arquivo não suportado.',
+            'images.*.mimes'   => 'Tipo de imagem não suportado.',
+            'images.*.max'     => 'Tamanho da imagem excedido (10 MB).',
+        ];
     }
 }
