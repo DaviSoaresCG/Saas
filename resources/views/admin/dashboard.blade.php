@@ -316,7 +316,9 @@
                     </div>
 
                     <p class="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
-                        @if ($subscriptionEnd)
+                        @if ($authUser && $authUser->isUnlimited())
+                            Sua loja está ativa por tempo indeterminado, sem data de expiração.
+                        @elseif ($subscriptionEnd)
                             Sua loja permanecerá ativa até esta data. Renovações antecipadas são somadas ao tempo restante sem qualquer perda de dias.
                         @else
                             Ative seu plano para liberar seu catálogo e subdomínio próprio.

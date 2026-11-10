@@ -134,6 +134,7 @@
                             class="w-full px-3 py-2 text-xs rounded-xl bg-slate-950/80 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         <option value="">Todos os status</option>
                         <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Ativa</option>
+                        <option value="unlimited" {{ $status === 'unlimited' ? 'selected' : '' }}>Ativa (Indeterminado)</option>
                         <option value="inactive" {{ $status === 'inactive' ? 'selected' : '' }}>Inativa</option>
                         <option value="suspended" {{ $status === 'suspended' ? 'selected' : '' }}>Suspensa</option>
                     </select>
@@ -254,7 +255,11 @@
                                                 @endif
                                             </div>
                                             <div>
-                                                @if($isAtiva)
+                                                @if($u->isUnlimited())
+                                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                                                        <i data-lucide="infinity" class="h-3 w-3 text-emerald-400"></i> Ativa (Indeterminado)
+                                                    </span>
+                                                @elseif($isAtiva)
                                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
                                                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Loja Ativa
                                                     </span>
@@ -303,6 +308,32 @@
                                                    title="Abrir Loja Pública em nova aba">
                                                     <i data-lucide="external-link" class="h-4 w-4"></i>
                                                 </a>
+                                            @endif
+
+                                            @if(!$u->isUnlimited())
+                                                <form action="{{ route('superadmin.users.activate-unlimited', $u) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"
+                                                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-300 bg-emerald-500/10 hover:bg-emerald-600 hover:text-white border border-emerald-500/30 transition-all cursor-pointer"
+                                                            title="Ativar cliente por tempo indeterminado">
+                                                        <i data-lucide="infinity" class="h-3.5 w-3.5"></i>
+                                                        Ativar Indeterminado
+                                                    </button>
+                                                </form>
+                                            @endif
+
+                                            @if($isAtiva && !$isSuperAdm)
+                                                <form action="{{ route('superadmin.users.deactivate', $u) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"
+                                                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-rose-300 bg-rose-500/10 hover:bg-rose-600 hover:text-white border border-rose-500/30 transition-all cursor-pointer"
+                                                            title="Desativar cliente">
+                                                        <i data-lucide="power-off" class="h-3.5 w-3.5"></i>
+                                                        Desativar
+                                                    </button>
+                                                </form>
                                             @endif
 
                                             <a href="{{ route('superadmin.users.show', $u) }}"

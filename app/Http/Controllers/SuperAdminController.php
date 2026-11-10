@@ -141,6 +141,41 @@ class SuperAdminController extends Controller
     }
 
     /**
+     * Ativar a loja de um usuário por tempo indeterminado.
+     */
+    public function activateUnlimited(User $user): RedirectResponse
+    {
+        $user->status = 'unlimited';
+        $user->plano_expira_em = null;
+
+        if (empty($user->slug)) {
+            $user->slug = User::generateUniqueSlug($user->nome_loja ?: $user->name, $user->id);
+        }
+
+        $user->save();
+
+        return redirect()->back()
+            ->with('success', "O cliente \"{$user->name}\" foi ativado por tempo indeterminado com sucesso!");
+    }
+
+    /**
+     * Desativar a loja de um usuário.
+     */
+    public function deactivateUser(User $user): RedirectResponse
+    {
+        if ($user->isSuperAdmin()) {
+            return redirect()->back()->with('error', 'Ação proibida: você não pode desativar a conta do Super Administrador!');
+        }
+
+        $user->status = 'inactive';
+        $user->plano_expira_em = null;
+        $user->save();
+
+        return redirect()->back()
+            ->with('success', "O cliente \"{$user->name}\" foi desativado com sucesso!");
+    }
+
+    /**
      * Excluir TODOS os Produtos de um certo usuário (incluindo imagens do storage).
      */
     public function deleteProducts(User $user): RedirectResponse

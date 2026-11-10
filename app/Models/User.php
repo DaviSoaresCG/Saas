@@ -75,13 +75,22 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->tipo_cliente === 'erp';
     }
 
+    public function isUnlimited(): bool
+    {
+        return $this->status === 'unlimited';
+    }
+
     /**
      * Verifies if the store is active based on its client type and billing.
      */
     public function isLojaAtiva(): bool
     {
-        if ($this->status === 'suspended') {
+        if (in_array($this->status, ['suspended', 'inactive'], true)) {
             return false;
+        }
+
+        if ($this->status === 'unlimited') {
+            return true;
         }
 
         // Validação para clientes ERP

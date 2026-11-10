@@ -146,7 +146,9 @@ class AdminController extends Controller
     {
         $user = Auth::user();
 
-        $subscriptionEnd = $user->plano_expira_em ? $user->plano_expira_em->format('d/m/Y H:i') : null;
+        $subscriptionEnd = $user->isUnlimited()
+            ? 'Tempo Indeterminado'
+            : ($user->plano_expira_em ? $user->plano_expira_em->format('d/m/Y H:i') : null);
         $subscriptionStatus = $user->isLojaAtiva() ? 'active' : 'inactive';
 
         $totalProducts = Products::count();

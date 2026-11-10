@@ -61,7 +61,11 @@
                                     👑 Super Admin
                                 </span>
                             @endif
-                            @if($user->isLojaAtiva())
+                            @if($user->isUnlimited())
+                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                                    <i data-lucide="infinity" class="h-3.5 w-3.5 text-emerald-400"></i> Loja Ativa (Indeterminado)
+                                </span>
+                            @elseif($user->isLojaAtiva())
                                 <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
                                     <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Loja Ativa
                                 </span>
@@ -105,7 +109,11 @@
                                     Doc: {{ $user->documento }}
                                 </span>
                             @endif
-                            @if($user->plano_expira_em)
+                            @if($user->isUnlimited())
+                                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-semibold">
+                                    Validade: Tempo Indeterminado
+                                </span>
+                            @elseif($user->plano_expira_em)
                                 <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
                                     Validade: {{ $user->plano_expira_em->format('d/m/Y H:i') }}
                                 </span>
@@ -115,16 +123,40 @@
                     </div>
                 </div>
 
-                <!-- Right: External store link -->
-                @if($user->slug)
-                    <div class="flex items-center gap-2 shrink-0">
+                <!-- Right: External store link & Activation Controls -->
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                    @if(!$user->isUnlimited())
+                        <form action="{{ route('superadmin.users.activate-unlimited', $user) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit"
+                                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-600/25 transition-all cursor-pointer">
+                                <i data-lucide="infinity" class="h-4 w-4"></i>
+                                Ativar por Tempo Indeterminado
+                            </button>
+                        </form>
+                    @endif
+
+                    @if($user->isLojaAtiva() && !$user->isSuperAdmin())
+                        <form action="{{ route('superadmin.users.deactivate', $user) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit"
+                                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-rose-200 bg-rose-950/60 hover:bg-rose-600 hover:text-white border border-rose-700/60 shadow-md transition-all cursor-pointer">
+                                <i data-lucide="power-off" class="h-4 w-4"></i>
+                                Desativar Cliente
+                            </button>
+                        </form>
+                    @endif
+
+                    @if($user->slug)
                         <a href="http://{{ $user->slug }}.{{ env('APP_DOMAIN', 'lvh.me') }}" target="_blank"
                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 shadow-md transition-all">
                             <i data-lucide="external-link" class="h-4 w-4 text-blue-400"></i>
                             Ver Loja no Ar
                         </a>
-                    </div>
-                @endif
+                    @endif
+                </div>
             </div>
         </div>
 

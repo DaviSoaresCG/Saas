@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/', [SuperAdminController::class, 'index'])->name('index');
     Route::get('/users/{user}', [SuperAdminController::class, 'showUser'])->name('users.show');
+    Route::patch('/users/{user}/activate-unlimited', [SuperAdminController::class, 'activateUnlimited'])->name('users.activate-unlimited');
+    Route::patch('/users/{user}/deactivate', [SuperAdminController::class, 'deactivateUser'])->name('users.deactivate');
     Route::delete('/users/{user}/products', [SuperAdminController::class, 'deleteProducts'])->name('users.delete-products');
     Route::delete('/users/{user}/pedidos', [SuperAdminController::class, 'deletePedidos'])->name('users.delete-pedidos');
     Route::delete('/users/{user}/grupos', [SuperAdminController::class, 'deleteGrupos'])->name('users.delete-grupos');

@@ -73,8 +73,6 @@
                         class="inline-flex items-center gap-2.5 rounded-2xl px-4 py-2.5 text-xs font-bold transition-all shrink-0 border {{ $isActive ? 'bg-[var(--color-primary)] text-[var(--text-on-primary)] border-[var(--color-primary)] shadow-md shadow-[var(--color-primary)]/25 scale-105' : 'bg-[var(--bg-card)] text-[var(--text-base)] border-[var(--color-primary)]/20 hover:border-[var(--color-primary)]/40 hover:bg-[var(--color-primary)]/5' }}">
                         @if ($grupo->foto_path)
                             <img src="{{ $grupo->foto_url }}" class="h-5 w-5 rounded-lg object-cover" alt="{{ $grupo->nome }}">
-                        @else
-                            <i data-lucide="layers" class="h-4 w-4 opacity-70"></i>
                         @endif
                         <span>{{ $grupo->nome }}</span>
                     </a>
