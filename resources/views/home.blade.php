@@ -350,8 +350,176 @@
             </div>
         </section>
 
-        {{-- Métricas, Funcionalidades e Comparativo Container (Ticket 03) --}}
-        <div id="features-slot"></div>
+        {{-- Barra de Métricas (Ticket 03) --}}
+        <section aria-label="Benefícios do ZapCatálogo" class="border-y border-[#37322f]/10 bg-white/45">
+            <div class="mx-auto grid max-w-[1160px] grid-cols-2 divide-x divide-y divide-[#37322f]/10 px-5 md:grid-cols-4 md:divide-y-0 md:px-8">
+                <div class="flex flex-col items-center justify-center py-6 text-center md:py-8">
+                    <span class="font-serif text-3xl md:text-4xl text-[#37322f]">0%</span>
+                    <span class="mt-1 text-xs text-[#716a64]">comissão por venda</span>
+                </div>
+                <div class="flex flex-col items-center justify-center py-6 text-center md:py-8">
+                    <span class="font-serif text-3xl md:text-4xl text-[#37322f]">1 link</span>
+                    <span class="mt-1 text-xs text-[#716a64]">para sua loja</span>
+                </div>
+                <div class="flex flex-col items-center justify-center py-6 text-center md:py-8">
+                    <span class="font-serif text-3xl md:text-4xl text-[#37322f]">24/7</span>
+                    <span class="mt-1 text-xs text-[#716a64]">catálogo no ar</span>
+                </div>
+                <div class="flex flex-col items-center justify-center py-6 text-center md:py-8">
+                    <span class="font-serif text-3xl md:text-4xl text-[#37322f]">100%</span>
+                    <span class="mt-1 text-xs text-[#716a64]">do lucro é seu</span>
+                </div>
+            </div>
+        </section>
+
+        {{-- Grade de Funcionalidades (Ticket 03) --}}
+        <section id="recursos" class="px-5 py-20 md:px-8 md:py-28">
+            <div class="mx-auto max-w-[1160px]">
+                <div class="mx-auto mb-12 max-w-[650px] text-center">
+                    <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#849451]">Tudo em um só lugar</span>
+                    <h2 class="mt-3 font-serif text-4xl leading-tight tracking-[-.025em] text-[#37322f] md:text-5xl">Sua loja online. Do seu jeito.</h2>
+                    <p class="mt-4 text-sm leading-6 text-[#716a64] md:text-base">Uma experiência de compra simples para o cliente e ferramentas práticas para você cuidar de cada detalhe.</p>
+                </div>
+
+                <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    {{-- Recurso 1: Subdomínio --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="globe" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">Seu endereço profissional</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Um subdomínio exclusivo para divulgar sua loja na bio, nos stories e onde seus clientes já estão.</p>
+                    </article>
+
+                    {{-- Recurso 2: WhatsApp --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="message-circle" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">Pedidos prontos no WhatsApp</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Carrinho, variações e total calculado. O cliente envia o pedido organizado direto para você.</p>
+                    </article>
+
+                    {{-- Recurso 3: Zero Comissão --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="tag" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">Zero comissão por venda</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Sem taxas sobre pedidos. Você paga uma assinatura fixa e fica com todo o lucro das vendas.</p>
+                    </article>
+
+                    {{-- Recurso 4: Branding --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="palette" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">A sua marca em cada detalhe</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Adicione sua logo e escolha as cores para criar uma vitrine com a identidade da sua loja.</p>
+                    </article>
+
+                    {{-- Recurso 5: Layout Mobile --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="layout-grid" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">Vitrine do seu jeito</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Escolha uma ou duas colunas no celular e deixe seus produtos brilharem como merecem.</p>
+                    </article>
+
+                    {{-- Recurso 6: Estatísticas --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="bar-chart-3" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">Dados para vender melhor</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Acompanhe produtos mais visitados, pedidos recebidos e o resumo da sua operação.</p>
+                    </article>
+
+                    {{-- Recurso 7: Promoções & Descontos --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="sparkles" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">Promoções com link próprio</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Crie campanhas com desconto automático ou mostre preços sob consulta para negociar.</p>
+                    </article>
+
+                    {{-- Recurso 8: Variações --}}
+                    <article class="group min-h-[205px] rounded-2xl border border-[#37322f]/10 bg-white/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-[#9bab70]/50 hover:bg-white hover:shadow-[0_14px_35px_rgba(55,50,47,.07)]">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-[#eef0e7] text-[#647449] transition group-hover:bg-[#e3e9d3]">
+                            <i data-lucide="package" class="size-[18px]"></i>
+                        </span>
+                        <h3 class="mt-5 text-sm font-semibold text-[#37322f]">Produtos e variações</h3>
+                        <p class="mt-2 text-[13px] leading-5 text-[#716a64]">Organize categorias, fotos, tamanhos, cores e atributos em um catálogo fácil de explorar.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        {{-- Comparativo: Jeito Antigo vs ZapCatálogo (Ticket 03) --}}
+        <section class="border-y border-[#37322f]/10 bg-[#eeece8] px-5 py-20 md:px-8 md:py-24">
+            <div class="mx-auto max-w-[1000px]">
+                <div class="mx-auto mb-12 max-w-[650px] text-center">
+                    <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#849451]">Uma forma mais leve de vender</span>
+                    <h2 class="mt-3 font-serif text-4xl leading-tight tracking-[-.025em] text-[#37322f] md:text-5xl">Menos conversa perdida. Mais pedidos fechados.</h2>
+                    <p class="mt-4 text-sm leading-6 text-[#716a64] md:text-base">Deixe o PDF e a digitação manual para trás. Sua vitrine trabalha junto com você.</p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    {{-- Jeito Antigo --}}
+                    <article class="rounded-2xl border border-[#37322f]/10 bg-[#f8f6f4] p-6 md:p-8">
+                        <span class="text-xs font-semibold uppercase tracking-[.13em] text-[#918780]">Do jeito antigo</span>
+                        <h3 class="mt-3 font-serif text-2xl text-[#5d5752]">Tudo se perde no chat.</h3>
+                        <ul class="mt-6 flex flex-col gap-4">
+                            <li class="flex gap-3 text-sm text-[#77706a]">
+                                <span class="mt-0.5 font-bold text-[#b29786]">—</span>
+                                <span>PDF pesado que ninguém abre</span>
+                            </li>
+                            <li class="flex gap-3 text-sm text-[#77706a]">
+                                <span class="mt-0.5 font-bold text-[#b29786]">—</span>
+                                <span>Preço desatualizado em cada conversa</span>
+                            </li>
+                            <li class="flex gap-3 text-sm text-[#77706a]">
+                                <span class="mt-0.5 font-bold text-[#b29786]">—</span>
+                                <span>Fotos e informações digitadas uma a uma</span>
+                            </li>
+                            <li class="flex gap-3 text-sm text-[#77706a]">
+                                <span class="mt-0.5 font-bold text-[#b29786]">—</span>
+                                <span>Pedidos confusos e difíceis de somar</span>
+                            </li>
+                        </ul>
+                    </article>
+
+                    {{-- Com ZapCatálogo --}}
+                    <article class="relative overflow-hidden rounded-2xl border border-[#d8dfc9] bg-[#f7f8f2] p-6 md:p-8 shadow-sm">
+                        <div class="pointer-events-none absolute -right-8 -top-10 size-40 rounded-full bg-[#d7e4bc]/60 blur-3xl"></div>
+                        <div class="relative">
+                            <span class="text-xs font-semibold uppercase tracking-[.13em] text-[#7d914e]">Com ZapCatálogo</span>
+                            <h3 class="mt-3 font-serif text-2xl text-[#37322f]">A venda flui naturalmente.</h3>
+                            <ul class="mt-6 flex flex-col gap-4">
+                                <li class="flex gap-3 text-sm text-[#514b46]">
+                                    <i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-[#839b50]"></i>
+                                    <span>Um link leve para sua bio e redes sociais</span>
+                                </li>
+                                <li class="flex gap-3 text-sm text-[#514b46]">
+                                    <i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-[#839b50]"></i>
+                                    <span>Vitrine interativa com busca instantânea</span>
+                                </li>
+                                <li class="flex gap-3 text-sm text-[#514b46]">
+                                    <i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-[#839b50]"></i>
+                                    <span>Cliente escolhe produtos e variações</span>
+                                </li>
+                                <li class="flex gap-3 text-sm text-[#514b46]">
+                                    <i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-[#839b50]"></i>
+                                    <span>Pedido completo, somado e pronto no WhatsApp</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
 
         {{-- Como Funciona e Demonstração do Pedido Container (Ticket 04) --}}
         <div id="how-it-works-slot"></div>

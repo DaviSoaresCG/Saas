@@ -4,12 +4,12 @@
 
 **Blocked by:** 02 — Implementar header com autenticação, hero editorial e mockup de vitrine com WhatsApp
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A barra de métricas exibe 4 indicadores comerciais divididos harmoniosamente com números em destaque tipográfico e rótulos explicativos.
-- [ ] A seção de recursos renderiza a grade responsiva (1 a 4 colunas) com os 8 diferenciais do sistema, utilizando ícones Lucide consistentes e cards estilizados no padrão Brillance.
-- [ ] Os cards de recursos possuem efeito sutil de hover com elevação e realce de borda.
-- [ ] O bloco comparativo visual apresenta duas colunas contrastantes: o modelo manual/antigo em tom neutro e o modelo ZapCatálogo com acabamento premium e ícones de checagem verde.
-- [ ] Todo o conteúdo textual reflete fielmente as capacidades da plataforma ZapCatálogo conforme a especificação do produto.
-- [ ] Todas as seções mantêm legibilidade, espaçamentos consistentes e responsividade em qualquer largura de tela.
+- [x] A barra de métricas exibe 4 indicadores comerciais divididos harmoniosamente com números em destaque tipográfico e rótulos explicativos.
+- [x] A seção de recursos renderiza a grade responsiva (1 a 4 colunas) com os 8 diferenciais do sistema, utilizando ícones Lucide consistentes e cards estilizados no padrão Brillance.
+- [x] Os cards de recursos possuem efeito sutil de hover com elevação e realce de borda.
+- [x] O bloco comparativo visual apresenta duas colunas contrastantes: o modelo manual/antigo em tom neutro e o modelo ZapCatálogo com acabamento premium e ícones de checagem verde.
+- [x] Todo o conteúdo textual reflete fielmente as capacidades da plataforma ZapCatálogo conforme a especificação do produto.
+- [x] Todas as seções mantêm legibilidade, espaçamentos consistentes e responsividade em qualquer largura de tela.
 
