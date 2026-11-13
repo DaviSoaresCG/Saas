@@ -4,12 +4,12 @@
 
 **Blocked by:** 02 — Implementar header com autenticação, hero editorial e mockup de vitrine com WhatsApp
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A seção de preços exibe claramente os planos Mensal (R$ 29,90) e Anual (R$ 299,00), destacando a economia do plano anual.
-- [ ] Cada cartão de plano exibe a listagem completa de benefícios (produtos ilimitados, WhatsApp checkout, subdomínio próprio, métricas e 0% comissão).
-- [ ] Quando um usuário autenticado clica para assinar, ele é redirecionado para `route('pagamento.pending')` com o parâmetro correspondente ao plano escolhido (`monthly` ou `yearly`).
-- [ ] Quando um visitante não autenticado clica para assinar, ele é conduzido para a rota de registro (`route('register')`).
-- [ ] O campo de cupom de desconto permite ao usuário submeter um código para validação contra o endpoint oficial `route('counpons.validate')`, exibindo adequadamente os retornos de sucesso ou erro vindos da sessão (`session('success')` ou `session('error')`).
-- [ ] Informações sobre formas de pagamento aceitas (Pix instantâneo e Cartão de Crédito) são visíveis e transmitem segurança.
+- [x] A seção de preços exibe claramente os planos Mensal (R$ 29,90) e Anual (R$ 299,00), destacando a economia do plano anual.
+- [x] Cada cartão de plano exibe a listagem completa de benefícios (produtos ilimitados, WhatsApp checkout, subdomínio próprio, métricas e 0% comissão).
+- [x] Quando um usuário autenticado clica para assinar, ele é redirecionado para `route('pagamento.pending')` com o parâmetro correspondente ao plano escolhido (`monthly` ou `yearly`).
+- [x] Quando um visitante não autenticado clica para assinar, ele é conduzido para a rota de registro (`route('register')`).
+- [x] O campo de cupom de desconto permite ao usuário submeter um código para validação contra o endpoint oficial `route('counpons.validate')`, exibindo adequadamente os retornos de sucesso ou erro vindos da sessão (`session('success')` ou `session('error')`).
+- [x] Informações sobre formas de pagamento aceitas (Pix instantâneo e Cartão de Crédito) são visíveis e transmitem segurança.
 

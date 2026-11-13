@@ -169,6 +169,53 @@ test('order demo section renders whatsapp interactive simulation with order #104
     $response->assertSee('copy-order-btn', false);
 });
 
+test('pricing section renders monthly and yearly plans with transparent pricing and benefits', function () {
+    $response = $this->get('/');
+
+    $response->assertStatus(200);
+    $response->assertSee('id="precos"', false);
+    $response->assertSee('Você vende. O lucro é seu.', false);
+    $response->assertSee('29,90', false);
+    $response->assertSee('299', false);
+    $response->assertSee('MAIS POPULAR', false);
+    $response->assertSee('economize 17%', false);
+    $response->assertSee('Produtos ilimitados', false);
+    $response->assertSee('Pedidos pelo WhatsApp', false);
+    $response->assertSee('Subdomínio exclusivo', false);
+    $response->assertSee('Métricas de cliques', false);
+    $response->assertSee('0% de comissão', false);
+    $response->assertSee('Pix ou cartão de crédito', false);
+});
+
+test('pricing ctas direct visitors to register and authenticated users to pagamento pending', function () {
+    // Visitor check
+    $visitorResponse = $this->get('/');
+    $visitorResponse->assertStatus(200);
+    $visitorResponse->assertSee(route('register'), false);
+
+    // Authenticated user check
+    $user = User::factory()->create([
+        'status' => 'pending',
+        'slug' => 'loja-preco-teste',
+    ]);
+
+    $authResponse = $this->actingAs($user)->get('/');
+    $authResponse->assertStatus(200);
+    $authResponse->assertSee(route('pagamento.pending', ['plan' => 'monthly']), false);
+    $authResponse->assertSee(route('pagamento.pending', ['plan' => 'yearly']), false);
+});
+
+test('coupon form is rendered with discount verification support', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get('/');
+    $response->assertStatus(200);
+    $response->assertSee(route('counpons.validate'), false);
+    $response->assertSee('Tem um cupom de desconto?', false);
+    $response->assertSee('name="code"', false);
+});
+
+
 
 
 

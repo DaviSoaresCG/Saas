@@ -649,8 +649,146 @@
             </div>
         </section>
 
-        {{-- Tabela de Preços e Cupom Container (Ticket 05) --}}
-        <div id="pricing-slot"></div>
+        {{-- Tabela de Preços e Cupom (Ticket 05) --}}
+        <section id="precos" class="border-y border-[#37322f]/10 bg-white/55 px-5 py-20 md:px-8 md:py-28">
+            <div class="mx-auto max-w-[1000px]">
+                <div class="mx-auto mb-12 max-w-[650px] text-center">
+                    <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#849451]">Preço simples e transparente</span>
+                    <h2 class="mt-3 font-serif text-4xl leading-tight tracking-[-.025em] text-[#37322f] md:text-5xl">Você vende. O lucro é seu.</h2>
+                    <p class="mt-4 text-sm leading-6 text-[#716a64] md:text-base">Todos os recursos, sem comissão por pedido. Escolha a assinatura que faz sentido para a sua loja.</p>
+                </div>
+
+                {{-- Grid dos Planos --}}
+                <div class="mx-auto grid max-w-[780px] gap-4 md:grid-cols-2">
+                    {{-- Plano Mensal --}}
+                    <article class="flex flex-col rounded-2xl border border-[#37322f]/12 bg-[#f9f8f6] p-6 md:p-7 shadow-sm">
+                        <div class="text-sm font-semibold text-[#37322f]">Mensal</div>
+                        <p class="mt-1 text-xs text-[#716a64]">Flexibilidade mês a mês</p>
+                        <div class="mt-6 flex items-end gap-1">
+                            <span class="mb-1 text-sm text-[#716a64]">R$</span>
+                            <span class="font-serif text-5xl tracking-tight text-[#37322f]">29,90</span>
+                            <span class="mb-1 text-sm text-[#716a64]">/ mês</span>
+                        </div>
+
+                        @auth
+                            <a href="{{ route('pagamento.pending', ['plan' => 'monthly']) }}" class="mt-6 inline-flex h-11 items-center justify-center rounded-full border border-[#37322f]/20 text-sm font-medium text-[#37322f] transition hover:bg-[#37322f] hover:text-white">
+                                Começar mensal
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="mt-6 inline-flex h-11 items-center justify-center rounded-full border border-[#37322f]/20 text-sm font-medium text-[#37322f] transition hover:bg-[#37322f] hover:text-white">
+                                Começar mensal
+                            </a>
+                        @endauth
+
+                        <ul class="mt-6 flex flex-col gap-3 border-t border-[#37322f]/10 pt-5 text-left">
+                            <li class="flex items-center gap-2 text-xs text-[#605a57]">
+                                <i data-lucide="check" class="size-3.5 text-[#839b50]"></i>
+                                <span>Produtos ilimitados</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-[#605a57]">
+                                <i data-lucide="check" class="size-3.5 text-[#839b50]"></i>
+                                <span>Pedidos pelo WhatsApp</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-[#605a57]">
+                                <i data-lucide="check" class="size-3.5 text-[#839b50]"></i>
+                                <span>Subdomínio exclusivo</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-[#605a57]">
+                                <i data-lucide="check" class="size-3.5 text-[#839b50]"></i>
+                                <span>Métricas de cliques</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-[#605a57]">
+                                <i data-lucide="check" class="size-3.5 text-[#839b50]"></i>
+                                <span>0% de comissão</span>
+                            </li>
+                        </ul>
+                    </article>
+
+                    {{-- Plano Anual (Destaque Mais Popular) --}}
+                    <article class="relative flex flex-col overflow-hidden rounded-2xl border border-[#37322f] bg-[#37322f] p-6 text-white shadow-[0_18px_45px_rgba(55,50,47,.17)] md:p-7">
+                        <span class="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-[#d7f56b] px-2.5 py-1 text-[10px] font-semibold text-[#37322f]">
+                            <i data-lucide="sparkles" class="size-3"></i> MAIS POPULAR
+                        </span>
+                        <div class="text-sm font-semibold">Anual</div>
+                        <p class="mt-1 text-xs text-white/65">Dois meses grátis no ano</p>
+                        <div class="mt-6 flex items-end gap-1">
+                            <span class="mb-1 text-sm text-white/65">R$</span>
+                            <span class="font-serif text-5xl tracking-tight">299</span>
+                            <span class="mb-1 text-sm text-white/65">/ ano</span>
+                        </div>
+                        <p class="mt-1 text-xs text-white/65">Equivale a R$ 24,91 por mês · economize 17%</p>
+
+                        @auth
+                            <a href="{{ route('pagamento.pending', ['plan' => 'yearly']) }}" class="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#d7f56b] text-sm font-semibold text-[#37322f] transition hover:bg-[#e2ff88]">
+                                <span>Escolher plano anual</span>
+                                <i data-lucide="arrow-right" class="size-4"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#d7f56b] text-sm font-semibold text-[#37322f] transition hover:bg-[#e2ff88]">
+                                <span>Escolher plano anual</span>
+                                <i data-lucide="arrow-right" class="size-4"></i>
+                            </a>
+                        @endauth
+
+                        <ul class="mt-6 flex flex-col gap-3 border-t border-white/15 pt-5 text-left">
+                            <li class="flex items-center gap-2 text-xs text-white/85">
+                                <i data-lucide="check" class="size-3.5 text-[#d7f56b]"></i>
+                                <span>Produtos ilimitados</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-white/85">
+                                <i data-lucide="check" class="size-3.5 text-[#d7f56b]"></i>
+                                <span>Pedidos pelo WhatsApp</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-white/85">
+                                <i data-lucide="check" class="size-3.5 text-[#d7f56b]"></i>
+                                <span>Subdomínio exclusivo</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-white/85">
+                                <i data-lucide="check" class="size-3.5 text-[#d7f56b]"></i>
+                                <span>Métricas de cliques</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-white/85">
+                                <i data-lucide="check" class="size-3.5 text-[#d7f56b]"></i>
+                                <span>0% de comissão</span>
+                            </li>
+                        </ul>
+                    </article>
+                </div>
+
+                {{-- Caixa de Cupom de Desconto --}}
+                <div class="mx-auto mt-7 max-w-[780px] rounded-2xl border border-[#37322f]/10 bg-[#f7f5f3] p-5 shadow-sm text-left">
+                    <label for="coupon-input" class="text-xs font-semibold text-[#514b46]">Tem um cupom de desconto?</label>
+                    @auth
+                        <form action="{{ route('counpons.validate') }}" method="POST" class="mt-2 flex gap-2">
+                            @csrf
+                            <input id="coupon-input" name="code" value="{{ old('code') }}" placeholder="Digite seu cupom" required maxlength="20" class="h-10 min-w-0 flex-1 rounded-lg border border-[#37322f]/15 bg-white px-3 text-sm text-[#37322f] outline-none placeholder:text-[#9b938c] focus:border-[#849451] transition">
+                            <button type="submit" class="h-10 rounded-lg bg-[#37322f] px-5 text-xs font-semibold text-white hover:bg-[#514a45] transition">Aplicar</button>
+                        </form>
+                    @else
+                        <form action="{{ route('login') }}" method="GET" class="mt-2 flex gap-2">
+                            <input id="coupon-input" name="code" placeholder="Digite seu cupom" required maxlength="20" class="h-10 min-w-0 flex-1 rounded-lg border border-[#37322f]/15 bg-white px-3 text-sm text-[#37322f] outline-none placeholder:text-[#9b938c] focus:border-[#849451] transition">
+                            <button type="submit" class="h-10 rounded-lg bg-[#37322f] px-5 text-xs font-semibold text-white hover:bg-[#514a45] transition">Aplicar</button>
+                        </form>
+                        <p class="mt-2 text-[11px] text-[#716a64]">Faça login ou crie sua conta para ativar seu cupom na assinatura.</p>
+                    @endauth
+
+                    @if(session('error'))
+                        <p role="alert" class="mt-2 text-xs font-medium text-red-600">{{ session('error') }}</p>
+                    @endif
+                    @if(session('success'))
+                        <p role="status" class="mt-2 text-xs font-medium text-[#487045]">{{ session('success') }}</p>
+                    @endif
+                </div>
+
+                {{-- Aviso de Meios de Pagamento --}}
+                <div class="mt-6 flex flex-col items-center justify-center gap-2 text-center text-xs text-[#716a64]">
+                    <p class="inline-flex items-center gap-1.5 font-medium">
+                        <i data-lucide="shield-check" class="size-4 text-[#839b50]"></i>
+                        <span>Pagamento seguro via Pix ou cartão de crédito. Assinatura transparente, sem taxas escondidas.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
 
         {{-- FAQ, CTA Final e Rodapé Container (Ticket 06) --}}
         <div id="closing-slot"></div>
