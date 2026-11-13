@@ -68,3 +68,33 @@ test('login screen displays validation error on failed authentication', function
     $followResponse->assertSee('Email ou senha errados', false);
 });
 
+test('register screen renders brillance split layout with all onboarding fields', function () {
+    $response = $this->get('/register');
+
+    $response->assertStatus(200);
+    $response->assertSee('Sua loja começa aqui', false);
+    $response->assertSee('Crie sua conta.', false);
+    $response->assertSee('Prepare sua vitrine digital e comece a receber pedidos pelo WhatsApp.', false);
+    $response->assertSee('name="name"', false);
+    $response->assertSee('name="email"', false);
+    $response->assertSee('name="whatsapp"', false);
+    $response->assertSee('name="store_name"', false);
+    $response->assertSee('name="password"', false);
+    $response->assertSee('name="password_confirmation"', false);
+    $response->assertSee('Criar minha conta', false);
+    $response->assertSee('Já tem uma conta?', false);
+    $response->assertSee(route('login'), false);
+    $response->assertSee('mulher_comprando', false);
+});
+
+test('register screen displays validation errors when submitting empty form', function () {
+    $response = $this->from('/register')->post('/register', []);
+
+    $response->assertRedirect('/register');
+
+    $followResponse = $this->followRedirects($response);
+    $followResponse->assertStatus(200);
+    $followResponse->assertSee('Este campo é obrigatório', false);
+});
+
+

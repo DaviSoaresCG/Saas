@@ -4,16 +4,15 @@
 
 **Blocked by:** 01 — Criar layout split-screen responsivo de autenticação no padrão Brillance
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A tela de cadastro exibe a hierarquia visual consistente com o Brillance: eyebrow verde musgo, título em Instrument Serif e subtítulo focado no valor do produto.
-- [ ] O campo de Nome possui ícone de usuário e preserva o valor submetido (`old('name')`).
-- [ ] O campo de E-mail possui ícone de envelope e preserva o valor submetido (`old('email')`).
-- [ ] O campo de WhatsApp implementa máscara interativa `(99) 99999-9999` com Alpine.js e validação de formato.
-- [ ] O campo de Nome da Loja possui ícone de loja/sacola e placeholder demonstrando o nome comercial.
-- [ ] Os campos de Senha e Confirmação de Senha possuem botão de alternância de visibilidade e aviso de requisitos mínimos.
-- [ ] O formulário contém token CSRF e submete via POST para `route('register')`.
-- [ ] Botão de submissão "Criar minha conta →" com estilo arredondado em carvão e seta.
-- [ ] Link de transição "Já tem uma conta? Entrar" direciona para `route('login')`.
-- [ ] Todas as mensagens de validação de campo do Laravel são renderizadas com estilo harmonizado e sem quebrar o layout.
-
+- [x] A tela de cadastro exibe a hierarquia visual consistente com o Brillance: eyebrow verde musgo, título em Instrument Serif e subtítulo focado no valor do produto.
+- [x] O campo de Nome possui ícone de usuário e preserva o valor submetido (`old('name')`).
+- [x] O campo de E-mail possui ícone de envelope e preserva o valor submetido (`old('email')`).
+- [x] O campo de WhatsApp implementa máscara interativa `(99) 99999-9999` com Alpine.js e validação de formato.
+- [x] O campo de Nome da Loja possui ícone de loja/sacola e placeholder demonstrando o nome comercial.
+- [x] Os campos de Senha e Confirmação de Senha possuem botão de alternância de visibilidade e aviso de requisitos mínimos.
+- [x] O formulário contém token CSRF e submete via POST para `route('register')`.
+- [x] Botão de submissão "Criar minha conta →" com estilo arredondado em carvão e seta.
+- [x] Link de transição "Já tem uma conta? Entrar" direciona para `route('login')`.
+- [x] Todas as mensagens de validação de campo do Laravel são renderizadas com estilo harmonizado e sem quebrar o layout.
