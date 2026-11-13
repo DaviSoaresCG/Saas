@@ -1,375 +1,461 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ZapCatalog | Seu Catálogo Digital no WhatsApp</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Planos e preços transparentes do ZapCatálogo. Crie sua vitrine digital integrada ao WhatsApp com 0% de comissão.">
+    <title>Planos e Preços | ZapCatálogo — Sua loja online no WhatsApp</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
-    
-    <!-- Tailwind CSS -->
+
+    <!-- Google Fonts: Instrument Serif & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN com extensão de tema do Design System Brillance) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"Instrument Serif"', 'serif'],
+                    },
+                    colors: {
+                        brillance: {
+                            bg: '#f7f5f3',
+                            paper: '#eeece8',
+                            charcoal: '#37322f',
+                            charcoalHover: '#514a45',
+                            muted: '#605a57',
+                            subtle: '#716a64',
+                            lime: '#d7f56b',
+                            limeHover: '#e2ff88',
+                            moss: '#849451',
+                            olive: '#71834f',
+                            border: 'rgba(55, 50, 47, 0.1)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              brand: {
-                dark: '#0f172a',
-                card: '#1e293b',
-                accent: '#2563eb',
-                accentHover: '#1d4ed8',
-              }
-            }
-          }
-        }
-      }
-    </script>
     <style>
-      /* Ajuste fino para scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #0f172a;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #334155;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #475569;
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react/": "https://esm.sh/react@^19.2.4/"
-  }
-}
-</script>
-</head>
-  <body class="bg-slate-900 text-white font-sans antialiased selection:bg-blue-600 selection:text-white">
-    
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-              <div class="bg-blue-600 p-2 rounded-lg">
-                <i data-lucide="shopping-bag" class="h-6 w-6 text-white"></i>
-              </div>
-              <span class="text-white font-bold text-xl tracking-tight">ZapCatalogo</span>
-            </div>
-            <div class="hidden md:block">
-              <div class="ml-10 flex items-baseline space-x-4">
-                <a href="{{ route('home') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Página inicial</a>
-              </div>
-            </div>
-          </div>
-          <div class="hidden md:block">
-            <div class="ml-4 flex items-center md:ml-6 space-x-4">
-              <p class="text-white font-medium text-sm">
+        html {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-                @auth()
-                    Ola  {{ auth()->user()->name }}
-                    @if(auth()->user()->isLojaAtiva())
-                        <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="text-blue-500">Sua Página</a>
-                    @endif
-                    <form action="{{ route('logout') }}" method="post">
-                        @csrf
-                        <input type="submit" value="Logout" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 hover:scale-105">
-                    </form>
+        .font-serif {
+            font-family: 'Instrument Serif', Georgia, serif;
+        }
+
+        /* Scrollbar suave */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f7f5f3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d8d4cf;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b5afa8;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#f7f5f3] font-sans text-[#37322f] selection:bg-[#d7f56b] selection:text-[#37322f] antialiased">
+
+    {{-- Feedback de Mensagens de Sessão --}}
+    @if(session('success'))
+        <div class="fixed top-4 right-4 z-50 flex items-center gap-2 rounded-xl border border-[#dce8d3] bg-[#f0f7eb] px-4 py-3 text-xs font-medium text-[#487045] shadow-lg animate-fade-in">
+            <i data-lucide="check-circle" class="size-4 text-[#20b85a]"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="fixed top-4 right-4 z-50 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-medium text-red-700 shadow-lg animate-fade-in">
+            <i data-lucide="alert-circle" class="size-4 text-red-500"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
+    {{-- Header / Navbar Flutuante --}}
+    <header class="sticky top-0 z-40 border-b border-[#37322f]/10 bg-[#f7f5f3]/90 backdrop-blur-xl transition-all">
+        <div class="mx-auto flex h-[72px] max-w-[1160px] items-center justify-between px-5 md:px-8">
+            {{-- BrandMark --}}
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 font-semibold tracking-tight text-[#37322f]" aria-label="ZapCatálogo, início">
+                <span class="flex size-9 items-center justify-center rounded-xl bg-[#37322f] text-[#d7f56b] shadow-sm">
+                    <i data-lucide="shopping-bag" class="size-[18px]"></i>
+                </span>
+                <span class="text-[17px]">zap<span class="font-normal">catálogo</span></span>
+            </a>
+
+            {{-- Desktop Navigation Links --}}
+            <nav class="hidden items-center gap-8 md:flex" aria-label="Navegação principal">
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}">Página inicial</a>
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}#recursos">Funcionalidades</a>
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}#como-funciona">Como funciona</a>
+                <a class="text-sm font-semibold text-[#37322f]" href="{{ route('plans') }}">Planos</a>
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}#duvidas">FAQ</a>
+            </nav>
+
+            {{-- Desktop Action Area (Auth vs Guest) --}}
+            <div class="hidden items-center gap-3 sm:flex">
+                @auth
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-medium text-[#605a57]">
+                            Olá, {{ auth()->user()->name }}
+                        </span>
+                        @if(auth()->user()->isLojaAtiva() && auth()->user()->slug)
+                            <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#37322f]/15 bg-white/80 px-3.5 text-xs font-medium text-[#37322f] transition hover:bg-white shadow-sm">
+                                <i data-lucide="external-link" class="size-3.5 text-[#849451]"></i>
+                                <span>Minha Loja</span>
+                            </a>
+                        @endif
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="inline-flex h-9 items-center rounded-full border border-[#37322f]/15 px-3 text-xs font-medium text-[#605a57] transition hover:bg-[#37322f] hover:text-white cursor-pointer">
+                                Sair
+                            </button>
+                        </form>
+                    </div>
                 @endauth
 
                 @guest
-                  <a href="{{ route('login') }}">Login</a>                                    
+                    <a href="{{ route('login') }}" class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]">
+                        Entrar no painel
+                    </a>
+                    <a href="{{ route('register') }}" class="inline-flex h-10 items-center gap-2 rounded-full bg-[#37322f] px-4 text-sm font-medium text-white shadow-sm transition hover:bg-[#514a45]">
+                        <span>Criar catálogo</span>
+                        <i data-lucide="arrow-right" class="size-4"></i>
+                    </a>
                 @endguest
-            </p>                
             </div>
-          </div>
-          <div class="-mr-2 flex md:hidden">
-            <button id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-slate-800 focus:outline-none">
-              <span class="sr-only">Abrir menu</span>
-              <i data-lucide="menu" class="h-6 w-6 block" id="menu-icon"></i>
-              <i data-lucide="x" class="h-6 w-6 hidden" id="close-icon"></i>
-            </button>
-          </div>
-        </div>
-      </div>
 
-      <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 transition-all duration-300 ease-in-out">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <a href="{{ route('home') }}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
-          <div class="pt-4 border-t border-slate-800 mt-4">
-            @auth()
-                    Ola  {{ auth()->user()->name }}
-                    @if(auth()->user()->isLojaAtiva())
-                        <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="text-blue-500">Sua Página</a>
+            {{-- Mobile Hamburger Button --}}
+            <div class="flex items-center sm:hidden">
+                <button type="button" id="mobile-menu-btn" aria-label="Abrir menu" class="inline-flex size-10 items-center justify-center rounded-xl border border-[#37322f]/10 text-[#37322f] transition hover:bg-white cursor-pointer">
+                    <i data-lucide="menu" class="size-5" id="menu-icon"></i>
+                    <i data-lucide="x" class="hidden size-5" id="close-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile Dropdown Menu --}}
+        <div id="mobile-menu" class="hidden border-b border-[#37322f]/10 bg-[#f7f5f3] px-5 py-4 sm:hidden">
+            <nav class="flex flex-col gap-3" aria-label="Navegação mobile">
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}">Página inicial</a>
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}#recursos">Funcionalidades</a>
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}#como-funciona">Como funciona</a>
+                <a class="text-sm font-semibold text-[#37322f]" href="{{ route('plans') }}">Planos</a>
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}#duvidas">FAQ</a>
+                <div class="mt-2 flex flex-col gap-2 border-t border-[#37322f]/10 pt-3">
+                    @auth
+                        <p class="text-xs font-medium text-[#605a57]">Olá, {{ auth()->user()->name }}</p>
+                        @if(auth()->user()->isLojaAtiva() && auth()->user()->slug)
+                            <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-[#37322f]/15 bg-white text-xs font-medium text-[#37322f]">
+                                <i data-lucide="external-link" class="size-3.5 text-[#849451]"></i>
+                                <span>Minha Loja</span>
+                            </a>
+                        @endif
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full h-10 rounded-full border border-[#37322f]/15 text-xs font-medium text-[#605a57] hover:bg-[#37322f] hover:text-white cursor-pointer">
+                                Sair
+                            </button>
+                        </form>
+                    @endauth
+
+                    @guest
+                        <a href="{{ route('login') }}" class="inline-flex h-10 items-center justify-center rounded-full border border-[#37322f]/15 bg-white text-xs font-medium text-[#37322f]">
+                            Entrar no painel
+                        </a>
+                        <a href="{{ route('register') }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#37322f] text-xs font-medium text-white hover:bg-[#514a45]">
+                            <span>Criar catálogo</span>
+                            <i data-lucide="arrow-right" class="size-4"></i>
+                        </a>
+                    @endguest
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="relative min-h-[calc(100vh-140px)]">
+
+        {{-- Hero da Página de Planos --}}
+        <section class="relative overflow-hidden px-5 pt-14 pb-8 md:pt-20 md:pb-12 text-center">
+            <div class="pointer-events-none absolute inset-0 opacity-40" style="background-image: radial-gradient(#a8a098 0.7px, transparent 0.7px); background-size: 22px 22px; -webkit-mask-image: linear-gradient(to bottom, black, transparent 48%); mask-image: linear-gradient(to bottom, black, transparent 48%);"></div>
+
+            <div class="relative mx-auto max-w-[800px]">
+                <div class="inline-flex items-center gap-2 rounded-full border border-[#37322f]/10 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-[#514b46] shadow-sm backdrop-blur-sm">
+                    <i data-lucide="sparkles" class="size-3.5 text-[#849451]"></i>
+                    <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#849451]">Preço simples e transparente</span>
+                </div>
+
+                <h1 class="mt-5 font-serif text-4xl leading-tight tracking-[-.03em] text-[#37322f] sm:text-5xl md:text-6xl">
+                    Planos feitos para o seu negócio <span class="italic text-[#7d8f55]">vender mais</span> no WhatsApp.
+                </h1>
+
+                <p class="mt-4 text-sm leading-6 text-[#716a64] sm:text-base md:text-lg">
+                    Sem comissão por pedido, sem contratos longos. Escolha a assinatura ideal para colocar sua loja no ar.
+                </p>
+            </div>
+        </section>
+
+        {{-- Grid dos Planos --}}
+        <section class="px-5 pb-16 md:px-8 md:pb-24">
+            <div class="mx-auto max-w-[840px]">
+                <div class="grid gap-6 md:grid-cols-2 items-stretch">
+
+                    {{-- Plano Mensal --}}
+                    <article class="flex flex-col justify-between rounded-2xl border border-[#37322f]/12 bg-[#f9f8f6] p-7 md:p-8 shadow-sm transition hover:border-[#37322f]/25">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-semibold text-[#37322f]">Plano Mensal</span>
+                                <span class="rounded-full bg-[#37322f]/5 px-2.5 py-0.5 text-[11px] font-medium text-[#716a64]">Sem fidelidade</span>
+                            </div>
+                            <p class="mt-1 text-xs text-[#716a64]">Flexibilidade para pagar mês a mês</p>
+
+                            <div class="mt-6 flex items-end gap-1">
+                                <span class="mb-1.5 text-sm font-medium text-[#716a64]">R$</span>
+                                <span class="font-serif text-5xl tracking-tight text-[#37322f]">29,90</span>
+                                <span class="mb-1.5 text-sm text-[#716a64]">/ mês</span>
+                            </div>
+
+                            @auth
+                                <a href="{{ route('pagamento.pending', ['plan' => 'monthly']) }}"
+                                   class="mt-6 inline-flex h-12 w-full items-center justify-center rounded-full border border-[#37322f]/20 bg-white text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#37322f] hover:text-white active:scale-[0.99] cursor-pointer">
+                                    Começar mensal
+                                </a>
+                            @else
+                                <a href="{{ route('register') }}"
+                                   class="mt-6 inline-flex h-12 w-full items-center justify-center rounded-full border border-[#37322f]/20 bg-white text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#37322f] hover:text-white active:scale-[0.99] cursor-pointer">
+                                    Começar mensal
+                                </a>
+                            @endauth
+
+                            <ul class="mt-7 flex flex-col gap-3.5 border-t border-[#37322f]/10 pt-6 text-left">
+                                <li class="flex items-center gap-2.5 text-xs text-[#605a57]">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Produtos e categorias ilimitados</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-[#605a57]">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Pedidos prontos direto no seu WhatsApp</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-[#605a57]">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Subdomínio próprio exclusivo</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-[#605a57]">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Múltiplos catálogos e cupons promocionais</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-[#605a57]">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Variações de produto (cor, tamanho)</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-[#605a57]">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span class="font-medium text-[#37322f]">0% de taxa por pedido</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    {{-- Plano Anual (Destaque Mais Popular) --}}
+                    <article class="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#37322f] bg-[#37322f] p-7 md:p-8 text-white shadow-[0_18px_45px_rgba(55,50,47,.17)]">
+                        <span class="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-[#d7f56b] px-3 py-1 text-[11px] font-semibold text-[#37322f] shadow-sm">
+                            <i data-lucide="sparkles" class="size-3"></i>
+                            <span>MAIS POPULAR</span>
+                        </span>
+
+                        <div>
+                            <div class="text-sm font-semibold">Plano Anual</div>
+                            <p class="mt-1 text-xs text-white/65">Dois meses grátis no ano</p>
+
+                            <div class="mt-6 flex items-end gap-1">
+                                <span class="mb-1.5 text-sm text-white/65">R$</span>
+                                <span class="font-serif text-5xl tracking-tight text-white">299</span>
+                                <span class="mb-1.5 text-sm text-white/65">/ ano</span>
+                            </div>
+                            <p class="mt-1 text-xs text-[#d7f56b] font-medium">Equivale a R$ 24,91 por mês · economize 17%</p>
+
+                            @auth
+                                <a href="{{ route('pagamento.pending', ['plan' => 'yearly']) }}"
+                                   class="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#d7f56b] text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#e2ff88] active:scale-[0.99] cursor-pointer">
+                                    <span>Escolher plano anual</span>
+                                    <i data-lucide="arrow-right" class="size-4"></i>
+                                </a>
+                            @else
+                                <a href="{{ route('register') }}"
+                                   class="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#d7f56b] text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#e2ff88] active:scale-[0.99] cursor-pointer">
+                                    <span>Escolher plano anual</span>
+                                    <i data-lucide="arrow-right" class="size-4"></i>
+                                </a>
+                            @endauth
+
+                            <ul class="mt-7 flex flex-col gap-3.5 border-t border-white/15 pt-6 text-left">
+                                <li class="flex items-center gap-2.5 text-xs text-white/90">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#d7f56b]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Todos os recursos do plano mensal</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-white/90">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#d7f56b]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Produtos e pedidos ilimitados</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-white/90">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#d7f56b]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Subdomínio exclusivo e personalizado</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-white/90">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#d7f56b]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Suporte prioritário na configuração</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-[#d7f56b] font-medium">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#d7f56b]/20 text-[#d7f56b]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span>Economia garantida de R$ 59,80</span>
+                                </li>
+                                <li class="flex items-center gap-2.5 text-xs text-white/90">
+                                    <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/10 text-[#d7f56b]">
+                                        <i data-lucide="check" class="size-3"></i>
+                                    </span>
+                                    <span class="font-medium text-white">0% de taxa por pedido</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+
+                {{-- Formulário de Cupom de Desconto --}}
+                <div class="mt-8 rounded-2xl border border-[#37322f]/10 bg-white/70 p-6 shadow-sm text-left">
+                    <label for="coupon-input" class="text-xs font-semibold text-[#514b46]">Possui um cupom de desconto?</label>
+                    @auth
+                        <form action="{{ route('counpons.validate') }}" method="POST" class="mt-2.5 flex flex-col sm:flex-row gap-2">
+                            @csrf
+                            <div class="relative min-w-0 flex-1">
+                                <i data-lucide="ticket" class="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#969087]"></i>
+                                <input id="coupon-input" name="code" value="{{ old('code') }}" placeholder="Ex: BEMVINDO10" required maxlength="20"
+                                    class="h-11 w-full rounded-xl border border-[#37322f]/15 bg-white pl-10 pr-3 text-sm text-[#37322f] outline-none placeholder:text-[#9b938c] focus:border-[#849451] transition">
+                            </div>
+                            <button type="submit" class="h-11 rounded-xl bg-[#37322f] px-6 text-xs font-semibold text-white hover:bg-[#514a45] transition cursor-pointer">
+                                Aplicar cupom
+                            </button>
+                        </form>
+                    @else
+                        <form action="{{ route('login') }}" method="GET" class="mt-2.5 flex flex-col sm:flex-row gap-2">
+                            <div class="relative min-w-0 flex-1">
+                                <i data-lucide="ticket" class="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#969087]"></i>
+                                <input id="coupon-input" name="code" placeholder="Ex: BEMVINDO10" required maxlength="20"
+                                    class="h-11 w-full rounded-xl border border-[#37322f]/15 bg-white pl-10 pr-3 text-sm text-[#37322f] outline-none placeholder:text-[#9b938c] focus:border-[#849451] transition">
+                            </div>
+                            <button type="submit" class="h-11 rounded-xl bg-[#37322f] px-6 text-xs font-semibold text-white hover:bg-[#514a45] transition cursor-pointer">
+                                Aplicar cupom
+                            </button>
+                        </form>
+                        <p class="mt-2 text-[11px] text-[#716a64]">Faça login ou crie sua conta para aplicar seu cupom na assinatura.</p>
+                    @endauth
+
+                    @if(session('error'))
+                        <p role="alert" class="mt-2 text-xs font-medium text-red-600">{{ session('error') }}</p>
                     @endif
-                    <form action="{{ route('logout') }}" method="post">
-                        @csrf
-                        <input type="submit" value="Logout" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-blue-600/20 hover:scale-105">
-                    </form>
-              @endauth
+                    @if(session('success'))
+                        <p role="status" class="mt-2 text-xs font-medium text-[#487045]">{{ session('success') }}</p>
+                    @endif
+                </div>
 
-              @guest
-                  <a href="{{ route('login') }}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                    Login
-                  </a>                                    
-              @endguest
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <main>
-      <!-- Hero Section -->
-     
-
-      <!-- Pricing -->
-      <section id="pricing" class="bg-slate-900 py-24 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
-              Preços
-            </h2>
-            <p class="text-gray-400 max-w-2xl mx-auto text-lg mb-8">
-              Escolha o plano ideal para o seu negócio e comece a vender pelo WhatsApp hoje mesmo.
-            </p>
-          </div>
-          
-      </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <!-- Plano Mensal -->
-            <div class="flex flex-col p-8 rounded-2xl border bg-slate-800/40 border-slate-700 hover:border-blue-500/50 transition-all duration-300">
-              <div class="mb-8">
-                <h3 class="text-2xl font-bold text-white mb-2">Plano Mensal</h3>
-                <p class="text-gray-400 text-sm h-10">Flexibilidade sem compromisso de longo prazo.</p>
-              </div>
-
-              <div class="flex items-baseline mb-8">
-                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 29,90</span>
-                <span class="text-gray-400 ml-2">/mês</span>
-              </div>
-
-              <ul class="space-y-4 mb-8 flex-1">
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Produtos Ilimitados</span>
-                </li>
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Pedidos direto no seu WhatsApp</span>
-                </li>
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Múltiplos Catálogos & Descontos</span>
-                </li>
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Suporte a Atributos (Cor, Tamanho)</span>
-                </li>
-              </ul>
-
-              @auth
-                <a href="{{ route('pagamento.pending', ['plan' => 'monthly']) }}" class="w-full block py-3 px-6 rounded-lg text-sm font-bold text-center transition-all bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-lg shadow-blue-600/20">
-                  Selecionar Mensal
-                </a>
-              @else
-                <a href="{{ route('register') }}">
-                  <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white">
-                    Começar Agora
-                  </button>
-                </a>
-              @endauth
+                {{-- Aviso de Segurança e Pagamento --}}
+                <div class="mt-8 flex flex-col items-center justify-center gap-2 text-center text-xs text-[#716a64]">
+                    <p class="inline-flex items-center gap-2 font-medium">
+                        <i data-lucide="shield-check" class="size-4 text-[#839b50]"></i>
+                        <span>Pagamento seguro via Pix ou cartão de crédito. Assinatura transparente, sem fidelidade e sem taxas escondidas.</span>
+                    </p>
+                </div>
             </div>
-
-            <!-- Plano Anual -->
-            <div class="flex flex-col p-8 rounded-2xl border bg-slate-800/80 border-blue-500 shadow-xl shadow-blue-900/20 relative overflow-hidden transform md:-translate-y-4">
-              <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                MELHOR VALOR
-              </div>
-              
-              <div class="mb-8">
-                <h3 class="text-2xl font-bold text-white mb-2">Plano Anual</h3>
-                <p class="text-gray-400 text-sm h-10">Economize quase 2 meses em relação ao mensal.</p>
-              </div>
-
-              <div class="flex items-baseline mb-8">
-                <span class="text-5xl font-extrabold text-white tracking-tight">R$ 299,00</span>
-                <span class="text-gray-400 ml-2">/ano</span>
-              </div>
-
-              <ul class="space-y-4 mb-8 flex-1">
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Produtos Ilimitados</span>
-                </li>
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Pedidos direto no seu WhatsApp</span>
-                </li>
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Múltiplos Catálogos & Descontos</span>
-                </li>
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-gray-300">Suporte a Atributos (Cor, Tamanho)</span>
-                </li>
-                <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                    <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                  </div>
-                  <span class="ml-3 text-sm text-emerald-400 font-semibold">Desconto de 17% garantido</span>
-                </li>
-              </ul>
-
-              @auth
-                <a href="{{ route('pagamento.pending', ['plan' => 'yearly']) }}" class="w-full block py-3 px-6 rounded-lg text-sm font-bold text-center transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 cursor-pointer">
-                  Selecionar Anual
-                </a>
-              @else
-                <a href="{{ route('register') }}">
-                  <button class="w-full py-3 px-6 rounded-lg text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25">
-                    Começar Agora
-                  </button>
-                </a>
-              @endauth
-            </div>
-          </div>
-        </div>
-        <div class="flex items-center justify-center mt-10 flex-col">
-            <span class="text-gray-400 mr-2">Cupom de Desconto?</span>
-          <form action="{{ route('counpons.validate') }}" method="POST" class="flex flex-col items-center justify-center gap-2 text-gray-900">
-            @csrf
-            <x-input-base for="code" label="Cupom" placeholder="Cupom" name="code" icon="counpon" type="text" value="{{ old('code') }}"/>
-            <button type="submit" class="w-full py-3.5 px-6 rounded-xl text-sm font-bold transition-all bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 cursor-pointer">
-              Validar Cupom
-            </button>
-          </form>
-        </div>
-      </section>
+        </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 pt-16 pb-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          <div class="col-span-1 md:col-span-1">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="bg-blue-600 p-1.5 rounded-lg">
-                <i data-lucide="shopping-bag" class="h-5 w-5 text-white"></i>
-              </div>
-              <span class="text-white font-bold text-lg">ZapCatalog</span>
+    {{-- Footer Padrão Brillance --}}
+    <footer class="border-t border-[#37322f]/10 bg-[#f7f5f3] py-12 text-[#605a57]">
+        <div class="mx-auto max-w-[1160px] px-5 md:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <a href="{{ route('home') }}" class="flex items-center gap-2.5 font-semibold tracking-tight text-[#37322f]">
+                    <span class="flex size-8 items-center justify-center rounded-xl bg-[#37322f] text-[#d7f56b] shadow-sm">
+                        <i data-lucide="shopping-bag" class="size-4"></i>
+                    </span>
+                    <span class="text-base">zap<span class="font-normal">catálogo</span></span>
+                </a>
+
+                <p class="text-xs text-[#8c827a] text-center md:text-left">
+                    &copy; {{ date('Y') }} ZapCatálogo. Todos os direitos reservados.
+                </p>
+
+                <div class="flex items-center gap-6 text-xs text-[#716a64]">
+                    <a href="{{ route('home') }}" class="hover:text-[#37322f] transition">Início</a>
+                    <a href="{{ route('home') }}#recursos" class="hover:text-[#37322f] transition">Recursos</a>
+                    <a href="{{ route('home') }}#duvidas" class="hover:text-[#37322f] transition">Dúvidas</a>
+                    <a href="{{ route('plans') }}" class="font-medium text-[#37322f]">Planos</a>
+                </div>
             </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              A plataforma líder para criar catálogos digitais integrados ao WhatsApp. Potencialize suas vendas hoje mesmo.
-            </p>
-          </div>
-          
-          <div>
-            <h4 class="text-white font-bold mb-4">Produto</h4>
-            <ul class="space-y-2 text-sm text-gray-400">
-              <li><a href="#" class="hover:text-white transition-colors">Funcionalidades</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Preços</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Showcase</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Atualizações</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 class="text-white font-bold mb-4">Suporte</h4>
-            <ul class="space-y-2 text-sm text-gray-400">
-              <li><a href="#" class="hover:text-white transition-colors">Central de Ajuda</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Tutoriais</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Contato</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Status</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 class="text-white font-bold mb-4">Legal</h4>
-            <ul class="space-y-2 text-sm text-gray-400">
-              <li><a href="#" class="hover:text-white transition-colors">Termos de Uso</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Privacidade</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Cookies</a></li>
-            </ul>
-          </div>
         </div>
-
-        <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p class="text-gray-500 text-sm">
-            © 2024 ZapCatalog Tecnologia Ltda. Todos os direitos reservados.
-          </p>
-          <div class="flex space-x-6">
-            <a href="#" class="text-gray-500 hover:text-white transition-colors">
-              <i data-lucide="instagram" class="h-5 w-5"></i>
-            </a>
-            <a href="#" class="text-gray-500 hover:text-white transition-colors">
-              <i data-lucide="facebook" class="h-5 w-5"></i>
-            </a>
-            <a href="#" class="text-gray-500 hover:text-white transition-colors">
-              <i data-lucide="twitter" class="h-5 w-5"></i>
-            </a>
-          </div>
-        </div>
-      </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Scripts de Interação -->
     <script>
-      // Initialize Lucide Icons
-      lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
 
-      // Mobile Menu Logic
-      const btn = document.getElementById('mobile-menu-btn');
-      const menu = document.getElementById('mobile-menu');
-      const menuIcon = document.getElementById('menu-icon');
-      const closeIcon = document.getElementById('close-icon');
+            // Mobile menu toggle
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
 
-      btn.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
-        
-        if (menu.classList.contains('hidden')) {
-          menuIcon.classList.remove('hidden');
-          closeIcon.classList.add('hidden');
-        } else {
-          menuIcon.classList.add('hidden');
-          closeIcon.classList.remove('hidden');
-        }
-      });
+            if (btn && menu) {
+                btn.addEventListener('click', function () {
+                    const isHidden = menu.classList.contains('hidden');
+                    menu.classList.toggle('hidden');
+                    if (menuIcon && closeIcon) {
+                        menuIcon.classList.toggle('hidden', isHidden);
+                        closeIcon.classList.toggle('hidden', !isHidden);
+                    }
+                });
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
