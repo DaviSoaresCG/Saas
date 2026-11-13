@@ -107,6 +107,4 @@ A aplicação adota a estratégia de **Single Database com Tenant Isolation** vi
 
 ## 🔗 Links de Demonstração
 * **Home:** http://zapcatalago.com.br/
-* **Página de um Lojista:** https://davilmtd.zapcatalago.com.br/produtos
-* **Login de demonstração (Dashboard):** `email: davisoaresgigante@gmail.com` | `senha: 123123123`
-
+* **Página de um Lojista:** https://sigadez.zapcatalago.com.br/produtos
