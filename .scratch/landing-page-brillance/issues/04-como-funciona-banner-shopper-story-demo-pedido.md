@@ -4,11 +4,11 @@
 
 **Blocked by:** 02 — Implementar header com autenticação, hero editorial e mockup de vitrine com WhatsApp
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A seção "Como funciona" exibe os 3 passos ilustrados (Montar vitrine, Compartilhar link, Receber e confirmar) com alinhamento responsivo e linha conectora no desktop.
-- [ ] O banner fotográfico da experiência de compra mobile é renderizado com imagem responsiva, degradê de sobreposição escuro e tipografia com contraste adequado.
-- [ ] A seção de demonstração do pedido exibe um cartão com simulação detalhada do WhatsApp, destacando o fluxo desde o carrinho até a mensagem pronta recebida pelo vendedor.
-- [ ] O botão ou gatilho de copiar pedido simula a interação e copia o texto formatado para a área de transferência com feedback visual de confirmação ao usuário.
-- [ ] As âncoras da página (`#como-funciona`, `#demonstracao`) respondem com rolagem suave a partir do menu e dos botões de ação.
+- [x] A seção "Como funciona" exibe os 3 passos ilustrados (Montar vitrine, Compartilhar link, Receber e confirmar) com alinhamento responsivo e linha conectora no desktop.
+- [x] O banner fotográfico da experiência de compra mobile é renderizado com imagem responsiva, degradê de sobreposição escuro e tipografia com contraste adequado.
+- [x] A seção de demonstração do pedido exibe um cartão com simulação detalhada do WhatsApp, destacando o fluxo desde o carrinho até a mensagem pronta recebida pelo vendedor.
+- [x] O botão ou gatilho de copiar pedido simula a interação e copia o texto formatado para a área de transferência com feedback visual de confirmação ao usuário.
+- [x] As âncoras da página (`#como-funciona`, `#demonstracao`) respondem com rolagem suave a partir do menu e dos botões de ação.
 

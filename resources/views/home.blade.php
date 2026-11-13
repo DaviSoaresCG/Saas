@@ -521,8 +521,133 @@
             </div>
         </section>
 
-        {{-- Como Funciona e Demonstração do Pedido Container (Ticket 04) --}}
-        <div id="how-it-works-slot"></div>
+        {{-- Como Funciona (Ticket 04) --}}
+        <section id="como-funciona" class="px-5 py-20 md:px-8 md:py-28">
+            <div class="mx-auto max-w-[1160px]">
+                <div class="mx-auto mb-12 max-w-[650px] text-center">
+                    <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#849451]">Comece sem complicação</span>
+                    <h2 class="mt-3 font-serif text-4xl leading-tight tracking-[-.025em] text-[#37322f] md:text-5xl">Do catálogo ao pedido em 3 passos.</h2>
+                    <p class="mt-4 text-sm leading-6 text-[#716a64] md:text-base">Sem instalar aplicativos. Sem precisar entender de tecnologia. É só colocar sua loja no ar.</p>
+                </div>
+
+                <div class="grid gap-8 md:grid-cols-3">
+                    {{-- Passo 1 --}}
+                    <article class="relative flex flex-col items-center text-center">
+                        <div class="relative flex size-[72px] items-center justify-center rounded-full border border-[#37322f]/10 bg-white text-[#71834f] shadow-[0_6px_22px_rgba(55,50,47,.05)]">
+                            <i data-lucide="package" class="size-6"></i>
+                            <span class="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-[#37322f] text-[10px] font-medium text-white">01</span>
+                        </div>
+                        <div class="absolute left-[calc(50%+50px)] top-9 hidden h-px w-[calc(100%-100px)] border-t border-dashed border-[#bcb8ae] md:block"></div>
+                        <h3 class="mt-5 text-base font-semibold text-[#37322f]">Monte sua vitrine</h3>
+                        <p class="mt-2 max-w-[290px] text-sm leading-6 text-[#716a64]">Cadastre seus produtos, adicione sua logo e escolha as cores da sua marca.</p>
+                    </article>
+
+                    {{-- Passo 2 --}}
+                    <article class="relative flex flex-col items-center text-center">
+                        <div class="relative flex size-[72px] items-center justify-center rounded-full border border-[#37322f]/10 bg-white text-[#71834f] shadow-[0_6px_22px_rgba(55,50,47,.05)]">
+                            <i data-lucide="globe" class="size-6"></i>
+                            <span class="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-[#37322f] text-[10px] font-medium text-white">02</span>
+                        </div>
+                        <div class="absolute left-[calc(50%+50px)] top-9 hidden h-px w-[calc(100%-100px)] border-t border-dashed border-[#bcb8ae] md:block"></div>
+                        <h3 class="mt-5 text-base font-semibold text-[#37322f]">Compartilhe seu link</h3>
+                        <p class="mt-2 max-w-[290px] text-sm leading-6 text-[#716a64]">Coloque seu endereço exclusivo na bio do Instagram, TikTok ou WhatsApp Business.</p>
+                    </article>
+
+                    {{-- Passo 3 --}}
+                    <article class="relative flex flex-col items-center text-center">
+                        <div class="relative flex size-[72px] items-center justify-center rounded-full border border-[#37322f]/10 bg-white text-[#71834f] shadow-[0_6px_22px_rgba(55,50,47,.05)]">
+                            <i data-lucide="message-circle" class="size-6"></i>
+                            <span class="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-[#37322f] text-[10px] font-medium text-white">03</span>
+                        </div>
+                        <h3 class="mt-5 text-base font-semibold text-[#37322f]">Receba e confirme</h3>
+                        <p class="mt-2 max-w-[290px] text-sm leading-6 text-[#716a64]">Seu cliente monta o pedido. Você recebe tudo organizado no WhatsApp e combina o pagamento.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        {{-- Banner Shopper Story (Ticket 04) --}}
+        <section aria-label="Compre com praticidade pelo celular" class="px-5 pb-20 md:px-8 md:pb-28">
+            <div class="relative mx-auto flex min-h-[360px] max-w-[1160px] items-center overflow-hidden rounded-[28px] bg-[#37322f] shadow-lg md:min-h-[430px]">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mulher_comprando-FAop2IuzUjyZMb0XWzE60Z2JJCNfuL.jpg" alt="Cliente sorrindo enquanto faz compras pelo celular" class="absolute inset-0 size-full object-cover object-[35%_center]">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#25231f]/10 via-[#25231f]/35 to-[#25231f]/85"></div>
+                <div class="relative ml-auto max-w-[520px] px-7 py-12 text-white md:px-14 md:py-16">
+                    <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#d7f56b]">Uma compra fácil, do começo ao fim</span>
+                    <h2 class="mt-4 font-serif text-4xl leading-tight tracking-[-.025em] md:text-5xl">A sua vitrine na palma da mão.</h2>
+                    <p class="mt-4 max-w-[400px] text-sm leading-6 text-white/80 md:text-base">Seus clientes exploram os produtos, montam o pedido e falam com você pelo WhatsApp — tudo pelo celular, sem complicação.</p>
+                    <a href="#demonstracao" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#d7f56b] transition hover:gap-3">
+                        <span>Veja como funciona</span>
+                        <i data-lucide="arrow-right" class="size-4"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        {{-- Demonstração Interativa do Pedido no WhatsApp (Ticket 04) --}}
+        <section id="demonstracao" class="px-5 pb-20 md:px-8 md:pb-28">
+            <div class="mx-auto grid max-w-[1160px] items-center gap-8 overflow-hidden rounded-[28px] border border-[#37322f]/10 bg-[#eaece3] p-6 md:grid-cols-[.9fr_1.1fr] md:p-12">
+                <div>
+                    <span class="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 text-[11px] font-medium text-[#69784c] shadow-sm">
+                        <i data-lucide="message-circle" class="size-3.5"></i>
+                        <span>Checkout direto no WhatsApp</span>
+                    </span>
+                    <h2 class="mt-5 max-w-[430px] font-serif text-4xl leading-tight tracking-[-.025em] text-[#37322f] md:text-[48px]">
+                        O pedido chega. Você só precisa responder.
+                    </h2>
+                    <p class="mt-4 max-w-[410px] text-sm leading-6 text-[#625d56]">
+                        Seu cliente escolhe produtos, variações e quantidades. O ZapCatálogo monta a mensagem com os itens, o total e os dados do cliente.
+                    </p>
+                    <div class="mt-6 flex flex-col gap-3 text-sm text-[#514b46]">
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="check" class="size-4 text-[#839b50]"></i> Número do pedido automático
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="check" class="size-4 text-[#839b50]"></i> Produtos e variações organizados
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="check" class="size-4 text-[#839b50]"></i> Total calculado para você
+                        </span>
+                    </div>
+                    <a href="#precos" class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#37322f] hover:text-[#71834f] transition">
+                        <span>Quero vender assim</span>
+                        <i data-lucide="arrow-right" class="size-4"></i>
+                    </a>
+                </div>
+
+                <div class="rounded-2xl border border-white/70 bg-[#e7e4dc] p-4 md:p-6 shadow-sm">
+                    <div class="mx-auto max-w-[420px] overflow-hidden rounded-[20px] bg-[#efeae0] shadow-[0_18px_45px_rgba(55,50,47,.12)]">
+                        <div class="flex items-center gap-3 bg-[#f8f6f1] px-4 py-3 border-b border-[#37322f]/5">
+                            <div class="flex size-9 items-center justify-center rounded-full bg-[#d9e2cb] text-[#60764b]">
+                                <i data-lucide="shopping-bag" class="size-4"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-[#37322f]">Minha Boutique</p>
+                                <p class="text-[10px] text-[#817971]">Catálogo online</p>
+                            </div>
+                            <span class="ml-auto rounded-full bg-[#edf0e7] px-2 py-1 text-[10px] font-medium text-[#69784c]">Pedido #1042</span>
+                        </div>
+
+                        <div class="flex flex-col gap-3 p-4">
+                            <div id="order-message-preview" class="max-w-[90%] self-end rounded-2xl rounded-tr-sm bg-white p-3 text-[11px] leading-[1.8] text-[#37322f] shadow-sm text-left">
+                                <strong>Olá! Gostaria de fazer o pedido #1042:</strong><br>
+                                • 1x Camiseta Basic (Preta / G) — R$ 59,90<br>
+                                • 2x Bermuda Jeans (Tamanho 42) — R$ 179,80<br>
+                                <span class="text-[#a39a90]">————————————</span><br>
+                                <strong>Total: R$ 239,70</strong><br>
+                                Nome: João da Silva<br>
+                                Aguardo confirmação!
+                            </div>
+                            <span class="self-end text-[9px] text-[#8e887e]">10:42 ✓✓</span>
+
+                            <button type="button" id="copy-order-btn" class="flex items-center justify-center gap-2 rounded-xl border border-[#d8d4c9] bg-white/70 px-3 py-2 text-[10px] font-medium text-[#79736b] transition hover:bg-white hover:text-[#37322f]">
+                                <i data-lucide="copy" class="size-3.5" id="copy-icon"></i>
+                                <span id="copy-text">Pedido copiado e pronto para enviar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         {{-- Tabela de Preços e Cupom Container (Ticket 05) --}}
         <div id="pricing-slot"></div>
@@ -555,6 +680,35 @@
                         mobileMenu.classList.add('hidden');
                         if (menuIcon) menuIcon.classList.remove('hidden');
                         if (closeIcon) closeIcon.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Botão Interativo de Copiar Pedido Demo
+            const copyBtn = document.getElementById('copy-order-btn');
+            const copyText = document.getElementById('copy-text');
+
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function () {
+                    const textToCopy = `Olá! Gostaria de fazer o pedido #1042:
+• 1x Camiseta Basic (Preta / G) — R$ 59,90
+• 2x Bermuda Jeans (Tamanho 42) — R$ 179,80
+————————————
+Total: R$ 239,70
+Nome: João da Silva
+Aguardo confirmação!`;
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(textToCopy).then(function () {
+                            if (copyText) copyText.textContent = 'Pedido copiado para a área de transferência!';
+                            copyBtn.classList.add('bg-[#dff1d5]', 'border-[#b8deb3]', 'text-[#487045]');
+                            setTimeout(function () {
+                                if (copyText) copyText.textContent = 'Pedido copiado e pronto para enviar';
+                                copyBtn.classList.remove('bg-[#dff1d5]', 'border-[#b8deb3]', 'text-[#487045]');
+                            }, 2500);
+                        });
+                    } else {
+                        if (copyText) copyText.textContent = 'Pedido pronto para enviar!';
                     }
                 });
             }

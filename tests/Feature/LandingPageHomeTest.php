@@ -132,5 +132,43 @@ test('comparison section contrasts old way against zapcatalogo workflow', functi
     $response->assertSee('Pedido completo, somado e pronto no WhatsApp', false);
 });
 
+test('how it works section renders 3 sequential steps', function () {
+    $response = $this->get('/');
+
+    $response->assertStatus(200);
+    $response->assertSee('id="como-funciona"', false);
+    $response->assertSee('Do catálogo ao pedido em 3 passos.', false);
+    $response->assertSee('Monte sua vitrine', false);
+    $response->assertSee('Compartilhe seu link', false);
+    $response->assertSee('Receba e confirme', false);
+    $response->assertSee('01', false);
+    $response->assertSee('02', false);
+    $response->assertSee('03', false);
+});
+
+test('shopper story banner renders mobile shopping message', function () {
+    $response = $this->get('/');
+
+    $response->assertStatus(200);
+    $response->assertSee('A sua vitrine na palma da mão.', false);
+    $response->assertSee('Uma compra fácil, do começo ao fim', false);
+    $response->assertSee('mulher_comprando', false);
+});
+
+test('order demo section renders whatsapp interactive simulation with order #1042 and copy button', function () {
+    $response = $this->get('/');
+
+    $response->assertStatus(200);
+    $response->assertSee('id="demonstracao"', false);
+    $response->assertSee('O pedido chega. Você só precisa responder.', false);
+    $response->assertSee('Pedido #1042', false);
+    $response->assertSee('Camiseta Basic', false);
+    $response->assertSee('Bermuda Jeans', false);
+    $response->assertSee('Total: R$ 239,70', false);
+    $response->assertSee('João da Silva', false);
+    $response->assertSee('copy-order-btn', false);
+});
+
+
 
 
