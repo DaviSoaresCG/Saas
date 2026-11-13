@@ -90,35 +90,305 @@
         </div>
     @endif
 
+    {{-- Header / Navbar Flutuante --}}
+    <header class="sticky top-0 z-40 border-b border-[#37322f]/10 bg-[#f7f5f3]/90 backdrop-blur-xl transition-all">
+        <div class="mx-auto flex h-[72px] max-w-[1160px] items-center justify-between px-5 md:px-8">
+            {{-- BrandMark --}}
+            <a href="#inicio" class="flex items-center gap-2.5 font-semibold tracking-tight text-[#37322f]" aria-label="ZapCatálogo, início">
+                <span class="flex size-9 items-center justify-center rounded-xl bg-[#37322f] text-[#d7f56b] shadow-sm">
+                    <i data-lucide="shopping-bag" class="size-[18px]"></i>
+                </span>
+                <span class="text-[17px]">zap<span class="font-normal">catálogo</span></span>
+            </a>
+
+            {{-- Desktop Navigation Links --}}
+            <nav class="hidden items-center gap-8 md:flex" aria-label="Navegação principal">
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="#recursos">Funcionalidades</a>
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="#como-funciona">Como funciona</a>
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="#precos">Preços</a>
+                <a class="text-sm text-[#605a57] transition hover:text-[#37322f]" href="#duvidas">FAQ</a>
+            </nav>
+
+            {{-- Desktop Action Area (Auth vs Guest) --}}
+            <div class="hidden items-center gap-3 sm:flex">
+                @auth
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-medium text-[#605a57]">
+                            {{ auth()->user()->name }}
+                        </span>
+                        @if(auth()->user()->isLojaAtiva() && auth()->user()->slug)
+                            <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#37322f]/15 bg-white/80 px-3.5 text-xs font-medium text-[#37322f] transition hover:bg-white shadow-sm">
+                                <i data-lucide="external-link" class="size-3.5 text-[#849451]"></i>
+                                <span>Minha Loja</span>
+                            </a>
+                        @endif
+                        @if(auth()->user()->isSuperAdmin())
+                            <a href="{{ route('superadmin.index') }}" class="inline-flex h-9 items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-3 text-xs font-semibold text-amber-800 transition hover:bg-amber-100">
+                                <span>👑 Super Admin</span>
+                            </a>
+                        @endif
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="inline-flex h-9 items-center rounded-full border border-[#37322f]/15 px-3 text-xs font-medium text-[#605a57] transition hover:bg-[#37322f] hover:text-white">
+                                Sair
+                            </button>
+                        </form>
+                    </div>
+                @endauth
+
+                @guest
+                    <a href="{{ route('login') }}" class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]">
+                        Entrar no painel
+                    </a>
+                    <a href="{{ route('register') }}" class="inline-flex h-10 items-center gap-2 rounded-full bg-[#37322f] px-4 text-sm font-medium text-white shadow-sm transition hover:bg-[#514a45]">
+                        <span>Criar catálogo</span>
+                        <i data-lucide="arrow-right" class="size-4"></i>
+                    </a>
+                @endguest
+            </div>
+
+            {{-- Mobile Hamburger Button --}}
+            <div class="flex items-center sm:hidden">
+                <button type="button" id="mobile-menu-btn" aria-label="Abrir menu" class="inline-flex size-10 items-center justify-center rounded-xl border border-[#37322f]/10 text-[#37322f] transition hover:bg-white">
+                    <i data-lucide="menu" class="size-5" id="menu-icon"></i>
+                    <i data-lucide="x" class="hidden size-5" id="close-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile Dropdown Menu --}}
+        <div id="mobile-menu" class="hidden border-b border-[#37322f]/10 bg-[#f7f5f3] px-5 py-4 sm:hidden">
+            <nav class="flex flex-col gap-3" aria-label="Navegação mobile">
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="#recursos">Funcionalidades</a>
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="#como-funciona">Como funciona</a>
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="#precos">Preços</a>
+                <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="#duvidas">FAQ</a>
+                <div class="mt-2 flex flex-col gap-2 border-t border-[#37322f]/10 pt-3">
+                    @auth
+                        <p class="text-xs font-medium text-[#605a57]">Olá, {{ auth()->user()->name }}</p>
+                        @if(auth()->user()->isLojaAtiva() && auth()->user()->slug)
+                            <a href="{{ route('products.index', ['slug' => auth()->user()->slug]) }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-[#37322f]/15 bg-white text-xs font-medium text-[#37322f]">
+                                <i data-lucide="external-link" class="size-3.5 text-[#849451]"></i>
+                                <span>Minha Loja</span>
+                            </a>
+                        @endif
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full h-10 rounded-full border border-[#37322f]/15 text-xs font-medium text-[#605a57] hover:bg-[#37322f] hover:text-white">
+                                Sair
+                            </button>
+                        </form>
+                    @endauth
+
+                    @guest
+                        <a href="{{ route('login') }}" class="inline-flex h-10 items-center justify-center rounded-full border border-[#37322f]/15 bg-white text-xs font-medium text-[#37322f]">
+                            Entrar no painel
+                        </a>
+                        <a href="{{ route('register') }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#37322f] text-xs font-medium text-white hover:bg-[#514a45]">
+                            <span>Criar catálogo</span>
+                            <i data-lucide="arrow-right" class="size-4"></i>
+                        </a>
+                    @endguest
+                </div>
+            </nav>
+        </div>
+    </header>
+
     {{-- Shell Semântico da Landing Page --}}
     <main id="app" class="relative min-h-screen overflow-x-hidden">
-        {{-- Shell Base: Placeholder pronto para os blocos da Landing Page --}}
-        <div id="shell-container" class="relative mx-auto flex min-h-screen flex-col justify-between">
-            {{-- Header/Navbar Container (Ticket 02) --}}
-            <div id="header-slot"></div>
 
-            {{-- Hero Section Container (Ticket 02) --}}
-            <div id="hero-slot"></div>
+        {{-- Hero Section (Ticket 02) --}}
+        <section id="inicio" class="relative overflow-hidden px-5 pb-14 pt-16 md:pb-20 md:pt-24">
+            {{-- Dot pattern background com gradiente radial --}}
+            <div class="pointer-events-none absolute inset-0 opacity-40" style="background-image: radial-gradient(#a8a098 0.7px, transparent 0.7px); background-size: 22px 22px; -webkit-mask-image: linear-gradient(to bottom, black, transparent 48%); mask-image: linear-gradient(to bottom, black, transparent 48%);"></div>
 
-            {{-- Métricas, Funcionalidades e Comparativo Container (Ticket 03) --}}
-            <div id="features-slot"></div>
+            <div class="relative mx-auto flex max-w-[1160px] flex-col items-center text-center">
+                {{-- Pill badge --}}
+                <div class="inline-flex items-center gap-2 rounded-full border border-[#37322f]/10 bg-white/80 px-3.5 py-2 text-xs font-medium text-[#514b46] shadow-sm backdrop-blur-sm">
+                    <i data-lucide="zap" class="size-3.5 fill-[#9fc54f] text-[#9fc54f]"></i>
+                    <span>ZapCatálogo 2.0</span>
+                    <span class="h-3 w-px bg-[#37322f]/15"></span>
+                    <span>Sem taxas por venda</span>
+                </div>
 
-            {{-- Como Funciona e Demonstração do Pedido Container (Ticket 04) --}}
-            <div id="how-it-works-slot"></div>
+                {{-- Headline editorial com Instrument Serif --}}
+                <h1 class="mt-7 max-w-[900px] font-serif text-[clamp(44px,7vw,82px)] leading-[.99] tracking-[-.045em] text-[#37322f]">
+                    Seu WhatsApp pode vender <span class="italic text-[#7d8f55]">muito mais.</span>
+                </h1>
 
-            {{-- Tabela de Preços e Cupom Container (Ticket 05) --}}
-            <div id="pricing-slot"></div>
+                {{-- Subheadline persuasiva --}}
+                <p class="mt-6 max-w-[610px] text-base leading-7 text-[#605a57] md:text-lg">
+                    Crie uma loja digital profissional com link próprio, carrinho inteligente e pedidos organizados no WhatsApp. Sem complicação e com <strong class="font-semibold text-[#37322f]">0% de comissão.</strong>
+                </p>
 
-            {{-- FAQ, CTA Final e Rodapé Container (Ticket 06) --}}
-            <div id="closing-slot"></div>
-        </div>
+                {{-- CTAs --}}
+                <div class="mt-8 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
+                    @auth
+                        <a href="#precos" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#37322f] px-6 text-sm font-medium text-white shadow-[0_8px_22px_rgba(55,50,47,.17)] transition hover:-translate-y-0.5 hover:bg-[#514a45]">
+                            <span>Começar agora</span>
+                            <i data-lucide="arrow-right" class="size-4"></i>
+                        </a>
+                    @else
+                        <a href="{{ route('register') }}" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#37322f] px-6 text-sm font-medium text-white shadow-[0_8px_22px_rgba(55,50,47,.17)] transition hover:-translate-y-0.5 hover:bg-[#514a45]">
+                            <span>Começar agora</span>
+                            <i data-lucide="arrow-right" class="size-4"></i>
+                        </a>
+                    @endauth
+                    <a href="#demonstracao" class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#37322f]/15 bg-white/70 px-6 text-sm font-medium text-[#37322f] transition hover:bg-white shadow-sm">
+                        <span class="flex size-6 items-center justify-center rounded-full bg-[#e9eddf]">
+                            <i data-lucide="arrow-down" class="size-3.5"></i>
+                        </span>
+                        <span>Ver demonstração</span>
+                    </a>
+                </div>
+
+                {{-- Selos de confiança --}}
+                <div class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-[#716a64]">
+                    <span class="inline-flex items-center gap-1.5">
+                        <i data-lucide="check" class="size-3.5 text-[#839b50]"></i> 0% de comissão
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <i data-lucide="check" class="size-3.5 text-[#839b50]"></i> Configuração simples
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <i data-lucide="check" class="size-3.5 text-[#839b50]"></i> Cancele quando quiser
+                    </span>
+                </div>
+
+                {{-- Mockup Duplo: Smartphone com Vitrine + Balão WhatsApp --}}
+                <div class="relative mx-auto w-full max-w-[930px] pt-4 md:pt-10">
+                    {{-- Halos de luz de fundo --}}
+                    <div class="absolute -left-10 top-24 hidden h-48 w-48 rounded-full bg-[#d7f56b]/40 blur-3xl md:block pointer-events-none"></div>
+                    <div class="absolute -right-8 bottom-4 hidden h-52 w-52 rounded-full bg-[#e8b68e]/35 blur-3xl md:block pointer-events-none"></div>
+
+                    <div class="relative grid items-center gap-5 md:grid-cols-[1fr_1.1fr] md:gap-8">
+                        {{-- Mockup do Smartphone --}}
+                        <div class="relative mx-auto w-[min(100%,350px)] rounded-[34px] border-[8px] border-[#292725] bg-white p-2 shadow-[0_28px_80px_rgba(55,50,47,.18)]">
+                            <div class="overflow-hidden rounded-[25px] bg-[#fbfaf8]">
+                                {{-- Topo do app mobile --}}
+                                <div class="flex items-center justify-between border-b border-[#37322f]/10 px-4 py-3">
+                                    <span class="text-xs font-semibold text-[#37322f]">boutique.zapcatalogo.com.br</span>
+                                    <i data-lucide="shopping-bag" class="size-4 text-[#37322f]"></i>
+                                </div>
+                                {{-- Banner interno da loja --}}
+                                <div class="bg-[#f1eadf] px-4 py-5 text-left">
+                                    <span class="text-[10px] font-medium uppercase tracking-[.2em] text-[#827267]">nova coleção</span>
+                                    <h3 class="mt-1 font-serif text-[28px] leading-none text-[#37322f]">Vista o seu melhor.</h3>
+                                    <div class="mt-4 flex h-9 items-center gap-2 rounded-full bg-white/80 px-3 text-xs text-[#8a817a]">
+                                        <i data-lucide="search" class="size-3.5"></i>
+                                        <span>Buscar produtos</span>
+                                    </div>
+                                </div>
+                                {{-- Vitrine em 2 colunas --}}
+                                <div class="grid grid-cols-2 gap-2 p-3 text-left">
+                                    <div class="rounded-xl bg-[#e8d7c7] p-2">
+                                        <div class="flex h-[94px] items-center justify-center rounded-lg bg-gradient-to-br from-[#d9c2aa] to-[#b48c70]">
+                                            <span class="text-2xl text-white/90">✦</span>
+                                        </div>
+                                        <p class="mt-2 text-[11px] font-medium text-[#37322f]">Blusa Aurora</p>
+                                        <p class="text-[10px] text-[#766c64]">R$ 89,90</p>
+                                    </div>
+                                    <div class="rounded-xl bg-[#e8d7c7] p-2">
+                                        <div class="flex h-[94px] items-center justify-center rounded-lg bg-gradient-to-br from-[#d1d9ca] to-[#87927e]">
+                                            <span class="text-2xl text-white/90">✦</span>
+                                        </div>
+                                        <p class="mt-2 text-[11px] font-medium text-[#37322f]">Bolsa Serena</p>
+                                        <p class="text-[10px] text-[#766c64]">R$ 149,90</p>
+                                    </div>
+                                </div>
+                                {{-- Barra de sacola inferior --}}
+                                <div class="mx-3 mb-3 flex items-center justify-between rounded-xl bg-[#37322f] px-3 py-2.5 text-white">
+                                    <span class="text-[11px]">Ver sacola · 2 itens</span>
+                                    <span class="text-xs font-semibold">R$ 239,80</span>
+                                </div>
+                            </div>
+                            {{-- Notch do celular --}}
+                            <div class="absolute left-1/2 top-1.5 h-4 w-20 -translate-x-1/2 rounded-b-xl bg-[#292725]"></div>
+                        </div>
+
+                        {{-- Mockup do WhatsApp Business --}}
+                        <div class="relative rounded-2xl border border-[#dce8d3] bg-[#f0f7eb] p-4 text-left shadow-[0_18px_55px_rgba(55,50,47,.10)] md:ml-0 md:p-5">
+                            <div class="mb-4 flex items-center gap-3 border-b border-[#dce8d3] pb-3">
+                                <div class="flex size-9 items-center justify-center rounded-full bg-[#20b85a] text-white shadow-sm">
+                                    <i data-lucide="message-circle" class="size-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-[#37322f]">Seu WhatsApp Business</div>
+                                    <div class="text-[11px] text-[#75816e]">Pedido recebido agora</div>
+                                </div>
+                                <span class="ml-auto rounded-full bg-[#dff1d5] px-2 py-1 text-[10px] font-semibold text-[#487045]">NOVO</span>
+                            </div>
+
+                            {{-- Balão da mensagem formatada --}}
+                            <div class="rounded-xl rounded-tl-sm bg-white p-4 text-[12px] leading-[1.8] text-[#37322f] shadow-sm">
+                                <p class="font-semibold text-[#2f3e29]">Olá! Quero fazer o pedido #1024:</p>
+                                <p class="mt-2">
+                                    • 1x Blusa Aurora (Areia / M)<br>
+                                    • 1x Bolsa Serena<br>
+                                    <span class="text-[#a8a39a]">—————————————</span><br>
+                                    <strong>Total: R$ 239,80</strong><br>
+                                    Cliente: Marina Costa
+                                </p>
+                                <p class="mt-2 text-[#687f5e] font-medium">Aguardo confirmação!</p>
+                                <span class="mt-2 block text-right text-[10px] text-[#9ba397]">10:42 ✓✓</span>
+                            </div>
+
+                            {{-- Destaque explicativo inferior --}}
+                            <div class="mt-3 flex items-center gap-2 rounded-xl bg-white/70 px-3 py-2 text-[11px] text-[#697363]">
+                                <i data-lucide="zap" class="size-3.5 text-[#93b64b]"></i>
+                                <span>Pedido montado automaticamente pelo catálogo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Badge explicativo sob o mockup --}}
+                    <div class="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full border border-[#37322f]/10 bg-white/80 px-4 py-2 text-xs text-[#605a57] shadow-sm">
+                        <span class="size-2 rounded-full bg-[#9ac34b]"></span>
+                        <span>Uma vitrine bonita. Um pedido que já chega pronto.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{-- Métricas, Funcionalidades e Comparativo Container (Ticket 03) --}}
+        <div id="features-slot"></div>
+
+        {{-- Como Funciona e Demonstração do Pedido Container (Ticket 04) --}}
+        <div id="how-it-works-slot"></div>
+
+        {{-- Tabela de Preços e Cupom Container (Ticket 05) --}}
+        <div id="pricing-slot"></div>
+
+        {{-- FAQ, CTA Final e Rodapé Container (Ticket 06) --}}
+        <div id="closing-slot"></div>
     </main>
 
-    <!-- Inicialização dos ícones Lucide -->
+    <!-- Inicialização dos ícones Lucide e Interatividade Mobile -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
+            }
+
+            // Menu Mobile Toggle
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function () {
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden');
+                        if (menuIcon) menuIcon.classList.add('hidden');
+                        if (closeIcon) closeIcon.classList.remove('hidden');
+                    } else {
+                        mobileMenu.classList.add('hidden');
+                        if (menuIcon) menuIcon.classList.remove('hidden');
+                        if (closeIcon) closeIcon.classList.add('hidden');
+                    }
+                });
             }
         });
     </script>

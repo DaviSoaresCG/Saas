@@ -4,13 +4,13 @@
 
 **Blocked by:** 01 — Configurar design system Brillance com fontes, paleta e shell base da Home
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] O cabeçalho fixo exibe a marca ZapCatálogo, links de navegação para âncoras da página e botões de ação adaptados ao estado do usuário.
-- [ ] Quando o usuário está autenticado (`@auth`), o cabeçalho exibe link direto para o catálogo da sua loja (`products.index`), atalho para o painel administrativo e botão/formulário funcional de logout.
-- [ ] Quando o usuário é visitante (`@guest`), o cabeçalho exibe links para login e criação de conta/catálogo.
-- [ ] A Hero Section exibe a headline em Instrument Serif com o estilo editorial do Brillance, subtítulo e badges de confiança ("0% de comissão", "Configuração simples", "Cancele quando quiser").
-- [ ] Os botões de CTA da Hero direcionam o usuário para a área de planos/cadastro ou iniciam a rolagem para a demonstração.
-- [ ] O mockup de produto exibe o smartphone estilizado com vitrine da loja e o balão realista de mensagem de pedido recebido no WhatsApp com itens e total somado.
-- [ ] O conjunto Hero + Header é totalmente responsivo e adaptado para telas mobile, tablets e desktops.
+- [x] O cabeçalho fixo exibe a marca ZapCatálogo, links de navegação para âncoras da página e botões de ação adaptados ao estado do usuário.
+- [x] Quando o usuário está autenticado (`@auth`), o cabeçalho exibe link direto para o catálogo da sua loja (`products.index`), atalho para o painel administrativo e botão/formulário funcional de logout.
+- [x] Quando o usuário é visitante (`@guest`), o cabeçalho exibe links para login e criação de conta/catálogo.
+- [x] A Hero Section exibe a headline em Instrument Serif com o estilo editorial do Brillance, subtítulo e badges de confiança ("0% de comissão", "Configuração simples", "Cancele quando quiser").
+- [x] Os botões de CTA da Hero direcionam o usuário para a área de planos/cadastro ou iniciam a rolagem para a demonstração.
+- [x] O mockup de produto exibe o smartphone estilizado com vitrine da loja e o balão realista de mensagem de pedido recebido no WhatsApp com itens e total somado.
+- [x] O conjunto Hero + Header é totalmente responsivo e adaptado para telas mobile, tablets e desktops.
 
