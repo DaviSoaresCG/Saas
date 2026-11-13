@@ -4,12 +4,11 @@
 
 **Blocked by:** 02 — Implementar tela de login com toggle de senha e feedback de erros, 03 — Implementar tela de cadastro com campos de loja, WhatsApp e validações
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A tela de recuperação de senha (`forgot-password.blade.php`) adota o layout Brillance com título explicativo e botão de envio de link de recuperação.
-- [ ] A tela de redefinição de senha (`reset-password.blade.php`) adota o layout Brillance com os campos necessários e validações.
-- [ ] Teste automatizado valida renderização 200 OK das rotas `/login` e `/register` com a estrutura split-screen e elementos da marca.
-- [ ] Teste automatizado valida submissão de login com credenciais válidas e mensagem amigável para credenciais inválidas.
-- [ ] Teste automatizado valida fluxo de registro de novo lojista criando usuário, telefone e slug exclusivo da loja.
-- [ ] A suíte completa de testes da aplicação (`php artisan test`) executa sem falhas nem regressões.
-
+- [x] A tela de recuperação de senha (`forgot-password.blade.php`) adota o layout Brillance com título explicativo e botão de envio de link de recuperação.
+- [x] A tela de redefinição de senha (`reset-password.blade.php`) adota o layout Brillance com os campos necessários e validações.
+- [x] Teste automatizado valida renderização 200 OK das rotas `/login` e `/register` com a estrutura split-screen e elementos da marca.
+- [x] Teste automatizado valida submissão de login com credenciais válidas e mensagem amigável para credenciais inválidas.
+- [x] Teste automatizado valida fluxo de registro de novo lojista criando usuário, telefone e slug exclusivo da loja.
+- [x] A suíte completa de testes da aplicação (`php artisan test`) executa sem falhas nem regressões.
