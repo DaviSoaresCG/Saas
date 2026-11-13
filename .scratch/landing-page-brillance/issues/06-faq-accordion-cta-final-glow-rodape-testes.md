@@ -4,13 +4,13 @@
 
 **Blocked by:** 03 — Implementar barra de métricas, grade de funcionalidades e comparativo de vendas, 04 — Implementar fluxo em 3 passos, banner de compra mobile e demonstração interativa do pedido, 05 — Implementar tabela de preços mensal e anual, validação de cupom e fluxo de contratação
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A seção de FAQ implementa acordeão interativo e acessível (via Alpine.js ou `<details>` estendido) com rotação suave do ícone chevron e respostas claras às 5 dúvidas principais.
-- [ ] O banner final (CTA escuro) é renderizado com visual sofisticado, efeitos luminosos nos cantos, badge explicativa e botão principal direcionando para o cadastro/preços.
-- [ ] O rodapé semântico exibe a marca ZapCatálogo, ano atual dinâmico e links de navegação consistentes com as seções da página.
-- [ ] O teste automatizado em Pest (`tests/Feature/LandingPageHomeTest.php`) valida que a rota `GET /` retorna status HTTP 200 para visitantes não autenticados e contém as seções principais da landing page.
-- [ ] O teste automatizado valida que para usuários autenticados a Home renderiza o link para a sua loja e o atalho para o painel.
-- [ ] O teste automatizado valida que os botões de plano apontam para os destinos corretos tanto para visitantes quanto para usuários logados.
-- [ ] A suíte completa de testes da aplicação executa sem falhas nem regressões.
+- [x] A seção de FAQ implementa acordeão interativo e acessível (via Alpine.js ou `<details>` estendido) com rotação suave do ícone chevron e respostas claras às 5 dúvidas principais.
+- [x] O banner final (CTA escuro) é renderizado com visual sofisticado, efeitos luminosos nos cantos, badge explicativa e botão principal direcionando para o cadastro/preços.
+- [x] O rodapé semântico exibe a marca ZapCatálogo, ano atual dinâmico e links de navegação consistentes com as seções da página.
+- [x] O teste automatizado em Pest (`tests/Feature/LandingPageHomeTest.php`) valida que a rota `GET /` retorna status HTTP 200 para visitantes não autenticados e contém as seções principais da landing page.
+- [x] O teste automatizado valida que para usuários autenticados a Home renderiza o link para a sua loja e o atalho para o painel.
+- [x] O teste automatizado valida que os botões de plano apontam para os destinos corretos tanto para visitantes quanto para usuários logados.
+- [x] A suíte completa de testes da aplicação executa sem falhas nem regressões.
 

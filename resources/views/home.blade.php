@@ -790,9 +790,142 @@
             </div>
         </section>
 
-        {{-- FAQ, CTA Final e Rodapé Container (Ticket 06) --}}
-        <div id="closing-slot"></div>
+        {{-- FAQ (Perguntas Frequentes - Ticket 06) --}}
+        <section id="duvidas" class="px-5 py-20 md:px-8 md:py-28">
+            <div class="mx-auto max-w-[760px]">
+                <div class="mx-auto mb-12 text-center">
+                    <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#849451]">Perguntas frequentes</span>
+                    <h2 class="mt-3 font-serif text-4xl leading-tight tracking-[-.025em] text-[#37322f] md:text-5xl">Ficou com alguma dúvida?</h2>
+                    <p class="mt-4 text-sm leading-6 text-[#716a64] md:text-base">Respostas diretas para você começar com tranquilidade.</p>
+                </div>
+
+                <div class="flex flex-col divide-y divide-[#37322f]/10 border-y border-[#37322f]/10 text-left">
+                    {{-- FAQ 1 --}}
+                    <details class="group py-5">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-[#37322f] marker:hidden [&::-webkit-details-marker]:hidden">
+                            <span>O ZapCatálogo cobra comissão sobre as vendas?</span>
+                            <i data-lucide="chevron-down" class="size-4 shrink-0 text-[#7f8e59] transition-transform duration-200 group-open:rotate-180"></i>
+                        </summary>
+                        <p class="max-w-[650px] pt-3 text-sm leading-6 text-[#716a64]">
+                            Não. Você paga somente a assinatura fixa e fica com 100% do valor das suas vendas. Não cobramos comissão por pedido.
+                        </p>
+                    </details>
+
+                    {{-- FAQ 2 --}}
+                    <details class="group py-5">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-[#37322f] marker:hidden [&::-webkit-details-marker]:hidden">
+                            <span>Como o cliente paga pelo pedido?</span>
+                            <i data-lucide="chevron-down" class="size-4 shrink-0 text-[#7f8e59] transition-transform duration-200 group-open:rotate-180"></i>
+                        </summary>
+                        <p class="max-w-[650px] pt-3 text-sm leading-6 text-[#716a64]">
+                            O pedido chega organizado no seu WhatsApp. Você combina diretamente com o cliente a forma de pagamento e a entrega: Pix, cartão, dinheiro ou link.
+                        </p>
+                    </details>
+
+                    {{-- FAQ 3 --}}
+                    <details class="group py-5">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-[#37322f] marker:hidden [&::-webkit-details-marker]:hidden">
+                            <span>Posso escolher o endereço da minha loja?</span>
+                            <i data-lucide="chevron-down" class="size-4 shrink-0 text-[#7f8e59] transition-transform duration-200 group-open:rotate-180"></i>
+                        </summary>
+                        <p class="max-w-[650px] pt-3 text-sm leading-6 text-[#716a64]">
+                            Sim. Você escolhe o nome do seu subdomínio, como sualoja.zapcatalogo.com.br, e compartilha o link nas suas redes.
+                        </p>
+                    </details>
+
+                    {{-- FAQ 4 --}}
+                    <details class="group py-5">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-[#37322f] marker:hidden [&::-webkit-details-marker]:hidden">
+                            <span>O catálogo funciona bem no celular?</span>
+                            <i data-lucide="chevron-down" class="size-4 shrink-0 text-[#7f8e59] transition-transform duration-200 group-open:rotate-180"></i>
+                        </summary>
+                        <p class="max-w-[650px] pt-3 text-sm leading-6 text-[#716a64]">
+                            Sim. A experiência é pensada para celular, e você pode escolher exibir seus produtos em uma ou duas colunas.
+                        </p>
+                    </details>
+
+                    {{-- FAQ 5 --}}
+                    <details class="group py-5">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-[#37322f] marker:hidden [&::-webkit-details-marker]:hidden">
+                            <span>Preciso instalar algum aplicativo?</span>
+                            <i data-lucide="chevron-down" class="size-4 shrink-0 text-[#7f8e59] transition-transform duration-200 group-open:rotate-180"></i>
+                        </summary>
+                        <p class="max-w-[650px] pt-3 text-sm leading-6 text-[#716a64]">
+                            Não. Seu catálogo e o painel funcionam diretamente no navegador, tanto para você quanto para seus clientes.
+                        </p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        {{-- CTA Final de Alta Conversão (Ticket 06) --}}
+        <section id="criar-conta" class="px-5 pb-16 md:px-8 md:pb-20">
+            <div class="relative mx-auto max-w-[1160px] overflow-hidden rounded-[28px] bg-[#37322f] px-6 py-14 text-center shadow-2xl md:px-12 md:py-20">
+                {{-- Halos de luz de fundo glow --}}
+                <div class="pointer-events-none absolute -left-16 -top-24 size-64 rounded-full bg-[#a8c65c]/25 blur-[70px]"></div>
+                <div class="pointer-events-none absolute -bottom-28 -right-10 size-72 rounded-full bg-[#dba982]/20 blur-[80px]"></div>
+
+                <div class="relative mx-auto max-w-[680px]">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-[11px] font-medium text-white/75 backdrop-blur-sm">
+                        <i data-lucide="clock-3" class="size-3.5 text-[#d7f56b]"></i>
+                        <span>Sua loja começa com um link</span>
+                    </span>
+
+                    <h2 class="mt-5 font-serif text-4xl leading-tight tracking-[-.025em] text-white md:text-6xl">
+                        Pronto para vender mais pelo WhatsApp?
+                    </h2>
+
+                    <p class="mx-auto mt-4 max-w-[480px] text-sm leading-6 text-white/70 md:text-base">
+                        Crie sua vitrine, compartilhe seu link e receba pedidos sem abrir mão do seu lucro.
+                    </p>
+
+                    <div class="mt-7 flex justify-center">
+                        @auth
+                            <a href="#precos" class="inline-flex h-12 items-center gap-2 rounded-full bg-[#d7f56b] px-6 text-sm font-semibold text-[#37322f] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#e2ff88]">
+                                <span>Criar meu catálogo agora</span>
+                                <i data-lucide="arrow-right" class="size-4"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="inline-flex h-12 items-center gap-2 rounded-full bg-[#d7f56b] px-6 text-sm font-semibold text-[#37322f] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#e2ff88]">
+                                <span>Criar meu catálogo agora</span>
+                                <i data-lucide="arrow-right" class="size-4"></i>
+                            </a>
+                        @endauth
+                    </div>
+
+                    <p class="mt-4 text-[11px] text-white/50">
+                        Sem comissão · Sem complicação · Cancele quando quiser
+                    </p>
+                </div>
+            </div>
+        </section>
     </main>
+
+    {{-- Rodapé Semântico (Ticket 06) --}}
+    <footer class="border-t border-[#37322f]/10 bg-[#f7f5f3] px-5 py-7 md:px-8">
+        <div class="mx-auto flex max-w-[1160px] flex-col items-center justify-between gap-4 sm:flex-row">
+            {{-- BrandMark no Rodapé --}}
+            <a href="#inicio" class="flex items-center gap-2.5 font-semibold tracking-tight text-[#37322f]" aria-label="ZapCatálogo, início">
+                <span class="flex size-8 items-center justify-center rounded-xl bg-[#37322f] text-[#d7f56b] shadow-sm">
+                    <i data-lucide="shopping-bag" class="size-4"></i>
+                </span>
+                <span class="text-[16px]">zap<span class="font-normal">catálogo</span></span>
+            </a>
+
+            {{-- Direitos Autorais --}}
+            <p class="text-xs text-[#857d76]">
+                © {{ date('Y') }} ZapCatálogo. Todos os direitos reservados.
+            </p>
+
+            {{-- Links de Navegação do Rodapé --}}
+            <nav class="flex gap-5 text-xs text-[#716a64]" aria-label="Links do rodapé">
+                <a href="#recursos" class="transition hover:text-[#37322f]">Funcionalidades</a>
+                <a href="#como-funciona" class="transition hover:text-[#37322f]">Como funciona</a>
+                <a href="#precos" class="transition hover:text-[#37322f]">Preços</a>
+                <a href="#duvidas" class="transition hover:text-[#37322f]">Dúvidas</a>
+            </nav>
+        </div>
+    </footer>
 
     <!-- Inicialização dos ícones Lucide e Interatividade Mobile -->
     <script>

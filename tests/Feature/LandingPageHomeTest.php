@@ -215,6 +215,44 @@ test('coupon form is rendered with discount verification support', function () {
     $response->assertSee('name="code"', false);
 });
 
+test('faq section renders accordion details with answers to essential merchant questions', function () {
+    $response = $this->get('/');
+
+    $response->assertStatus(200);
+    $response->assertSee('id="duvidas"', false);
+    $response->assertSee('Ficou com alguma dúvida?', false);
+    $response->assertSee('O ZapCatálogo cobra comissão sobre as vendas?', false);
+    $response->assertSee('Como o cliente paga pelo pedido?', false);
+    $response->assertSee('Posso escolher o endereço da minha loja?', false);
+    $response->assertSee('O catálogo funciona bem no celular?', false);
+    $response->assertSee('Preciso instalar algum aplicativo?', false);
+    $response->assertSee('<details', false);
+    $response->assertSee('<summary', false);
+});
+
+test('final cta section renders glow conversion banner and action button', function () {
+    $response = $this->get('/');
+
+    $response->assertStatus(200);
+    $response->assertSee('id="criar-conta"', false);
+    $response->assertSee('Pronto para vender mais pelo WhatsApp?', false);
+    $response->assertSee('Criar meu catálogo agora', false);
+    $response->assertSee('Sem comissão · Sem complicação · Cancele quando quiser', false);
+});
+
+test('footer section renders copyright with dynamic year and navigation anchors', function () {
+    $currentYear = date('Y');
+    $response = $this->get('/');
+
+    $response->assertStatus(200);
+    $response->assertSee("<footer", false);
+    $response->assertSee("© {$currentYear} ZapCatálogo. Todos os direitos reservados.", false);
+    $response->assertSee('href="#recursos"', false);
+    $response->assertSee('href="#precos"', false);
+    $response->assertSee('href="#duvidas"', false);
+});
+
+
 
 
 
