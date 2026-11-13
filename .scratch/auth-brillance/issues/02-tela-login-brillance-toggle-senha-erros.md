@@ -4,14 +4,14 @@
 
 **Blocked by:** 01 — Criar layout split-screen responsivo de autenticação no padrão Brillance
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] A tela de login renderiza a hierarquia tipográfica exata da referência: eyebrow verde musgo, headline em Instrument Serif e subtítulo explicativo.
-- [ ] O campo de e-mail possui ícone Lucide de envelope, autopreenchimento de valor anterior (`old('email')`) e validação visual de erro.
-- [ ] O campo de senha possui ícone de cadeado e botão funcional com Alpine.js para alternar entre tipo `password` e `text`, atualizando o ícone de olho.
-- [ ] O formulário contém token CSRF e submete via POST para `route('login')`.
-- [ ] Link "Esqueceu a senha?" direciona para `route('password.request')` quando configurado.
-- [ ] Botão principal "Entrar →" estilizado em carvão `#37322f` com cantos arredondados (`rounded-full`) e efeito hover suave.
-- [ ] Link inferior "Ainda não tem conta? Criar conta" direciona para `route('register')`.
-- [ ] Mensagens de status da sessão (ex: redefinição de senha realizada) e erros de credenciais são exibidos de forma amigável e acessível.
+- [x] A tela de login renderiza a hierarquia tipográfica exata da referência: eyebrow verde musgo, headline em Instrument Serif e subtítulo explicativo.
+- [x] O campo de e-mail possui ícone Lucide de envelope, autopreenchimento de valor anterior (`old('email')`) e validação visual de erro.
+- [x] O campo de senha possui ícone de cadeado e botão funcional com Alpine.js para alternar entre tipo `password` e `text`, atualizando o ícone de olho.
+- [x] O formulário contém token CSRF e submete via POST para `route('login')`.
+- [x] Link "Esqueceu a senha?" direciona para `route('password.request')` quando configurado.
+- [x] Botão principal "Entrar →" estilizado em carvão `#37322f` com cantos arredondados (`rounded-full`) e efeito hover suave.
+- [x] Link inferior "Ainda não tem conta? Criar conta" direciona para `route('register')`.
+- [x] Mensagens de status da sessão (ex: redefinição de senha realizada) e erros de credenciais são exibidos de forma amigável e acessível.
 

@@ -37,3 +37,34 @@ test('auth split layout renders split screen grid with typography and assets', f
     $view->assertSee('Uma vitrine que transforma visitas em conversas.', false);
     $view->assertSee('Organize seu catálogo e receba cada pedido pronto para continuar no WhatsApp.', false);
 });
+
+test('login screen renders brillance split layout with toggle senha and register link', function () {
+    $response = $this->get('/login');
+
+    $response->assertStatus(200);
+    $response->assertSee('Que bom ter você de volta', false);
+    $response->assertSee('Entre na sua conta.', false);
+    $response->assertSee('Acesse seu painel e continue cuidando da sua loja.', false);
+    $response->assertSee('name="email"', false);
+    $response->assertSee('voce@exemplo.com', false);
+    $response->assertSee('name="password"', false);
+    $response->assertSee('Sua senha', false);
+    $response->assertSee('Entrar', false);
+    $response->assertSee('Ainda não tem conta?', false);
+    $response->assertSee(route('register'), false);
+    $response->assertSee('mulher_comprando', false);
+});
+
+test('login screen displays validation error on failed authentication', function () {
+    $response = $this->from('/login')->post('/login', [
+        'email' => 'naoexiste@exemplo.com',
+        'password' => 'senhaerrada123',
+    ]);
+
+    $response->assertRedirect('/login');
+
+    $followResponse = $this->followRedirects($response);
+    $followResponse->assertStatus(200);
+    $followResponse->assertSee('Email ou senha errados', false);
+});
+
