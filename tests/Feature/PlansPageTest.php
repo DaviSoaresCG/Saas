@@ -45,3 +45,4 @@ test('active store merchant sees my store link in header on plans page', functio
     $response->assertStatus(200);
     $response->assertSee(route('products.index', ['slug' => 'boutique-elegance']), false);
 });
+
