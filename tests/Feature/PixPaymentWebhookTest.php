@@ -464,6 +464,73 @@ class PixPaymentWebhookTest extends TestCase
         $response->assertRedirect();
         $response->assertSessionHas('success');
     }
+
+    public function test_home_page_syncs_pending_payment_with_asaas_and_redirects_to_dashboard(): void
+    {
+        $user = User::factory()->create([
+            'nome_loja' => 'Loja da Home',
+            'status' => 'pending',
+            'plano_expira_em' => null,
+            'slug' => null,
+        ]);
+
+        $transaction = PaymentTransaction::create([
+            'user_id' => $user->id,
+            'payment_id' => 'pay_home_sync_123',
+            'amount' => 29.90,
+            'plan' => 'monthly',
+            'status' => 'pending',
+        ]);
+
+        Http::fake([
+            'https://sandbox.asaas.com/api/v3/payments/pay_home_sync_123' => Http::response([
+                'id' => 'pay_home_sync_123',
+                'status' => 'CONFIRMED',
+            ], 200),
+        ]);
+
+        $response = $this->actingAs($user)->get('/');
+
+        $user->refresh();
+        $transaction->refresh();
+
+        $this->assertEquals('approved', $transaction->status);
+        $this->assertEquals('active', $user->status);
+        $this->assertNotNull($user->plano_expira_em);
+        $this->assertNotNull($user->slug);
+
+        $response->assertRedirect(route('dashboard', ['slug' => $user->slug, 'welcome' => 1]));
+        $response->assertSessionHas('welcome', true);
+    }
+
+    public function test_home_page_renders_normally_when_payment_is_not_confirmed(): void
+    {
+        $user = User::factory()->create([
+            'nome_loja' => 'Loja Ainda Pendente',
+            'status' => 'pending',
+            'plano_expira_em' => null,
+        ]);
+
+        PaymentTransaction::create([
+            'user_id' => $user->id,
+            'payment_id' => 'pay_still_pending_456',
+            'amount' => 29.90,
+            'plan' => 'monthly',
+            'status' => 'pending',
+        ]);
+
+        Http::fake([
+            'https://sandbox.asaas.com/api/v3/payments/pay_still_pending_456' => Http::response([
+                'id' => 'pay_still_pending_456',
+                'status' => 'PENDING',
+            ], 200),
+        ]);
+
+        $response = $this->actingAs($user)->get('/');
+
+        $response->assertOk();
+        $response->assertViewIs('home');
+    }
 }
 
 

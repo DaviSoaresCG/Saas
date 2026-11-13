@@ -23,13 +23,10 @@ class SubscriptionController extends Controller
     }
 
     /**
-     * Exibe a tela de pagamento pendente/renovação e sincroniza com o Asaas se já pago.
+     * Sincroniza o status de transação pendente com o Asaas e aprova caso o pagamento tenha sido confirmado.
      */
-    public function pending(Request $request, AsaasService $asaasService)
+    public function syncPendingPayment(User $user, AsaasService $asaasService): bool
     {
-        $user = Auth::user();
-
-        // 1. Verifica se há transação pendente recente e sincroniza com o Asaas
         $lastPending = PaymentTransaction::where('user_id', $user->id)
             ->where('status', 'pending')
             ->latest()
@@ -40,13 +37,28 @@ class SubscriptionController extends Controller
                 $asaasPayment = $asaasService->getPayment($lastPending->payment_id);
                 if ($asaasPayment && in_array($asaasPayment['status'] ?? '', ['RECEIVED', 'CONFIRMED'])) {
                     $this->approveTransactionAndUser($lastPending, $user, $lastPending->payment_id);
-                    return redirect()->route('dashboard', ['slug' => $user->slug, 'welcome' => 1])
-                        ->with('welcome', true)
-                        ->with('success', 'Assinatura confirmada com sucesso! Bem-vindo ao ZapCatálogo.');
+                    return true;
                 }
             } catch (\Exception $e) {
-                Log::warning("Erro ao sincronizar status Asaas em pending(): " . $e->getMessage());
+                Log::warning("Erro ao sincronizar status Asaas para o usuário {$user->id}: " . $e->getMessage());
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * Exibe a tela de pagamento pendente/renovação e sincroniza com o Asaas se já pago.
+     */
+    public function pending(Request $request, AsaasService $asaasService)
+    {
+        $user = Auth::user();
+
+        // 1. Verifica se há transação pendente recente e sincroniza com o Asaas
+        if ($this->syncPendingPayment($user, $asaasService)) {
+            return redirect()->route('dashboard', ['slug' => $user->slug, 'welcome' => 1])
+                ->with('welcome', true)
+                ->with('success', 'Assinatura confirmada com sucesso! Bem-vindo ao ZapCatálogo.');
         }
 
         // Se a loja já está ativa e o usuário NÃO está pedindo renovação explícita, vai para o dashboard
