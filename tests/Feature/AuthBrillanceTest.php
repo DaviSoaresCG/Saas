@@ -197,3 +197,137 @@ test('user can reset password with valid token and is redirected to login', func
         return true;
     });
 });
+
+test('login screen renders brillance split layout with toggle senha and register link', function () {
+    $response = $this->get('/login');
+
+    $response->assertStatus(200);
+    $response->assertSee('Que bom ter você de volta', false);
+    $response->assertSee('Entre na sua conta.', false);
+    $response->assertSee('Acesse seu painel e continue cuidando da sua loja.', false);
+    $response->assertSee('name="email"', false);
+    $response->assertSee('voce@exemplo.com', false);
+    $response->assertSee('name="password"', false);
+    $response->assertSee('Sua senha', false);
+    $response->assertSee('Entrar', false);
+    $response->assertSee('Ainda não tem conta?', false);
+    $response->assertSee(route('register'), false);
+    $response->assertSee('mulher_comprando', false);
+});
+
+test('login screen displays validation error on failed authentication', function () {
+    $response = $this->from('/login')->post('/login', [
+        'email' => 'naoexiste@exemplo.com',
+        'password' => 'senhaerrada123',
+    ]);
+
+    $response->assertRedirect('/login');
+
+    $followResponse = $this->followRedirects($response);
+    $followResponse->assertStatus(200);
+    $followResponse->assertSee('Email ou senha errados', false);
+});
+
+test('register screen renders brillance split layout with all onboarding fields', function () {
+    $response = $this->get('/register');
+
+    $response->assertStatus(200);
+    $response->assertSee('Sua loja começa aqui', false);
+    $response->assertSee('Crie sua conta.', false);
+    $response->assertSee('Prepare sua vitrine digital e comece a receber pedidos pelo WhatsApp.', false);
+    $response->assertSee('name="name"', false);
+    $response->assertSee('name="email"', false);
+    $response->assertSee('name="whatsapp"', false);
+    $response->assertSee('name="store_name"', false);
+    $response->assertSee('name="password"', false);
+    $response->assertSee('name="password_confirmation"', false);
+    $response->assertSee('Criar minha conta', false);
+    $response->assertSee('Já tem uma conta?', false);
+    $response->assertSee(route('login'), false);
+    $response->assertSee('mulher_comprando', false);
+});
+
+test('register screen displays validation errors when submitting empty form', function () {
+    $response = $this->from('/register')->post('/register', []);
+
+    $response->assertRedirect('/register');
+
+    $followResponse = $this->followRedirects($response);
+    $followResponse->assertStatus(200);
+    $followResponse->assertSee('Este campo é obrigatório', false);
+});
+
+
+
+    $user = User::where('email', 'anaclara@exemplo.com')->first();
+    expect($user)->not->toBeNull();
+    expect($user->whatsapp)->toBe('11987654321');
+    expect($user->nome_loja)->toBe('Boutique Ana Clara');
+    expect($user->slug)->toBe('boutique-ana-clara');
+});
+
+test('forgot-password screen renders brillance split layout with recovery fields', function () {
+    $response = $this->get('/forgot-password');
+
+    $response->assertStatus(200);
+    $response->assertSee('Recuperação de acesso', false);
+    $response->assertSee('Esqueceu a senha?', false);
+    $response->assertSee('name="email"', false);
+    $response->assertSee('Enviar link de recuperação', false);
+    $response->assertSee(route('login'), false);
+    $response->assertSee('mulher_comprando', false);
+});
+
+test('forgot-password can request reset password link', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    $response = $this->post('/forgot-password', ['email' => $user->email]);
+
+    Notification::assertSentTo($user, ResetPassword::class);
+});
+
+test('reset-password screen renders brillance split layout with token and password fields', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+    $this->post('/forgot-password', ['email' => $user->email]);
+
+    Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
+        $response = $this->get('/reset-password/'.$notification->token);
+
+        $response->assertStatus(200);
+        $response->assertSee('Nova credencial', false);
+        $response->assertSee('Crie sua nova senha.', false);
+        $response->assertSee('name="token"', false);
+        $response->assertSee('name="email"', false);
+        $response->assertSee('name="password"', false);
+        $response->assertSee('name="password_confirmation"', false);
+        $response->assertSee('Redefinir senha', false);
+        $response->assertSee('mulher_comprando', false);
+
+        return true;
+    });
+});
+
+test('user can reset password with valid token and is redirected to login', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+    $this->post('/forgot-password', ['email' => $user->email]);
+
+    Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+        $response = $this->post('/reset-password', [
+            'token' => $notification->token,
+            'email' => $user->email,
+            'password' => 'NovaSenhaSegura123',
+            'password_confirmation' => 'NovaSenhaSegura123',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('login'));
+
+        return true;
+    });
+});
