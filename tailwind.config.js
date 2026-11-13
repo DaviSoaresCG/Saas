@@ -12,7 +12,21 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', 'Figtree', ...defaultTheme.fontFamily.sans],
+                serif: ['"Instrument Serif"', ...defaultTheme.fontFamily.serif],
+            },
+            colors: {
+                brillance: {
+                    bg: '#f7f5f3',
+                    paper: '#eeece8',
+                    charcoal: '#37322f',
+                    muted: '#605a57',
+                    subtle: '#716a64',
+                    lime: '#d7f56b',
+                    limeHover: '#e2ff88',
+                    moss: '#849451',
+                    olive: '#71834f',
+                },
             },
         },
     },
