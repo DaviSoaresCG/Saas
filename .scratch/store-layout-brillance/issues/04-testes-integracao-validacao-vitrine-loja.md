@@ -4,11 +4,11 @@
 
 **Blocked by:** Nenhum — Ticket 03 concluído.
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Criação ou atualização de testes de feature cobrindo a renderização do `<x-store-layout>` com elementos Brillance (`Instrument Serif`, classes editoriais e tokens semânticos).
-- [ ] Testes de integração validando a exibição do nome da loja, avatar com logo customizada e fallback com ícone padrão.
-- [ ] Validação automatizada do badge do carrinho no header (estados vazio, contagem numérica e contagem `99+`).
-- [ ] Teste de renderização do modal de adicionar ao carrinho na vitrine pública.
-- [ ] Execução da suíte completa de testes (`php artisan test`) com 100% de aprovação e zero regressões.
+- [x] Criação ou atualização de testes de feature cobrindo a renderização do `<x-store-layout>` com elementos Brillance (`Instrument Serif`, classes editoriais e tokens semânticos).
+- [x] Testes de integração validando a exibição do nome da loja, avatar com logo customizada e fallback com ícone padrão.
+- [x] Validação automatizada do badge do carrinho no header (estados vazio, contagem numérica e contagem `99+`).
+- [x] Teste de renderização do modal de adicionar ao carrinho na vitrine pública.
+- [x] Execução da suíte completa de testes (`php artisan test`) com 100% de aprovação e zero regressões.
 

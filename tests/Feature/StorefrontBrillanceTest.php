@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Catalogo;
+use App\Models\Products;
 use App\Models\User;
 
 test('storefront layout loads instrument serif and inter typography in styles stack', function () {
@@ -126,4 +127,129 @@ test('storefront modal renders brillance styling with rounded-3xl, font-serif pr
     $response->assertSee('Confirmar e Adicionar', false);
     $response->assertSee('rounded-xl', false);
     $response->assertSee('active:scale-[0.98]', false);
+});
+
+test('storefront renders tenant custom logo when available and standard icon fallback when absent', function () {
+    $userWithLogo = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+        'logo_path' => 'https://example.com/uploads/custom-logo.png',
+        'nome_loja' => 'Loja Com Logo',
+    ]);
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $responseWithLogo = $this->get("http://{$userWithLogo->slug}.{$domain}/produtos");
+    $responseWithLogo->assertOk();
+    $responseWithLogo->assertSee('src="https://example.com/uploads/custom-logo.png"', false);
+    $responseWithLogo->assertSee('alt="Loja Com Logo"', false);
+
+    $userWithoutLogo = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+        'logo_path' => null,
+        'nome_loja' => 'Loja Sem Logo',
+    ]);
+
+    $responseWithoutLogo = $this->get("http://{$userWithoutLogo->slug}.{$domain}/produtos");
+    $responseWithoutLogo->assertOk();
+    $responseWithoutLogo->assertDontSee('src="https://example.com/uploads/custom-logo.png"', false);
+    $responseWithoutLogo->assertSee('data-lucide="shopping-bag"', false);
+});
+
+test('storefront renders header cart badge accurately across empty, count, and 99+ states', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+
+    // 1. Estado vazio
+    $responseEmpty = $this->withSession(['cart' => []])
+        ->get("http://{$user->slug}.{$domain}/produtos");
+    $responseEmpty->assertOk();
+    $responseEmpty->assertSee('id="cart-badge"', false);
+    $responseEmpty->assertSee('class="hidden inline-flex', false);
+
+    // 2. Estado numérico (7 itens)
+    $responseCount = $this->withSession([
+        'cart' => [
+            'item_1' => ['id' => 1, 'name' => 'Vestido', 'value' => 150.00, 'quantity' => 3],
+            'item_2' => ['id' => 2, 'name' => 'Bolsa', 'value' => 80.00, 'quantity' => 4],
+        ],
+    ])->get("http://{$user->slug}.{$domain}/produtos");
+    $responseCount->assertOk();
+    $responseCount->assertSee('id="cart-badge"', false);
+    $responseCount->assertSee('7');
+
+    // 3. Estado 99+ (105 itens)
+    $response99Plus = $this->withSession([
+        'cart' => [
+            'item_1' => ['id' => 1, 'name' => 'Cinto', 'value' => 30.00, 'quantity' => 105],
+        ],
+    ])->get("http://{$user->slug}.{$domain}/produtos");
+    $response99Plus->assertOk();
+    $response99Plus->assertSee('id="cart-badge"', false);
+    $response99Plus->assertSee('99+');
+});
+
+test('storefront child views (products.show, cart.index, and pedidos.whatsapp) inherit brillance store layout typography and header', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+        'nome_loja' => 'Maison Brillance',
+        'whatsapp' => '11999998888',
+    ]);
+
+    $product = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Relógio Clássico Vintage',
+        'preco_base' => 380.00,
+        'sku' => 'REL-001',
+        'estoque' => 10,
+        'status' => true,
+        'description' => 'Relógio clássico de alta precisão',
+    ]);
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+
+    // 1. Teste de renderização em products.show
+    $responseShow = $this->get("http://{$user->slug}.{$domain}/produtos/{$product->id}");
+    $responseShow->assertOk();
+    $responseShow->assertSee('family=Instrument+Serif', false);
+    $responseShow->assertSee('Maison Brillance', false);
+    $responseShow->assertSee('backdrop-blur-xl', false);
+    $responseShow->assertSee('rounded-2xl', false);
+    $responseShow->assertSee('id="cart-badge"', false);
+
+    // 2. Teste de renderização em cart.index
+    $responseCart = $this->get("http://{$user->slug}.{$domain}/cart/index");
+    $responseCart->assertOk();
+    $responseCart->assertSee('family=Instrument+Serif', false);
+    $responseCart->assertSee('Maison Brillance', false);
+    $responseCart->assertSee('id="cart-badge"', false);
+    $responseCart->assertSee('rounded-2xl', false);
+
+    // 3. Teste de renderização em pedidos.whatsapp
+    $cart = [
+        'item_1' => [
+            'id' => $product->id,
+            'name' => $product->nome,
+            'value' => 380.00,
+            'quantity' => 1,
+        ],
+    ];
+
+    $responseOrder = $this->withSession(['cart' => $cart])
+        ->post("http://{$user->slug}.{$domain}/pedido-finalizar", [
+            'cliente_nome' => 'Cliente Elegante',
+            'cliente_phone' => '(11) 98888-7777',
+        ]);
+
+    $responseOrder->assertOk();
+    $responseOrder->assertViewIs('pedidos.whatsapp');
+    $responseOrder->assertSee('family=Instrument+Serif', false);
+    $responseOrder->assertSee('Maison Brillance', false);
+    $responseOrder->assertSee('Quase lá!', false);
+    $responseOrder->assertSee('Finalizar no WhatsApp', false);
 });

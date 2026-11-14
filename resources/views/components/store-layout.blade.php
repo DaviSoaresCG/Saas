@@ -30,7 +30,7 @@
                         $displayLogo = $storeLogo ?? $logoUrl ?? null;
                     @endphp
                     @if (!empty($displayLogo))
-                        <div class="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl overflow-hidden shrink-0 border border-[var(--text-base)]/10 bg-[var(--bg-card)] shadow-sm">
+                        <div class="flex h-16 w-16 sm:h-18 sm:w-18 items-center justify-center rounded-2xl overflow-hidden shrink-0 border border-[var(--text-base)]/10 bg-[var(--bg-card)] shadow-sm">
                             <img src="{{ $displayLogo }}" alt="{{ $storeName }}" class="h-full w-full object-cover">
                         </div>
                     @else
