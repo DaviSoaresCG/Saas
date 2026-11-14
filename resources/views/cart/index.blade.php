@@ -1,18 +1,38 @@
 <x-store-layout page-title='Carrinho'>
-    <div class="mb-6 flex flex-wrap items-center gap-2">
+    <div class="mb-6 sm:mb-8 flex flex-wrap items-center gap-3">
         <button type="button"
             onclick="(function(){try{var r=document.referrer;if(r&&new URL(r).hostname===location.hostname){history.back();return;}}catch(e){} window.location.href='{{ tenant_route('products.index') }}';})();"
-            class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-[var(--text-on-primary)] transition-colors">
-            <i data-lucide="arrow-left" class="h-4 w-4"></i>
-            Voltar
+            class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--text-base)]/15 bg-[var(--bg-card)] px-4 py-2 text-sm font-medium text-[var(--text-base)] shadow-sm transition-all hover:bg-[var(--text-base)]/5 active:scale-95">
+            <i data-lucide="arrow-left" class="h-4 w-4 stroke-[2]"></i>
+            <span>Voltar às compras</span>
         </button>
     </div>
-    <div class="container mx-auto dark:text-white">
-        
-        
-        <h1 class="text-3xl font-bold text-[var(--text-base)] mb-8">Meu Carrinho</h1>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="container mx-auto">
+        <div class="mb-8 sm:mb-10 flex flex-col gap-1">
+            <h1 class="font-serif text-3xl sm:text-4xl text-[var(--text-base)] tracking-tight">Meu Carrinho</h1>
+            <p class="text-sm sm:text-base text-[var(--text-muted)]">Revise os produtos selecionados antes de concluir seu pedido</p>
+        </div>
+
+        @if (empty($cart))
+            <div class="flex flex-col items-center justify-center rounded-3xl border border-[var(--text-base)]/10 bg-[var(--bg-card)] p-8 sm:p-14 text-center shadow-sm">
+                <div class="mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--text-base)]/5 text-[var(--text-base)] ring-1 ring-[var(--text-base)]/10">
+                    <i data-lucide="shopping-bag" class="h-10 w-10 stroke-[1.5]"></i>
+                </div>
+                <h2 class="font-serif text-2xl sm:text-3xl text-[var(--text-base)] tracking-tight">Seu carrinho está vazio</h2>
+                <p class="mt-2 max-w-md text-sm sm:text-base text-[var(--text-muted)]">
+                    Você ainda não adicionou nenhum produto ao seu carrinho. Explore nosso catálogo e encontre itens exclusivos para você.
+                </p>
+                <div class="mt-8">
+                    <a href="{{ tenant_route('products.index') }}"
+                        class="inline-flex items-center gap-2.5 rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm sm:text-base font-medium text-[var(--text-on-primary)] shadow-sm transition-all hover:opacity-95 active:scale-[0.98]">
+                        <i data-lucide="compass" class="h-4 w-4 stroke-[2]"></i>
+                        <span>Explorar produtos</span>
+                    </a>
+                </div>
+            </div>
+        @else
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             <div class="lg:col-span-2 space-y-3">
                 @foreach ($cart as $id => $item)
@@ -112,6 +132,7 @@
             </div>
 
         </div>
+        @endif
     </div>
 
     <!-- Modal de Finalização / Dados do Cliente -->
@@ -246,6 +267,7 @@
                     const data = await response.json();
 
                     if (data.success) {
+                        const count = typeof data.cartCounter !== 'undefined' ? (parseInt(data.cartCounter, 10) || 0) : null;
                         const isSobConsulta = {{ session('sob_consulta') ? 'true' : 'false' }};
                         if (!isSobConsulta) {
                             const summaryTotalEl = document.getElementById('summary-total');
@@ -253,8 +275,7 @@
                         }
 
                         const cartBadge = document.getElementById('cart-badge');
-                        if (cartBadge && typeof data.cartCounter !== 'undefined') {
-                            const count = parseInt(data.cartCounter, 10) || 0;
+                        if (cartBadge && count !== null) {
                             if (count > 0) {
                                 cartBadge.innerText = count > 99 ? '99+' : count;
                                 cartBadge.classList.remove('hidden');
@@ -268,7 +289,12 @@
                             if (quantity <= 0) {
                                 itemElement.parentElement.style.transition = 'opacity 0.3s ease-out';
                                 itemElement.parentElement.style.opacity = '0';
-                                setTimeout(() => itemElement.parentElement.remove(), 300);
+                                setTimeout(() => {
+                                    itemElement.parentElement.remove();
+                                    if (count === 0) {
+                                        location.reload();
+                                    }
+                                }, 300);
                             } else {
                                 const itemSubtotalEl = document.getElementById('item-subtotal-' + productId);
                                 if (itemSubtotalEl && !isSobConsulta) itemSubtotalEl.innerText = 'R$ ' + data.item_subtotal;

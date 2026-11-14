@@ -4,9 +4,10 @@
 
 **Blocked by:** Nenhum — pode começar imediatamente.
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Redesenho do botão superior de retorno no estilo pill (`rounded-full border border-[var(--text-base)]/15 bg-[var(--bg-card)] text-[var(--text-base)] hover:bg-[var(--text-base)]/5 shadow-sm`), mantendo comportamento de histórico ou rota fallback.
-- [ ] Título da página "Meu Carrinho" estilizado em tipografia editorial (`font-serif text-3xl sm:text-4xl text-[var(--text-base)] tracking-tight`).
-- [ ] Criação de Empty State elegante e centralizado para quando `$cart` estiver vazio, com ícone de sacola/carrinho em container suave, texto descritivo e botão CTA pill ("Explorar Produtos" / "Ver Catálogo").
-- [ ] Preservação da exibição do grid de itens e resumo quando houver produtos no carrinho.
+- [x] Redesenho do botão superior de retorno no estilo pill (`rounded-full border border-[var(--text-base)]/15 bg-[var(--bg-card)] text-[var(--text-base)] hover:bg-[var(--text-base)]/5 shadow-sm`), mantendo comportamento de histórico ou rota fallback.
+- [x] Título da página "Meu Carrinho" estilizado em tipografia editorial (`font-serif text-3xl sm:text-4xl text-[var(--text-base)] tracking-tight`).
+- [x] Criação de Empty State elegante e centralizado para quando `$cart` estiver vazio, com ícone de sacola/carrinho em container suave, texto descritivo e botão CTA pill ("Explorar Produtos" / "Ver Catálogo").
+- [x] Preservação da exibição do grid de itens e resumo quando houver produtos no carrinho.
+
