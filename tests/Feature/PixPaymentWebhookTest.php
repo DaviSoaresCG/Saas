@@ -393,6 +393,32 @@ class PixPaymentWebhookTest extends TestCase
         $responseApproved->assertJson(['status' => 'approved']);
     }
 
+    public function test_subscription_pending_page_renders_brillance_design_and_polling(): void
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'pending',
+            'plano_expira_em' => null,
+            'slug' => null,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('subscription.pending'));
+
+        $response->assertOk();
+        $response->assertSee('zap', false);
+        $response->assertSee('catálogo', false);
+        $response->assertSee('Processando sua assinatura');
+        $response->assertSee('Confirmando pagamento no Asaas');
+        $response->assertDontSee('Mercado Pago');
+        $response->assertDontSee('bg-slate-900');
+        $response->assertSee('Conexão segura');
+        $response->assertSee('Ativação automática');
+        $response->assertSee('Instrument Serif');
+        $response->assertSee(route('pagamento.status'), false);
+        $response->assertSee('checkPaymentStatus', false);
+        $response->assertSee('cartão de crédito', false);
+    }
+
     public function test_generate_redirects_to_invoice_url_for_credit_card(): void
     {
         $user = User::factory()->create([
