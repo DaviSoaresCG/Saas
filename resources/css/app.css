@@ -1,13 +1,13 @@
 /* app.css */
 
-/* 1. Tema Clean (Minimalista) */
+/* 1. Tema Clean (Minimalista - Brillance) */
 :root, [data-theme="clean"] {
-    --bg-page: oklch(98% 0 0);           /* Fundo da página: Branco gelo */
-    --bg-card: oklch(100% 0 0);          /* Fundo do Card: Branco puro (destaque) */
-    --color-primary: oklch(25% 0.02 0);  /* Preto/Cinza muito escuro */
-    --text-base: oklch(25% 0.02 0);      /* Texto principal */
-    --text-muted: oklch(55% 0 0);        /* Texto secundário */
-    --text-on-primary: oklch(100% 0 0);  /* Texto no botão */
+    --bg-page: #f7f5f3;                  /* Fundo da página: Papel suave Brillance */
+    --bg-card: #ffffff;                  /* Fundo do Card: Branco puro */
+    --color-primary: #37322f;            /* Carvão profundo Brillance */
+    --text-base: #37322f;                /* Texto principal */
+    --text-muted: #605a57;               /* Texto secundário */
+    --text-on-primary: #ffffff;          /* Texto no botão */
 }
 
 /* 2. Tema Oceano (Azul Profundo) */
