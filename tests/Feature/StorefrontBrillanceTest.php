@@ -93,3 +93,37 @@ test('storefront header renders elegant catalog name badge when catalogoName is 
     $response->assertSee('Coleção Especial de Inverno', false);
     $response->assertSee('rounded-full border border-[var(--text-base)]/10', false);
 });
+
+test('storefront modal renders brillance styling with rounded-3xl, font-serif price and tactile quantity controls when modal_carrinho is enabled', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+        'modal_carrinho' => true,
+    ]);
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $response = $this->get("http://{$user->slug}.{$domain}/produtos");
+
+    $response->assertOk();
+
+    // Modal structure with rounded-3xl and subtle border
+    $response->assertSee('id="add-to-cart-modal"', false);
+    $response->assertSee('id="add-to-cart-modal-content"', false);
+    $response->assertSee('rounded-3xl', false);
+    $response->assertSee('border border-[var(--text-base)]/10', false);
+    $response->assertSee('shadow-2xl', false);
+
+    // Product price with font-serif
+    $response->assertSee('id="add-modal-product-price"', false);
+    $response->assertSee('font-serif', false);
+
+    // Quantity selector buttons with rounded-xl and border
+    $response->assertSee('id="btn-modal-qty-minus"', false);
+    $response->assertSee('id="btn-modal-qty-plus"', false);
+    $response->assertSee('rounded-xl border border-[var(--text-base)]/15', false);
+
+    // Submit button with micro-interactions and rounded-xl
+    $response->assertSee('Confirmar e Adicionar', false);
+    $response->assertSee('rounded-xl', false);
+    $response->assertSee('active:scale-[0.98]', false);
+});

@@ -2,7 +2,7 @@
 
 **What to build:** Cobertura de testes automatizados e validação de ponta a ponta da vitrine da loja utilizando o novo layout Brillance. Os testes garantem que as páginas filhas (`products.index`, `products.show`, `cart.index`, `pedidos.whatsapp`) renderizem com precisão os novos elementos tipográficos, o header da loja, o avatar, os botões e badges de carrinho, e que o modal de adicionar ao carrinho continue operando sem regressões de front-end ou de regras de negócio multi-tenant.
 
-**Blocked by:** 03 — Redesenho do modal de adicionar produto ao carrinho e controles de quantidade
+**Blocked by:** Nenhum — Ticket 03 concluído.
 
 **Status:** ready-for-agent
 

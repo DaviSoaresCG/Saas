@@ -83,23 +83,23 @@
 
     @if (!empty($modalCarrinho))
         <!-- Modal Adicionar Produto ao Carrinho -->
-        <div id="add-to-cart-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300 ease-out">
-            <div id="add-to-cart-modal-content" class="relative w-full max-w-md bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)] transform scale-95 opacity-0 transition-all duration-300 ease-out">
+        <div id="add-to-cart-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-md p-4 opacity-0 transition-opacity duration-300 ease-out">
+            <div id="add-to-cart-modal-content" class="relative w-full max-w-md bg-[var(--bg-card)] border border-[var(--text-base)]/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)] transform scale-95 opacity-0 transition-all duration-300 ease-out">
 
-                <button type="button" id="close-add-modal-btn" class="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-base)] transition-colors cursor-pointer">
-                    <i data-lucide="x" class="h-6 w-6"></i>
+                <button type="button" id="close-add-modal-btn" class="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full text-[var(--text-muted)] hover:text-[var(--text-base)] hover:bg-[var(--text-base)]/5 transition-colors cursor-pointer" aria-label="Fechar modal">
+                    <i data-lucide="x" class="h-5 w-5"></i>
                 </button>
 
                 <div class="mb-5 text-center">
-                    <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] mb-2.5">
+                    <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] mb-3">
                         <i data-lucide="shopping-bag" class="h-6 w-6"></i>
                     </div>
-                    <h3 id="add-modal-product-name" class="text-xl font-bold text-[var(--text-base)]">Adicionar ao Carrinho</h3>
-                    <p id="add-modal-product-price" class="text-base font-extrabold text-emerald-600 mt-1"></p>
+                    <h3 id="add-modal-product-name" class="text-lg sm:text-xl font-bold text-[var(--text-base)] tracking-tight">Adicionar ao Carrinho</h3>
+                    <p id="add-modal-product-price" class="mt-1 font-serif text-2xl sm:text-3xl font-normal text-[var(--text-base)]"></p>
 
-                    <div id="add-modal-erp-info" class="hidden my-2 pt-2 text-center">
-                        <p id="add-modal-product-sku" class="text-[var(--text-base)] font-medium text-sm"></p>
-                        <p id="add-modal-product-peso" class="text-[var(--text-muted)] font-medium text-sm"></p>
+                    <div id="add-modal-erp-info" class="hidden my-3 flex items-center justify-center gap-2 text-xs text-[var(--text-muted)]">
+                        <span id="add-modal-product-sku" class="rounded-lg bg-[var(--text-base)]/5 px-2.5 py-1 font-mono text-[11px]"></span>
+                        <span id="add-modal-product-peso" class="rounded-lg bg-[var(--text-base)]/5 px-2.5 py-1 text-[11px]"></span>
                     </div>
                 </div>
 
@@ -108,34 +108,34 @@
                     <div id="add-modal-attributes-container" class="hidden"></div>
 
                     <div>
-                        <label for="add-modal-quantity" class="block text-sm font-semibold text-[var(--text-base)] mb-1.5">
+                        <label for="add-modal-quantity" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-2">
                             Quantidade <span class="text-red-500">*</span>
                         </label>
                         <div class="flex items-center gap-3">
-                            <button type="button" id="btn-modal-qty-minus" class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl bg-[var(--color-primary)]/15 hover:bg-[var(--color-primary)]/25 text-[var(--text-base)] font-bold text-lg transition-colors">-</button>
+                            <button type="button" id="btn-modal-qty-minus" class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-card)] hover:bg-[var(--text-base)]/5 active:scale-95 text-[var(--text-base)] font-bold text-lg transition-all shadow-sm">-</button>
                             <input type="number" id="add-modal-quantity" name="quantity" value="1" min="1" required
-                                class="w-full text-center px-4 py-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--color-primary)]/30 text-[var(--text-base)] font-bold text-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all">
-                            <button type="button" id="btn-modal-qty-plus" class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl bg-[var(--color-primary)]/15 hover:bg-[var(--color-primary)]/25 text-[var(--text-base)] font-bold text-lg transition-colors">+</button>
+                                class="w-full text-center px-4 py-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--text-base)]/15 text-[var(--text-base)] font-bold text-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/15 focus:border-[var(--color-primary)] transition-all">
+                            <button type="button" id="btn-modal-qty-plus" class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-card)] hover:bg-[var(--text-base)]/5 active:scale-95 text-[var(--text-base)] font-bold text-lg transition-all shadow-sm">+</button>
                         </div>
                     </div>
 
                     <div>
-                        <label for="add-modal-observacao" class="block text-sm font-semibold text-[var(--text-base)] mb-1.5">
-                            Observação / Variação <span class="text-xs font-normal text-[var(--text-muted)]">(Opcional)</span>
+                        <label for="add-modal-observacao" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-2">
+                            Observação / Variação <span class="text-[11px] font-normal lowercase text-[var(--text-muted)]/80">(opcional)</span>
                         </label>
                         <textarea id="add-modal-observacao" name="observacao" rows="3"
                             placeholder="Ex: Tamanho G, sem cebola, cor preta..."
-                            class="w-full px-4 py-3 rounded-xl bg-[var(--bg-card)] border border-[var(--color-primary)]/30 text-[var(--text-base)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all text-sm"></textarea>
+                            class="w-full px-4 py-3 rounded-2xl bg-[var(--bg-card)] border border-[var(--text-base)]/15 text-[var(--text-base)] placeholder-[var(--text-muted)]/60 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/15 focus:border-[var(--color-primary)] transition-all text-sm resize-none"></textarea>
                     </div>
 
                     <div class="pt-2 flex flex-col gap-2.5">
                         <button type="submit"
-                            class="w-full cursor-pointer bg-[var(--color-primary)] hover:opacity-90 text-[var(--text-on-primary)] font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-base">
-                            <i data-lucide="shopping-cart" class="h-5 w-5"></i>
+                            class="w-full cursor-pointer bg-[var(--color-primary)] hover:opacity-95 active:scale-[0.98] text-[var(--text-on-primary)] font-semibold py-3.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 text-sm sm:text-base">
+                            <i data-lucide="shopping-cart" class="h-4 w-4 sm:h-5 sm:w-5"></i>
                             <span>Confirmar e Adicionar</span>
                         </button>
                         <button type="button" id="cancel-add-modal-btn"
-                            class="w-full cursor-pointer bg-transparent hover:bg-gray-500/10 text-[var(--text-muted)] font-semibold py-2 rounded-xl transition-all text-sm">
+                            class="w-full cursor-pointer rounded-xl border border-transparent py-2.5 text-center text-xs sm:text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-base)] hover:bg-[var(--text-base)]/5 transition-all">
                             Cancelar
                         </button>
                     </div>
@@ -236,9 +236,9 @@
                         if (modalProdPrice) {
                             modalProdPrice.innerText = productPrice;
                             if (productPrice.includes('Sob Consulta')) {
-                                modalProdPrice.className = 'text-base font-extrabold text-amber-500 mt-1';
+                                modalProdPrice.className = 'mt-2 inline-flex items-center rounded-full bg-[var(--color-primary)]/10 px-3.5 py-1 text-xs font-semibold text-[var(--color-primary)] border border-[var(--color-primary)]/20';
                             } else {
-                                modalProdPrice.className = 'text-base font-extrabold text-emerald-600 mt-1';
+                                modalProdPrice.className = 'mt-1 font-serif text-2xl sm:text-3xl font-normal text-[var(--text-base)]';
                             }
                         }
 

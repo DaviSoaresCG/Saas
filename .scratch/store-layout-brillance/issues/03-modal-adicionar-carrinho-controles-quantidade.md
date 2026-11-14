@@ -4,12 +4,12 @@
 
 **Blocked by:** Nenhum — Ticket 02 concluído.
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Redesenho da estrutura do modal (`#add-to-cart-modal` e `#add-to-cart-modal-content`) com cantos `rounded-3xl`, fundo `bg-[var(--bg-card)]`, borda `border-[var(--text-base)]/10` e sombra `shadow-2xl`.
-- [ ] Destaque tipográfico para o preço do produto em `font-serif` com suporte a preço normal e badge "Sob Consulta".
-- [ ] Seletor de quantidade modernizado com botões `-` e `+` em estilo arredondado suave (`rounded-xl border border-[var(--text-base)]/15`) e input centralizado e responsivo.
-- [ ] Campos de SKU, peso e textarea de observação com bordas arredondadas e anel de foco consistente (`focus:ring-2 focus:ring-[var(--color-primary)]/15`).
-- [ ] Botão primário "Confirmar e Adicionar" com cantos `rounded-xl`, tipografia semibold e micro-interação ao clique (`active:scale-[0.98]`).
-- [ ] Preservação de todos os event listeners JS (fechamento por ESC, clique fora, interceptação de formulários `/cart/add/`, preenchimento dinâmico de dados).
+- [x] Redesenho da estrutura do modal (`#add-to-cart-modal` e `#add-to-cart-modal-content`) com cantos `rounded-3xl`, fundo `bg-[var(--bg-card)]`, borda `border-[var(--text-base)]/10` e sombra `shadow-2xl`.
+- [x] Destaque tipográfico para o preço do produto em `font-serif` com suporte a preço normal e badge "Sob Consulta".
+- [x] Seletor de quantidade modernizado com botões `-` e `+` em estilo arredondado suave (`rounded-xl border border-[var(--text-base)]/15`) e input centralizado e responsivo.
+- [x] Campos de SKU, peso e textarea de observação com bordas arredondadas e anel de foco consistente (`focus:ring-2 focus:ring-[var(--color-primary)]/15`).
+- [x] Botão primário "Confirmar e Adicionar" com cantos `rounded-xl`, tipografia semibold e micro-interação ao clique (`active:scale-[0.98]`).
+- [x] Preservação de todos os event listeners JS (fechamento por ESC, clique fora, interceptação de formulários `/cart/add/`, preenchimento dinâmico de dados).
 
