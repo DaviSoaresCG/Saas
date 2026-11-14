@@ -56,11 +56,10 @@
                         </a>
                     @endif
                     <a href="{{ Route::is('variant.*') ? route('variant.cart.index', ['slug' => $slug]) : route('cart.index') }}"
-                        class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs sm:text-sm font-semibold text-[var(--text-on-primary)] shadow-sm hover:opacity-95 active:scale-[0.98] transition-all duration-200">
+                        class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs sm:text-sm font-semibold text-[var(--text-on-primary)] shadow-sm hover:opacity-95 active:scale-[0.98] transition-all duration-200 relative">
                         <i data-lucide="shopping-cart" class="h-4 w-4"></i>
-                        <span class="hidden sm:inline font-medium">Carrinho</span>
                         <span id="cart-badge"
-                            class="{{ ($cartCount ?? 0) > 0 ? '' : 'hidden ' }}inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-600 px-1.5 text-[10px] font-bold text-white shadow-sm leading-none">
+                            class="{{ ($cartCount ?? 0) > 0 ? '' : 'hidden ' }} absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow-sm leading-none">
                             {{ ($cartCount ?? 0) > 99 ? '99+' : ($cartCount ?? 0) }}
                         </span>
                     </a>

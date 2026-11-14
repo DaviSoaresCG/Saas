@@ -37,7 +37,7 @@
             <div class="lg:col-span-2 space-y-4">
                 @foreach ($cart as $id => $item)
                     <div class="product-card rounded-2xl border border-[var(--text-base)]/10 bg-[var(--bg-card)] p-4 sm:p-5 shadow-sm transition-all duration-200 hover:border-[var(--text-base)]/20">
-                        <div class="product-item flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5"
+                        <div class="product-item flex flex-col sm:flex-row items-center gap-4 sm:gap-5"
                             data-price="{{ $item['value'] }}" data-product-id="{{ $id }}">
 
                             <!-- Imagem do Produto -->
@@ -54,7 +54,7 @@
                             </div>
 
                             <!-- Dados do Produto: Título, Atributos e Observações -->
-                            <div class="flex-1 min-w-0 w-full sm:w-auto">
+                            <div class="flex-1 min-w-0 w-full sm:w-auto text-center sm:text-start">
                                 <h3 class="text-base sm:text-lg font-semibold text-[var(--text-base)] leading-snug">
                                     {{ $item['name'] }}
                                 </h3>
@@ -79,8 +79,8 @@
                                 @endif
 
                                 @if (!session('sob_consulta'))
-                                    <p class="mt-1.5 text-xs sm:text-sm text-[var(--text-muted)] font-normal">
-                                        Unitário: <span class="font-serif font-medium text-[var(--text-base)] text-sm sm:text-base">R$ {{ number_format($item['value'], 2, ',', '.') }}</span>
+                                    <p class="mt-1.5 text-sm text-[var(--text-muted)] font-normal">
+                                        Unitário: <span class="font-serif font-medium text-[var(--text-base)] text-lg sm:text-2xl">R$ {{ number_format($item['value'], 2, ',', '.') }}</span>
                                     </p>
                                 @endif
                             </div>
@@ -168,7 +168,7 @@
     <!-- Modal de Finalização / Dados do Cliente -->
     <div id="checkout-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-md p-4 transition-all duration-300">
         <div class="relative w-full max-w-md rounded-3xl border border-[var(--text-base)]/10 bg-[var(--bg-card)] p-6 sm:p-8 shadow-2xl text-[var(--text-base)]">
-            
+
             <button type="button" id="close-modal-btn"
                 aria-label="Fechar modal"
                 class="absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--text-base)]/5 hover:text-[var(--text-base)] cursor-pointer">
@@ -217,7 +217,7 @@
             </form>
         </div>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
