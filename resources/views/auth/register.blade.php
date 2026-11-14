@@ -41,35 +41,34 @@
             @enderror
         </div>
 
-        {{-- Campo WhatsApp --}}
-        <div class="flex flex-col gap-1.5">
-            <label for="whatsapp" class="text-xs font-medium text-[#514b46]">WhatsApp da Loja</label>
-            <div class="relative">
-                <i data-lucide="message-circle" class="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[#969087]"></i>
-                <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" required
-                    value="{{ old('whatsapp') }}" placeholder="(xx) 9xxxx-xxxx"
-                    x-data x-mask="(99) 99999-9999"
-                    class="h-11 w-full rounded-xl border border-[#37322f]/15 bg-white/80 pl-11 pr-4 text-sm text-[#37322f] outline-none transition placeholder:text-[#a19a93] focus:border-[#8ea05e] focus:ring-2 focus:ring-[#8ea05e]/15 @error('whatsapp') border-red-400 @enderror">
+        {{-- Campo Nome da Loja e Whatsapp --}}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="flex flex-col gap-1.5">
+                <label for="store_name" class="text-xs font-medium text-[#514b46]">Nome da Loja</label>
+                <div class="relative">
+                    <i data-lucide="store" class="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[#969087]"></i>
+                    <input id="store_name" name="store_name" type="text" autocomplete="organization" required maxlength="255"
+                        value="{{ old('store_name') }}" placeholder="Ex: Minha Loja"
+                        class="h-11 w-full rounded-xl border border-[#37322f]/15 bg-white/80 pl-11 pr-4 text-sm text-[#37322f] outline-none transition placeholder:text-[#a19a93] focus:border-[#8ea05e] focus:ring-2 focus:ring-[#8ea05e]/15 @error('store_name') border-red-400 @enderror">
+                </div>
+                <span class="text-[10px] text-[#857d76]">Seu link exclusivo será gerado a partir deste nome.</span>
+                @error('store_name')
+                    <p class="text-xs text-red-600">{{ $message }}</p>
+                @enderror
             </div>
-            <span class="text-[10px] text-[#857d76]">É por este número que você receberá os pedidos dos clientes.</span>
-            @error('whatsapp')
-                <p class="text-xs text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
-
-        {{-- Campo Nome da Loja --}}
-        <div class="flex flex-col gap-1.5">
-            <label for="store_name" class="text-xs font-medium text-[#514b46]">Nome da Loja</label>
-            <div class="relative">
-                <i data-lucide="store" class="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[#969087]"></i>
-                <input id="store_name" name="store_name" type="text" autocomplete="organization" required maxlength="255"
-                    value="{{ old('store_name') }}" placeholder="Ex: Minha Loja"
-                    class="h-11 w-full rounded-xl border border-[#37322f]/15 bg-white/80 pl-11 pr-4 text-sm text-[#37322f] outline-none transition placeholder:text-[#a19a93] focus:border-[#8ea05e] focus:ring-2 focus:ring-[#8ea05e]/15 @error('store_name') border-red-400 @enderror">
+            <div class="flex flex-col gap-1.5">
+                <label for="whatsapp" class="text-xs font-medium text-[#514b46]">WhatsApp da Loja</label>
+                <div class="relative">
+                    <i data-lucide="message-circle" class="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[#969087]"></i>
+                    <input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" required
+                        value="{{ old('whatsapp') }}" placeholder="(xx) 9xxxx-xxxx"
+                        x-data x-mask="(99) 99999-9999"
+                        class="h-11 w-full rounded-xl border border-[#37322f]/15 bg-white/80 pl-11 pr-4 text-sm text-[#37322f] outline-none transition placeholder:text-[#a19a93] focus:border-[#8ea05e] focus:ring-2 focus:ring-[#8ea05e]/15 @error('whatsapp') border-red-400 @enderror">
+                </div>
+                @error('whatsapp')
+                    <p class="text-xs text-red-600">{{ $message }}</p>
+                @enderror
             </div>
-            <span class="text-[10px] text-[#857d76]">Seu link exclusivo será gerado a partir deste nome.</span>
-            @error('store_name')
-                <p class="text-xs text-red-600">{{ $message }}</p>
-            @enderror
         </div>
 
         {{-- Campos de Senha e Confirmação com Toggle Conjunto --}}

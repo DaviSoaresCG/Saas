@@ -95,7 +95,7 @@
             </a>
 
             {{-- Container Central do Formulário --}}
-            <div class="mx-auto flex w-full max-w-[420px] flex-1 flex-col justify-center py-10 sm:py-12">
+            <div class="mx-auto flex w-full max-w-[520px] flex-1 flex-col justify-center py-10 sm:py-12">
                 {{-- Botão Voltar para o site --}}
                 <a href="{{ route('home') }}" class="mb-8 inline-flex w-fit items-center gap-2 text-xs font-medium text-[#77706a] transition hover:text-[#37322f]">
                     <i data-lucide="arrow-left" class="size-3.5"></i>
@@ -126,7 +126,7 @@
 
         {{-- Coluna Direita: Imagem Editorial Desktop --}}
         <aside class="relative hidden overflow-hidden bg-[#37322f] lg:flex lg:min-h-screen lg:items-end">
-            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mulher_comprando-FAop2IuzUjyZMb0XWzE60Z2JJCNfuL.jpg" alt="Cliente sorrindo enquanto faz compras pelo celular" class="absolute inset-0 size-full object-cover object-[36%_center]">
+            <img src="https://img.magnific.com/fotos-gratis/homem-bonito-elegante-e-barbudo-posando-contra-a-parede-branca_176420-33011.jpg?semt=ais_hybrid&w=740&q=80" alt="Cliente sorrindo enquanto faz compras pelo celular" class="absolute inset-0 size-full object-cover object-[36%_center]">
             <div class="absolute inset-0 bg-gradient-to-t from-[#25231f]/85 via-[#25231f]/20 to-[#25231f]/10"></div>
             <div class="relative max-w-[560px] px-10 pb-12 text-white xl:px-16 xl:pb-16">
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-white backdrop-blur-sm">
