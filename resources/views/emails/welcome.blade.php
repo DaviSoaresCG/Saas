@@ -87,7 +87,7 @@
                                                 <td colspan="2" style="padding-top: 12px; border-top: 1px dashed #e8e5e0;">
                                                     <span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #8c827a;">Subdomínio do Catálogo:</span>
                                                     <span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; color: #71834f; margin-left: 4px;">
-                                                        {{ $user->slug }}.{{ config('app.domain', env('APP_DOMAIN', 'zapcatalogo.com.br')) }}
+                                                        {{ $user->slug }}.{{ config('app.domain', 'zapcatalogo.com.br') }}
                                                     </span>
                                                 </td>
                                             </tr>

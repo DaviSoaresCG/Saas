@@ -110,7 +110,7 @@
             </nav>
 
             {{-- Desktop Action Area (Auth vs Guest) --}}
-            <div class="hidden items-center gap-3 sm:flex">
+            <div class="hidden items-center gap-3 md:flex">
                 @auth
                     <div class="flex items-center gap-3">
                         <span class="text-xs font-medium text-[#605a57]">
@@ -148,7 +148,7 @@
             </div>
 
             {{-- Mobile Hamburger Button --}}
-            <div class="flex items-center sm:hidden">
+            <div class="flex items-center md:hidden">
                 <button type="button" id="mobile-menu-btn" aria-label="Abrir menu" class="inline-flex size-10 items-center justify-center rounded-xl border border-[#37322f]/10 text-[#37322f] transition hover:bg-white">
                     <i data-lucide="menu" class="size-5" id="menu-icon"></i>
                     <i data-lucide="x" class="hidden size-5" id="close-icon"></i>
@@ -157,7 +157,7 @@
         </div>
 
         {{-- Mobile Dropdown Menu --}}
-        <div id="mobile-menu" class="hidden border-b border-[#37322f]/10 bg-[#f7f5f3] px-5 py-4 sm:hidden">
+        <div id="mobile-menu" class="hidden border-b border-[#37322f]/10 bg-[#f7f5f3] px-5 py-4 md:hidden">
             <nav class="flex flex-col gap-3" aria-label="Navegação mobile">
                 <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="#recursos">Funcionalidades</a>
                 <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="#como-funciona">Como funciona</a>

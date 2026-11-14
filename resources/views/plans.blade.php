@@ -110,7 +110,7 @@
             </nav>
 
             {{-- Desktop Action Area (Auth vs Guest) --}}
-            <div class="hidden items-center gap-3 sm:flex">
+            <div class="hidden items-center gap-3 md:flex">
                 @auth
                     <div class="flex items-center gap-3">
                         <span class="text-xs font-medium text-[#605a57]">
@@ -143,7 +143,7 @@
             </div>
 
             {{-- Mobile Hamburger Button --}}
-            <div class="flex items-center sm:hidden">
+            <div class="flex items-center md:hidden">
                 <button type="button" id="mobile-menu-btn" aria-label="Abrir menu" class="inline-flex size-10 items-center justify-center rounded-xl border border-[#37322f]/10 text-[#37322f] transition hover:bg-white cursor-pointer">
                     <i data-lucide="menu" class="size-5" id="menu-icon"></i>
                     <i data-lucide="x" class="hidden size-5" id="close-icon"></i>
@@ -152,7 +152,7 @@
         </div>
 
         {{-- Mobile Dropdown Menu --}}
-        <div id="mobile-menu" class="hidden border-b border-[#37322f]/10 bg-[#f7f5f3] px-5 py-4 sm:hidden">
+        <div id="mobile-menu" class="hidden border-b border-[#37322f]/10 bg-[#f7f5f3] px-5 py-4 md:hidden">
             <nav class="flex flex-col gap-3" aria-label="Navegação mobile">
                 <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}">Página inicial</a>
                 <a class="text-sm font-medium text-[#605a57] transition hover:text-[#37322f]" href="{{ route('home') }}#recursos">Funcionalidades</a>
@@ -213,6 +213,11 @@
         </section>
 
         {{-- Grid dos Planos --}}
+        @php
+            $monthlyCheckoutUrl = auth()->check() ? route('pagamento.pending', ['plan' => 'monthly']) : route('register');
+            $yearlyCheckoutUrl = auth()->check() ? route('pagamento.pending', ['plan' => 'yearly']) : route('register');
+        @endphp
+
         <section class="px-5 pb-16 md:px-8 md:pb-24">
             <div class="mx-auto max-w-[840px]">
                 <div class="grid gap-6 md:grid-cols-2 items-stretch">
@@ -232,17 +237,10 @@
                                 <span class="mb-1.5 text-sm text-[#716a64]">/ mês</span>
                             </div>
 
-                            @auth
-                                <a href="{{ route('pagamento.pending', ['plan' => 'monthly']) }}"
-                                   class="mt-6 inline-flex h-12 w-full items-center justify-center rounded-full border border-[#37322f]/20 bg-white text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#37322f] hover:text-white active:scale-[0.99] cursor-pointer">
-                                    Começar mensal
-                                </a>
-                            @else
-                                <a href="{{ route('register') }}"
-                                   class="mt-6 inline-flex h-12 w-full items-center justify-center rounded-full border border-[#37322f]/20 bg-white text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#37322f] hover:text-white active:scale-[0.99] cursor-pointer">
-                                    Começar mensal
-                                </a>
-                            @endauth
+                            <a href="{{ $monthlyCheckoutUrl }}"
+                               class="mt-6 inline-flex h-12 w-full items-center justify-center rounded-full border border-[#37322f]/20 bg-white text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#37322f] hover:text-white active:scale-[0.99] cursor-pointer">
+                                Começar mensal
+                            </a>
 
                             <ul class="mt-7 flex flex-col gap-3.5 border-t border-[#37322f]/10 pt-6 text-left">
                                 <li class="flex items-center gap-2.5 text-xs text-[#605a57]">
@@ -303,19 +301,11 @@
                             </div>
                             <p class="mt-1 text-xs text-[#d7f56b] font-medium">Equivale a R$ 24,91 por mês · economize 17%</p>
 
-                            @auth
-                                <a href="{{ route('pagamento.pending', ['plan' => 'yearly']) }}"
-                                   class="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#d7f56b] text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#e2ff88] active:scale-[0.99] cursor-pointer">
-                                    <span>Escolher plano anual</span>
-                                    <i data-lucide="arrow-right" class="size-4"></i>
-                                </a>
-                            @else
-                                <a href="{{ route('register') }}"
-                                   class="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#d7f56b] text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#e2ff88] active:scale-[0.99] cursor-pointer">
-                                    <span>Escolher plano anual</span>
-                                    <i data-lucide="arrow-right" class="size-4"></i>
-                                </a>
-                            @endauth
+                            <a href="{{ $yearlyCheckoutUrl }}"
+                               class="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#d7f56b] text-sm font-semibold text-[#37322f] shadow-sm transition hover:bg-[#e2ff88] active:scale-[0.99] cursor-pointer">
+                                <span>Escolher plano anual</span>
+                                <i data-lucide="arrow-right" class="size-4"></i>
+                            </a>
 
                             <ul class="mt-7 flex flex-col gap-3.5 border-t border-white/15 pt-6 text-left">
                                 <li class="flex items-center gap-2.5 text-xs text-white/90">
@@ -375,17 +365,19 @@
                             </button>
                         </form>
                     @else
-                        <form action="{{ route('login') }}" method="GET" class="mt-2.5 flex flex-col sm:flex-row gap-2">
-                            <div class="relative min-w-0 flex-1">
-                                <i data-lucide="ticket" class="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#969087]"></i>
-                                <input id="coupon-input" name="code" placeholder="Ex: BEMVINDO10" required maxlength="20"
-                                    class="h-11 w-full rounded-xl border border-[#37322f]/15 bg-white pl-10 pr-3 text-sm text-[#37322f] outline-none placeholder:text-[#9b938c] focus:border-[#849451] transition">
+                        <div class="mt-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                            <p class="text-xs text-[#716a64]">
+                                Faça login ou crie sua conta para aplicar seu cupom na finalização da assinatura.
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <a href="{{ route('login') }}" class="inline-flex h-9 items-center justify-center rounded-lg border border-[#37322f]/15 bg-white px-3.5 text-xs font-medium text-[#37322f] transition hover:bg-[#f7f5f3]">
+                                    Entrar
+                                </a>
+                                <a href="{{ route('register') }}" class="inline-flex h-9 items-center justify-center rounded-lg bg-[#37322f] px-3.5 text-xs font-medium text-white transition hover:bg-[#514a45]">
+                                    Criar conta
+                                </a>
                             </div>
-                            <button type="submit" class="h-11 rounded-xl bg-[#37322f] px-6 text-xs font-semibold text-white hover:bg-[#514a45] transition cursor-pointer">
-                                Aplicar cupom
-                            </button>
-                        </form>
-                        <p class="mt-2 text-[11px] text-[#716a64]">Faça login ou crie sua conta para aplicar seu cupom na assinatura.</p>
+                        </div>
                     @endauth
 
                     @if(session('error'))

@@ -4,12 +4,12 @@
 
 **Blocked by:** 01 — Shell da página de planos e cards de precificação no Design System Brillance
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Formulário de cupom de desconto estilizado no padrão Brillance, integrado à rota `route('counpons.validate')`, com suporte a feedback de erro (`session('error')`) e sucesso (`session('success')`).
-- [ ] Seção informativa de garantias de segurança (ícone de escudo, menção a Pix e cartão de crédito, política transparente sem cobrança de comissões por venda).
-- [ ] Rodapé (Footer) unificado com a identidade da marca ZapCatálogo, links institucionais e ano dinâmico no copyright.
-- [ ] Menu mobile funcional com alternância de ícones via JavaScript leve e acessibilidade.
-- [ ] Testes automatizados em `tests/Feature/PlansPageTest.php` validando aplicação de cupons, exibição de mensagens de feedback e integridade do rodapé.
-- [ ] Execução da suíte completa de testes (`php artisan test`) com 100% dos testes passando sem regressões.
+- [x] Formulário de cupom de desconto estilizado no padrão Brillance, integrado à rota `route('counpons.validate')`, com suporte a feedback de erro (`session('error')`) e sucesso (`session('success')`).
+- [x] Seção informativa de garantias de segurança (ícone de escudo, menção a Pix e cartão de crédito, política transparente sem cobrança de comissões por venda).
+- [x] Rodapé (Footer) unificado com a identidade da marca ZapCatálogo, links institucionais e ano dinâmico no copyright.
+- [x] Menu mobile funcional com alternância de ícones via JavaScript leve e acessibilidade.
+- [x] Testes automatizados em `tests/Feature/PlansPageTest.php` validando aplicação de cupons, exibição de mensagens de feedback e integridade do rodapé.
+- [x] Execução da suíte completa de testes (`php artisan test`) com 100% dos testes passando sem regressões.
 
