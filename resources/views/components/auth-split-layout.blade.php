@@ -96,10 +96,10 @@
 
             {{-- Container Central do Formulário --}}
             <div class="mx-auto flex w-full max-w-[520px] flex-1 flex-col justify-center py-10 sm:py-12">
-                {{-- Botão Voltar para o site --}}
-                <a href="{{ route('home') }}" class="mb-8 inline-flex w-fit items-center gap-2 text-xs font-medium text-[#77706a] transition hover:text-[#37322f]">
+                {{-- Botão Voltar --}}
+                <a class="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-[#77706a] transition hover:text-[#37322f]">
                     <i data-lucide="arrow-left" class="size-3.5"></i>
-                    <span>Voltar para o site</span>
+                    <button type="submit" onclick="history.back()">Voltar</button>
                 </a>
 
                 {{-- Eyebrow, Título e Subtítulo --}}
