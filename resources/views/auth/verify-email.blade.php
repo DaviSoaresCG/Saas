@@ -25,18 +25,6 @@
         </div>
     @endif
 
-    {{-- Orientações e Caixa de Spam --}}
-    <div class="mb-6 rounded-2xl border border-[#37322f]/10 bg-white/50 p-4 text-xs leading-relaxed text-[#605a57]">
-        <p class="mb-2 font-medium text-[#37322f]">
-            {{ __('O que fazer agora?') }}
-        </p>
-        <ul class="space-y-1.5 list-disc list-inside text-[#716a64]">
-            <li>{{ __('Abra seu serviço de e-mail e procure pela mensagem do ZapCatálogo.') }}</li>
-            <li>{{ __('Clique no link para validar sua conta e começar a montar sua vitrine.') }}</li>
-            <li>{{ __('Não encontrou? Verifique sua caixa de spam ou lixo eletrônico.') }}</li>
-        </ul>
-    </div>
-
     {{-- Formulário de Reenvio --}}
     <form method="POST" action="{{ route('verification.send') }}" class="w-full">
         @csrf
