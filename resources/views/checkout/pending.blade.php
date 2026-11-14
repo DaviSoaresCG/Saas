@@ -4,50 +4,69 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Ative seu Catálogo | ZapCatalogo</title>
+    <title>Ative seu Catálogo | ZapCatálogo</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Google Fonts: Instrument Serif & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN com extensão de tema do Design System Brillance) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
+              serif: ['"Instrument Serif"', 'serif'],
             },
             colors: {
-              brand: {
-                dark: '#0f172a',
-                card: '#1e293b',
-                accent: '#2563eb',
-                accentHover: '#1d4ed8',
+              brillance: {
+                bg: '#f7f5f3',
+                paper: '#eeece8',
+                charcoal: '#37322f',
+                charcoalHover: '#514a45',
+                muted: '#605a57',
+                subtle: '#716a64',
+                lime: '#d7f56b',
+                limeHover: '#e2ff88',
+                moss: '#849451',
+                olive: '#71834f',
+                border: 'rgba(55, 50, 47, 0.1)',
               }
             }
           }
         }
       }
     </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
+      html {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .font-serif {
+        font-family: 'Instrument Serif', Georgia, serif;
+      }
+      /* Scrollbar suave Brillance */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #0f172a;
+        background: #f7f5f3;
       }
       ::-webkit-scrollbar-thumb {
-        background: #334155;
-        border-radius: 4px;
+        background: #d8d4cf;
+        border-radius: 9999px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #475569;
+        background: #b5afa8;
       }
       @keyframes shake {
         0%, 100% { transform: translateX(0); }
@@ -59,267 +78,283 @@
       }
     </style>
   </head>
-  <body class="bg-slate-900 text-white font-sans antialiased selection:bg-blue-600 selection:text-white min-h-screen flex flex-col relative">
-    
-    <!-- Navbar -->
-    <nav class="fixed w-full z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
-          <div class="flex items-center">
-            <div class="flex-shrink-0 flex items-center gap-2">
-              <div class="bg-blue-600 p-2 rounded-lg">
-                <i data-lucide="shopping-bag" class="h-6 w-6 text-white"></i>
-              </div>
-              <span class="text-white font-bold text-xl tracking-tight">ZapCatalogo</span>
-            </div>
-          </div>
-          <div>
-            <form action="{{ route('logout') }}" method="POST" class="inline">
-              @csrf
-              <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all border border-slate-750 cursor-pointer">
-                Sair da conta
-              </button>
-            </form>
-          </div>
+  <body class="min-h-screen bg-[#f7f5f3] font-sans text-[#37322f] selection:bg-[#d7f56b] selection:text-[#37322f] antialiased flex flex-col relative">
+
+    <!-- Header / Navbar Superior Simplificado -->
+    <header class="sticky top-0 z-40 border-b border-[#37322f]/10 bg-[#f7f5f3]/90 backdrop-blur-xl transition-all">
+      <div class="mx-auto flex h-[72px] max-w-[1160px] items-center justify-between px-5 md:px-8">
+        <!-- BrandMark ZapCatálogo -->
+        <a href="{{ route('home') }}" class="flex items-center gap-2.5 font-semibold tracking-tight text-[#37322f]" aria-label="ZapCatálogo, início">
+          <span class="flex size-9 items-center justify-center rounded-xl bg-[#37322f] text-[#d7f56b] shadow-sm">
+            <i data-lucide="shopping-bag" class="size-[18px]"></i>
+          </span>
+          <span class="text-[17px]">zap<span class="font-normal">catálogo</span></span>
+        </a>
+
+        <!-- Ação de Logout Discreta -->
+        <div>
+          <form action="{{ route('logout') }}" method="POST" class="inline">
+            @csrf
+            <button type="submit" class="inline-flex items-center gap-2 rounded-full border border-[#37322f]/15 bg-white px-3.5 py-1.5 text-xs font-medium text-[#605a57] transition hover:bg-[#eeece8] hover:text-[#37322f] shadow-sm cursor-pointer">
+              <i data-lucide="log-out" class="size-3.5"></i>
+              <span>Sair da conta</span>
+            </button>
+          </form>
         </div>
       </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
-    <main class="flex-grow pt-32 pb-24 flex items-center justify-center">
-      <div class="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="text-center mb-10">
-          <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            Ative o seu Catálogo Digital
-          </h2>
-          <p class="text-gray-400 max-w-xl mx-auto text-base md:text-lg">
-            Complete seus dados e escolha o plano ideal para começar a vender pelo WhatsApp hoje mesmo.
-          </p>
+    <main class="flex-grow pt-8 md:pt-12 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
+      
+      <!-- Cabeçalho da Página / Hero -->
+      <div class="text-center mb-8">
+        <div class="flex justify-center mb-4">
+          <span class="inline-flex items-center gap-2 rounded-full border border-[#71834f]/25 bg-[#f4f8e6] px-3.5 py-1 text-xs font-semibold text-[#546830]">
+            <i data-lucide="sparkles" class="size-3.5 text-[#71834f]"></i>
+            <span>Ativação de Assinatura</span>
+          </span>
         </div>
-
-        @if (session('error'))
-            <div class="mb-8 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm max-w-2xl mx-auto flex items-center gap-3 shadow-lg">
-                <i data-lucide="alert-circle" class="h-5 w-5 text-rose-400 flex-shrink-0"></i>
-                <span>{{ session('error') }}</span>
-            </div>
-        @endif
-
-        <!-- Stepper Navigation -->
-        <div class="flex items-center justify-center gap-3 mb-8">
-          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/15 text-blue-400 border border-blue-500/30">
-            <span class="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px] font-extrabold">1</span>
-            <span>Identificação</span>
-          </div>
-          <div class="w-8 h-px bg-slate-700"></div>
-          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700">
-            <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px] font-extrabold">2</span>
-            <span>Plano & Pagamento</span>
-          </div>
-        </div>
-
-        <!-- Passo 1: CPF/CNPJ Input Card -->
-        <div id="docInputCard" class="max-w-xl mx-auto mb-12 bg-slate-800/90 p-6 md:p-8 rounded-2xl border border-slate-700 shadow-2xl transition-all duration-300">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                <label for="docInput" class="block text-base font-bold text-white flex items-center gap-2">
-                    <i data-lucide="shield-check" class="h-5 w-5 text-blue-400"></i>
-                    <span>Passo 1: CPF ou CNPJ do Titular</span>
-                    <span class="text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full font-semibold">Obrigatório</span>
-                </label>
-
-                @if(config('app.env') === 'local' || config('services.asaas.env') === 'sandbox')
-                <button type="button" id="btnGenTestCpf" class="text-xs text-blue-400 hover:text-blue-300 font-semibold underline flex items-center gap-1 cursor-pointer transition-colors self-start sm:self-auto">
-                    <i data-lucide="zap" class="h-3.5 w-3.5 text-amber-400"></i>
-                    <span>Gerar CPF Válido (Teste)</span>
-                </button>
-                @endif
-            </div>
-
-            <p class="text-xs text-gray-400 mb-4 leading-relaxed">
-                Exigido pelas normas do Banco Central e pelo gateway Asaas para emissão de Pix e cobrança da assinatura.
-            </p>
-
-            <div class="relative">
-                <input type="text" id="docInput"
-                    value="{{ auth()->user()->documento ?? old('documento') }}"
-                    placeholder="000.000.000-00 ou 00.000.000/0000-00"
-                    maxlength="18"
-                    autocomplete="off"
-                    class="w-full px-4 py-3.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-base font-medium tracking-wide focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 placeholder:text-gray-500 transition-all">
-                
-                <div id="docValidIcon" class="absolute right-3.5 top-3.5 hidden">
-                    <i data-lucide="check-circle-2" class="h-5 w-5 text-emerald-400"></i>
-                </div>
-            </div>
-
-            <div id="docFeedback" class="mt-2.5 text-xs flex items-center gap-1.5 transition-all hidden">
-                <i data-lucide="alert-circle" id="docFeedbackIcon" class="h-4 w-4 flex-shrink-0"></i>
-                <span id="docFeedbackText">Por favor, informe seu CPF ou CNPJ antes de prosseguir.</span>
-            </div>
-        </div>
-
-        <!-- Passo 2: Seleção de Planos -->
-        <div class="mb-4 text-center">
-            <h3 class="text-xl font-bold text-white mb-1 flex items-center justify-center gap-2">
-                <i data-lucide="sparkles" class="h-5 w-5 text-amber-400"></i>
-                <span>Passo 2: Escolha o seu Plano</span>
-            </h3>
-            <p class="text-xs text-gray-400">Clique na forma de pagamento desejada para ativar seu acesso imediato.</p>
-        </div>
-
-        @php $selectedPlan = request('plan', 'monthly'); @endphp
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
-          
-          <!-- Plano Mensal -->
-          <div class="plan-card flex flex-col p-8 rounded-2xl border {{ $selectedPlan === 'monthly' ? 'border-emerald-500 ring-2 ring-emerald-500/30' : 'border-slate-700' }} bg-slate-800/50 hover:border-emerald-500/50 transition-all duration-300 shadow-xl cursor-pointer group hover:-translate-y-1">
-            <div class="mb-6">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors">Plano Mensal</h3>
-                <span class="text-[11px] font-semibold text-slate-400 bg-slate-700/60 px-2.5 py-1 rounded-lg">Sem Fidelidade</span>
-              </div>
-              <p class="text-gray-400 text-sm">Flexibilidade mês a mês para o seu negócio.</p>
-            </div>
-
-            <div class="flex items-baseline mb-6">
-              <span class="text-4xl font-extrabold text-white tracking-tight">R$ 29,90</span>
-              <span class="text-gray-400 ml-2">/mês</span>
-            </div>
-
-            <ul class="space-y-4 mb-8 flex-1">
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Produtos Ilimitados</span>
-              </li>
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Pedidos direto no seu WhatsApp</span>
-              </li>
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Múltiplos Catálogos & Descontos</span>
-              </li>
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Suporte a Atributos (Cor, Tamanho)</span>
-              </li>
-            </ul>
-
-            <form action="{{ route('pagamento.generate', [], false) }}" method="POST" class="payment-plan-form space-y-3">
-              @csrf
-              <input type="hidden" name="plan" value="monthly">
-              <input type="hidden" name="documento" class="documento-hidden" value="{{ auth()->user()->documento ?? old('documento') }}">
-              <input type="hidden" name="payment_method" value="pix">
-
-              <button type="submit" data-method="pix" class="btn-submit-payment w-full py-3.5 px-4 rounded-xl text-sm font-bold transition-all bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
-                <i data-lucide="qr-code" class="h-4 w-4"></i>
-                <span class="btn-label">Pagar via Pix</span>
-              </button>
-              <button type="submit" data-method="credit_card" class="btn-submit-payment w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-all bg-slate-700/80 hover:bg-slate-700 text-gray-200 hover:text-white cursor-pointer border border-slate-600/80 hover:border-emerald-500 flex items-center justify-center gap-2">
-                <i data-lucide="credit-card" class="h-3.5 w-3.5 text-blue-400"></i>
-                <span class="btn-label">Pagar com Cartão de Crédito</span>
-              </button>
-            </form>
-          </div>
-
-          <!-- Plano Anual -->
-          <div class="plan-card flex flex-col p-8 rounded-2xl border {{ $selectedPlan === 'yearly' ? 'border-blue-400 ring-2 ring-blue-500/40' : 'border-blue-500/60' }} bg-slate-800/90 shadow-2xl relative overflow-hidden transform md:-translate-y-2 group hover:-translate-y-3 transition-all duration-300 cursor-pointer">
-            <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl uppercase tracking-wider flex items-center gap-1">
-              <i data-lucide="award" class="h-3 w-3"></i>
-              <span>Melhor Valor</span>
-            </div>
-            
-            <div class="mb-6">
-              <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Plano Anual</h3>
-              <p class="text-gray-400 text-sm">Economize quase 2 meses em relação ao mensal.</p>
-            </div>
-
-            <div class="flex items-baseline mb-6">
-              <span class="text-4xl font-extrabold text-white tracking-tight">R$ 299,00</span>
-              <span class="text-gray-400 ml-2">/ano</span>
-            </div>
-
-            <ul class="space-y-4 mb-8 flex-1">
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Produtos Ilimitados</span>
-              </li>
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Pedidos direto no seu WhatsApp</span>
-              </li>
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Múltiplos Catálogos & Descontos</span>
-              </li>
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-gray-300">Suporte a Atributos (Cor, Tamanho)</span>
-              </li>
-              <li class="flex items-start">
-                <div class="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5 bg-green-500/20">
-                  <i data-lucide="check" class="h-3 w-3 text-green-500"></i>
-                </div>
-                <span class="ml-3 text-sm text-emerald-400 font-semibold">Desconto de 17% garantido</span>
-              </li>
-            </ul>
-
-            <form action="{{ route('pagamento.generate', [], false) }}" method="POST" class="payment-plan-form space-y-3">
-              @csrf
-              <input type="hidden" name="plan" value="yearly">
-              <input type="hidden" name="documento" class="documento-hidden" value="{{ auth()->user()->documento ?? old('documento') }}">
-              <input type="hidden" name="payment_method" value="pix">
-
-              <button type="submit" data-method="pix" class="btn-submit-payment w-full py-3.5 px-4 rounded-xl text-sm font-bold transition-all bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 cursor-pointer flex items-center justify-center gap-2">
-                <i data-lucide="qr-code" class="h-4 w-4"></i>
-                <span class="btn-label">Pagar via Pix</span>
-              </button>
-              <button type="submit" data-method="credit_card" class="btn-submit-payment w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-all bg-slate-700/80 hover:bg-slate-700 text-gray-200 hover:text-white cursor-pointer border border-slate-600/80 hover:border-blue-400 flex items-center justify-center gap-2">
-                <i data-lucide="credit-card" class="h-3.5 w-3.5 text-blue-400"></i>
-                <span class="btn-label">Pagar com Cartão de Crédito</span>
-              </button>
-            </form>
-          </div>
-          
-        </div>
-
+        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-center text-[#37322f] mb-3 tracking-tight">
+          Ative o seu Catálogo Digital
+        </h1>
+        <p class="text-center text-[#605a57] max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+          Complete seus dados e escolha o plano ideal para começar a vender pelo WhatsApp hoje mesmo.
+        </p>
       </div>
+
+      <!-- Feedback de Erro de Sessão -->
+      @if (session('error'))
+        <div class="mb-8 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm max-w-xl mx-auto flex items-center gap-3 shadow-sm animate-fade-in">
+          <i data-lucide="alert-circle" class="size-5 text-red-500 flex-shrink-0"></i>
+          <span>{{ session('error') }}</span>
+        </div>
+      @endif
+
+      <!-- Stepper Visual Interativo -->
+      <div class="flex items-center justify-center gap-3 mb-8">
+        <div id="stepperStep1" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#37322f] text-white shadow-sm transition-all duration-300">
+          <span id="stepperStep1Badge" class="w-5 h-5 rounded-full bg-[#d7f56b] text-[#37322f] flex items-center justify-center text-[10px] font-bold">1</span>
+          <span>Passo 1: Identificação</span>
+        </div>
+        <div class="w-8 h-px bg-[#37322f]/20"></div>
+        <div id="stepperStep2" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-[#37322f]/10 text-[#605a57] transition-all duration-300">
+          <span id="stepperStep2Badge" class="w-5 h-5 rounded-full bg-[#eeece8] text-[#37322f] flex items-center justify-center text-[10px] font-bold">2</span>
+          <span>Passo 2: Plano & Pagamento</span>
+        </div>
+      </div>
+
+      <!-- Passo 1: Card de CPF/CNPJ com Validação em Tempo Real -->
+      <div id="docInputCard" class="max-w-xl mx-auto mb-12 bg-white p-6 sm:p-7 rounded-2xl border border-[#37322f]/10 shadow-sm transition-all duration-300">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+          <label for="docInput" class="block text-sm sm:text-base font-semibold text-[#37322f] flex items-center gap-2">
+            <i data-lucide="shield-check" class="size-5 text-[#71834f]"></i>
+            <span>Passo 1: CPF ou CNPJ do Titular</span>
+            <span class="text-[11px] bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full font-medium">Obrigatório</span>
+          </label>
+
+          @if(config('app.env') === 'local' || config('services.asaas.env') === 'sandbox')
+          <button type="button" id="btnGenTestCpf" class="text-xs text-[#71834f] hover:text-[#546830] font-semibold underline flex items-center gap-1 cursor-pointer transition-colors self-start sm:self-auto">
+            <i data-lucide="zap" class="size-3.5 text-amber-500"></i>
+            <span>Gerar CPF Válido (Teste)</span>
+          </button>
+          @endif
+        </div>
+
+        <p class="text-xs text-[#605a57] mb-4 leading-relaxed">
+          Exigido pelas normas do Banco Central e pelo gateway Asaas para emissão de Pix e cobrança da assinatura.
+        </p>
+
+        <div class="relative">
+          <input type="text" id="docInput"
+            value="{{ auth()->user()->documento ?? old('documento') }}"
+            placeholder="000.000.000-00 ou 00.000.000/0000-00"
+            maxlength="18"
+            autocomplete="off"
+            class="w-full px-4 py-3 bg-[#f7f5f3] border border-[#37322f]/15 rounded-xl text-[#37322f] text-base font-medium tracking-wide focus:outline-none focus:bg-white focus:border-[#37322f] focus:ring-2 focus:ring-[#37322f]/10 placeholder:text-[#a09a95] transition-all">
+          
+          <div id="docValidIcon" class="absolute right-3.5 top-3.5 hidden">
+            <i data-lucide="check-circle-2" class="size-5 text-emerald-600"></i>
+          </div>
+        </div>
+
+        <div id="docFeedback" class="mt-2.5 text-xs flex items-center gap-1.5 transition-all hidden">
+          <i data-lucide="alert-circle" id="docFeedbackIcon" class="size-4 flex-shrink-0"></i>
+          <span id="docFeedbackText">Por favor, informe seu CPF ou CNPJ antes de prosseguir.</span>
+        </div>
+      </div>
+
+      <!-- Passo 2: Seleção de Planos & Pagamento -->
+      <div class="mb-6 text-center">
+        <h2 class="font-serif text-2xl sm:text-3xl text-[#37322f] mb-1 flex items-center justify-center gap-2">
+          <i data-lucide="sparkles" class="size-5 text-[#849451]"></i>
+          <span>Passo 2: Escolha o seu Plano</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-[#605a57]">Clique na forma de pagamento desejada para ativar seu acesso imediato.</p>
+      </div>
+
+      @php $selectedPlan = request('plan', 'monthly'); @endphp
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch">
+        
+        <!-- Plano Mensal -->
+        <div id="planCardMonthly" class="plan-card flex flex-col p-6 sm:p-8 rounded-2xl border {{ $selectedPlan === 'monthly' ? 'border-[#37322f] ring-2 ring-[#37322f]/15' : 'border-[#37322f]/15' }} bg-white hover:border-[#37322f]/40 transition-all duration-300 shadow-sm group hover:-translate-y-1">
+          <div class="mb-5">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xl sm:text-2xl font-bold text-[#37322f]">Plano Mensal</h3>
+              <span class="text-[11px] font-semibold text-[#605a57] bg-[#eeece8] px-2.5 py-1 rounded-full">Sem Fidelidade</span>
+            </div>
+            <p class="text-xs sm:text-sm text-[#605a57]">Flexibilidade mês a mês para o seu negócio.</p>
+          </div>
+
+          <div class="flex items-baseline my-4">
+            <span class="font-serif text-4xl sm:text-5xl font-normal text-[#37322f] tracking-tight">R$ 29,90</span>
+            <span class="text-xs sm:text-sm text-[#605a57] ml-2 font-medium">/mês</span>
+          </div>
+
+          <ul class="space-y-3 mb-6 flex-1 text-sm text-[#37322f]">
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#37322f]">Produtos Ilimitados</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#37322f]">Pedidos direto no seu WhatsApp</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#37322f]">Múltiplos Catálogos & Descontos</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#f4f8e6] text-[#71834f] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#37322f]">Suporte a Atributos (Cor, Tamanho)</span>
+            </li>
+          </ul>
+
+          <form action="{{ route('pagamento.generate', [], false) }}" method="POST" class="payment-plan-form space-y-2.5 pt-4 border-t border-[#37322f]/10 mt-auto">
+            @csrf
+            <input type="hidden" name="plan" value="monthly">
+            <input type="hidden" name="documento" class="documento-hidden" value="{{ auth()->user()->documento ?? old('documento') }}">
+            <input type="hidden" name="payment_method" value="pix">
+
+            <button type="submit" data-method="pix" class="btn-submit-payment w-full py-3 px-4 rounded-xl text-sm font-semibold transition-all bg-[#37322f] hover:bg-[#514a45] text-white cursor-pointer shadow-sm flex items-center justify-center gap-2">
+              <i data-lucide="qr-code" class="size-4 text-[#d7f56b]"></i>
+              <span class="btn-label">Pagar via Pix</span>
+            </button>
+            <button type="submit" data-method="credit_card" class="btn-submit-payment w-full py-3 px-4 rounded-xl text-sm font-semibold transition-all bg-[#eeece8] hover:bg-[#e4e1dc] text-[#37322f] cursor-pointer border border-[#37322f]/15 flex items-center justify-center gap-2">
+              <i data-lucide="credit-card" class="size-4 text-[#605a57]"></i>
+              <span class="btn-label">Pagar com Cartão de Crédito</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Plano Anual (Destaque Brillance Charcoal + Lime) -->
+        <div id="planCardYearly" class="plan-card flex flex-col p-6 sm:p-8 rounded-2xl border {{ $selectedPlan === 'yearly' ? 'border-[#37322f] ring-2 ring-[#d7f56b]/50' : 'border-[#37322f]' }} bg-[#37322f] text-white shadow-xl relative overflow-hidden transform md:-translate-y-2 group hover:-translate-y-3 transition-all duration-300">
+          <div class="absolute top-0 right-0 bg-[#d7f56b] text-[#37322f] text-[11px] font-bold px-3.5 py-1 rounded-bl-xl uppercase tracking-wider flex items-center gap-1 shadow-sm">
+            <i data-lucide="award" class="size-3"></i>
+            <span>Melhor Valor</span>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="text-xl sm:text-2xl font-bold text-white mb-1">Plano Anual</h3>
+            <p class="text-xs sm:text-sm text-[#d8d4cf]">Economize quase 2 meses em relação ao mensal.</p>
+          </div>
+
+          <div class="flex items-baseline my-4">
+            <span class="font-serif text-4xl sm:text-5xl font-normal text-white tracking-tight">R$ 299,00</span>
+            <span class="text-xs sm:text-sm text-[#d8d4cf] ml-2 font-medium">/ano</span>
+          </div>
+
+          <ul class="space-y-3 mb-6 flex-1 text-sm text-[#eeece8]">
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/15 text-[#d7f56b] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#eeece8]">Produtos Ilimitados</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/15 text-[#d7f56b] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#eeece8]">Pedidos direto no seu WhatsApp</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/15 text-[#d7f56b] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#eeece8]">Múltiplos Catálogos & Descontos</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-white/15 text-[#d7f56b] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#eeece8]">Suporte a Atributos (Cor, Tamanho)</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex size-4 shrink-0 items-center justify-center rounded-full bg-[#d7f56b]/20 text-[#d7f56b] mt-0.5">
+                <i data-lucide="check" class="size-3"></i>
+              </span>
+              <span class="text-xs sm:text-sm text-[#d7f56b] font-semibold">Desconto de 17% garantido</span>
+            </li>
+          </ul>
+
+          <form action="{{ route('pagamento.generate', [], false) }}" method="POST" class="payment-plan-form space-y-2.5 pt-4 border-t border-white/10 mt-auto">
+            @csrf
+            <input type="hidden" name="plan" value="yearly">
+            <input type="hidden" name="documento" class="documento-hidden" value="{{ auth()->user()->documento ?? old('documento') }}">
+            <input type="hidden" name="payment_method" value="pix">
+
+            <button type="submit" data-method="pix" class="btn-submit-payment w-full py-3 px-4 rounded-xl text-sm font-bold transition-all bg-[#d7f56b] hover:bg-[#e2ff88] text-[#37322f] shadow-md cursor-pointer flex items-center justify-center gap-2">
+              <i data-lucide="qr-code" class="size-4"></i>
+              <span class="btn-label">Pagar via Pix</span>
+            </button>
+            <button type="submit" data-method="credit_card" class="btn-submit-payment w-full py-3 px-4 rounded-xl text-sm font-bold transition-all bg-white/15 hover:bg-white/25 text-white cursor-pointer border border-white/25 flex items-center justify-center gap-2">
+              <i data-lucide="credit-card" class="size-4 text-[#d7f56b]"></i>
+              <span class="btn-label">Pagar com Cartão de Crédito</span>
+            </button>
+          </form>
+        </div>
+        
+      </div>
+
     </main>
 
     <!-- Floating Toast Notification -->
-    <div id="toastNotice" class="fixed bottom-6 inset-x-0 mx-auto max-w-md w-[92%] px-5 py-3.5 rounded-2xl bg-slate-800/95 border border-rose-500/50 text-white text-sm shadow-2xl backdrop-blur-md flex items-center gap-3 transition-all duration-300 transform translate-y-28 opacity-0 pointer-events-none z-50">
-        <div class="h-8 w-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0">
-            <i data-lucide="alert-triangle" class="h-4 w-4"></i>
-        </div>
-        <div class="flex-1 text-xs md:text-sm font-medium" id="toastText">
-            Por favor, informe seu CPF ou CNPJ no Passo 1 para continuar.
-        </div>
+    <div id="toastNotice" class="fixed bottom-6 inset-x-0 mx-auto max-w-md w-[92%] px-4 py-3 rounded-2xl bg-[#37322f] text-white text-sm shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-28 opacity-0 pointer-events-none z-50 border border-white/10">
+      <div id="toastIconContainer" class="size-8 rounded-xl bg-red-500/20 text-red-300 flex items-center justify-center flex-shrink-0">
+        <i data-lucide="alert-triangle" class="size-4" id="toastIcon"></i>
+      </div>
+      <div class="flex-1 text-xs sm:text-sm font-medium" id="toastText">
+        Por favor, informe seu CPF ou CNPJ no Passo 1 para continuar.
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-gray-500 text-sm">
-      <div class="max-w-7xl mx-auto px-4">
-        <p>© 2024 ZapCatalogo Tecnologia Ltda. Todos os direitos reservados.</p>
+    <!-- Footer Padrão Brillance -->
+    <footer class="border-t border-[#37322f]/10 bg-[#eeece8]/40 py-8 text-center text-xs text-[#716a64] mt-auto">
+      <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2 font-semibold text-[#37322f]">
+          <span class="flex size-6 items-center justify-center rounded-lg bg-[#37322f] text-[#d7f56b]">
+            <i data-lucide="shopping-bag" class="size-3"></i>
+          </span>
+          <span>zap<span class="font-normal">catálogo</span></span>
+        </div>
+        <p>© {{ date('Y') }} ZapCatálogo Tecnologia. Pagamentos processados com segurança via Asaas.</p>
+        <div class="flex items-center gap-2 text-[#605a57]">
+          <i data-lucide="shield-check" class="size-3.5 text-[#71834f]"></i>
+          <span>Ambiente Seguro 256-bit</span>
+        </div>
       </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Scripts de Interatividade e Validações -->
     <script>
       lucide.createIcons();
 
@@ -331,7 +366,12 @@
       const docValidIcon = document.getElementById('docValidIcon');
       const toastNotice = document.getElementById('toastNotice');
       const toastText = document.getElementById('toastText');
+      const toastIconContainer = document.getElementById('toastIconContainer');
       const btnGenTestCpf = document.getElementById('btnGenTestCpf');
+      const stepperStep1 = document.getElementById('stepperStep1');
+      const stepperStep1Badge = document.getElementById('stepperStep1Badge');
+      const stepperStep2 = document.getElementById('stepperStep2');
+      const stepperStep2Badge = document.getElementById('stepperStep2Badge');
 
       // Validação de Dígitos Verificadores CPF / CNPJ
       function validateCpfCnpj(val) {
@@ -375,7 +415,7 @@
           return false;
       }
 
-      // Máscara e Formatação
+      // Máscara e Formatação Dinâmica
       function formatDoc(value) {
           let clean = value.replace(/\D/g, '');
           if (clean.length <= 11) {
@@ -391,38 +431,76 @@
           }
       }
 
+      function updateStepperState(isValid) {
+          if (!stepperStep1 || !stepperStep2) return;
+          if (isValid) {
+              // Passo 1 concluído
+              stepperStep1.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#f4f8e6] text-[#546830] border border-[#71834f]/30 transition-all duration-300';
+              stepperStep1Badge.className = 'w-5 h-5 rounded-full bg-[#71834f] text-white flex items-center justify-center text-[10px] font-bold';
+              stepperStep1Badge.innerHTML = '✓';
+              // Passo 2 ativo
+              stepperStep2.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#37322f] text-white shadow-sm transition-all duration-300';
+              stepperStep2Badge.className = 'w-5 h-5 rounded-full bg-[#d7f56b] text-[#37322f] flex items-center justify-center text-[10px] font-bold';
+              stepperStep2Badge.innerHTML = '2';
+          } else {
+              // Passo 1 ativo
+              stepperStep1.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#37322f] text-white shadow-sm transition-all duration-300';
+              stepperStep1Badge.className = 'w-5 h-5 rounded-full bg-[#d7f56b] text-[#37322f] flex items-center justify-center text-[10px] font-bold';
+              stepperStep1Badge.innerHTML = '1';
+              // Passo 2 pendente
+              stepperStep2.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-[#37322f]/10 text-[#605a57] transition-all duration-300';
+              stepperStep2Badge.className = 'w-5 h-5 rounded-full bg-[#eeece8] text-[#37322f] flex items-center justify-center text-[10px] font-bold';
+              stepperStep2Badge.innerHTML = '2';
+          }
+      }
+
+      function setDocValidationFeedback(state, message) {
+          if (state === 'clear') {
+              docFeedback.classList.add('hidden');
+              docValidIcon.classList.add('hidden');
+              docInput.classList.remove('border-red-500', 'border-emerald-600', 'ring-2', 'ring-red-500/20', 'ring-emerald-600/20');
+              docInputCard.classList.remove('border-red-500', 'ring-4', 'ring-red-500/20');
+              updateStepperState(false);
+              return;
+          }
+
+          if (state === 'valid') {
+              docFeedback.classList.remove('hidden', 'text-red-600');
+              docFeedback.classList.add('text-emerald-700');
+              docFeedbackText.textContent = message;
+              docValidIcon.classList.remove('hidden');
+              docInput.classList.remove('border-red-500', 'ring-red-500/20');
+              docInput.classList.add('border-emerald-600');
+              docInputCard.classList.remove('border-red-500', 'ring-4', 'ring-red-500/20');
+              updateStepperState(true);
+          } else {
+              docFeedback.classList.remove('hidden', 'text-emerald-700');
+              docFeedback.classList.add('text-red-600');
+              docFeedbackText.textContent = message;
+              docValidIcon.classList.add('hidden');
+              docInput.classList.remove('border-emerald-600');
+              docInput.classList.add('border-red-500');
+              updateStepperState(false);
+          }
+      }
+
       function updateDocValidationUI() {
           if (!docInput) return;
           const clean = docInput.value.replace(/\D/g, '');
           if (!clean) {
-              docFeedback.classList.add('hidden');
-              docValidIcon.classList.add('hidden');
-              docInput.classList.remove('border-rose-500', 'border-emerald-500', 'ring-2', 'ring-rose-500/20', 'ring-emerald-500/20');
-              docInputCard.classList.remove('border-rose-500', 'ring-4', 'ring-rose-500/20');
+              setDocValidationFeedback('clear');
               return;
           }
 
           const isValid = validateCpfCnpj(clean);
           if (isValid) {
-              docFeedback.classList.remove('hidden', 'text-rose-400');
-              docFeedback.classList.add('text-emerald-400');
-              docFeedbackText.textContent = clean.length === 11 ? 'CPF válido e pronto para cobrança.' : 'CNPJ válido e pronto para cobrança.';
-              docValidIcon.classList.remove('hidden');
-              docInput.classList.remove('border-rose-500', 'ring-rose-500/20');
-              docInput.classList.add('border-emerald-500');
-              docInputCard.classList.remove('border-rose-500', 'ring-4', 'ring-rose-500/20');
+              const msg = clean.length === 11 ? 'CPF válido e pronto para cobrança.' : 'CNPJ válido e pronto para cobrança.';
+              setDocValidationFeedback('valid', msg);
           } else if (clean.length === 11 || clean.length === 14) {
-              docFeedback.classList.remove('hidden', 'text-emerald-400');
-              docFeedback.classList.add('text-rose-400');
-              docFeedbackText.textContent = clean.length === 11 ? 'CPF inválido. Verifique os dígitos.' : 'CNPJ inválido. Verifique os dígitos.';
-              docValidIcon.classList.add('hidden');
-              docInput.classList.add('border-rose-500');
+              const msg = clean.length === 11 ? 'CPF inválido. Verifique os dígitos.' : 'CNPJ inválido. Verifique os dígitos.';
+              setDocValidationFeedback('invalid', msg);
           } else {
-              docFeedback.classList.remove('hidden', 'text-emerald-400');
-              docFeedback.classList.add('text-rose-400');
-              docFeedbackText.textContent = 'Informe os 11 dígitos do CPF ou 14 do CNPJ.';
-              docValidIcon.classList.add('hidden');
-              docInput.classList.add('border-rose-500');
+              setDocValidationFeedback('invalid', 'Informe os 11 dígitos do CPF ou 14 do CNPJ.');
           }
       }
 
@@ -432,7 +510,7 @@
               updateDocValidationUI();
           });
 
-          // Valida no carregamento se já houver valor
+          // Valida no carregamento se já houver valor salvo
           if (docInput.value) {
               docInput.value = formatDoc(docInput.value);
               updateDocValidationUI();
@@ -467,6 +545,15 @@
       function showToast(message, type = 'error') {
           if (!toastNotice) return;
           if (toastText) toastText.textContent = message;
+
+          if (toastIconContainer) {
+              if (type === 'info') {
+                  toastIconContainer.className = 'size-8 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center flex-shrink-0';
+              } else {
+                  toastIconContainer.className = 'size-8 rounded-xl bg-red-500/20 text-red-300 flex items-center justify-center flex-shrink-0';
+              }
+          }
+
           toastNotice.classList.remove('translate-y-28', 'opacity-0');
           toastNotice.classList.add('translate-y-0', 'opacity-100');
 
@@ -482,8 +569,8 @@
 
           if (docInputCard) {
               docInputCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              docInputCard.classList.remove('border-slate-700');
-              docInputCard.classList.add('border-rose-500', 'ring-4', 'ring-rose-500/20', 'animate-shake');
+              docInputCard.classList.remove('border-[#37322f]/10');
+              docInputCard.classList.add('border-red-500', 'ring-4', 'ring-red-500/20', 'animate-shake');
               setTimeout(() => {
                   docInputCard.classList.remove('animate-shake');
               }, 500);
@@ -491,28 +578,15 @@
 
           if (docInput) {
               docInput.focus();
-              docInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/30');
+              docInput.classList.add('border-red-500', 'ring-2', 'ring-red-500/30');
           }
 
           if (docFeedback) {
-              docFeedback.classList.remove('hidden', 'text-emerald-400');
-              docFeedback.classList.add('text-rose-400');
+              docFeedback.classList.remove('hidden', 'text-emerald-700');
+              docFeedback.classList.add('text-red-600');
               docFeedbackText.textContent = customMsg || 'Por favor, informe seu CPF ou CNPJ antes de prosseguir.';
           }
       }
-
-      // Clique no card do plano aciona o botão principal (Pix)
-      document.querySelectorAll('.plan-card').forEach(card => {
-          card.addEventListener('click', function(e) {
-              if (e.target.closest('button') || e.target.closest('a') || e.target.closest('form')) {
-                  return;
-              }
-              const pixBtn = card.querySelector('button[data-method="pix"]');
-              if (pixBtn) {
-                  pixBtn.click();
-              }
-          });
-      });
 
       // Gerenciamento de Submissão de Formulário
       let lastClickedBtn = null;
@@ -565,7 +639,7 @@
                   if (label) {
                       label.innerHTML = `
                           <span class="inline-flex items-center gap-2">
-                              <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                               </svg>

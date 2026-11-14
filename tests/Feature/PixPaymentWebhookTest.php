@@ -161,12 +161,61 @@ class PixPaymentWebhookTest extends TestCase
         $response = $this->actingAs($user)->get('/pagamento/pendente');
 
         $response->assertOk();
+        $response->assertSee('zap', false);
+        $response->assertSee('catálogo', false);
+        $response->assertSee('Ative o seu Catálogo Digital');
+        $response->assertSee('Passo 1: Identificação', false);
+        $response->assertSee('Passo 2: Plano & Pagamento', false);
         $response->assertSee('Passo 1: CPF ou CNPJ do Titular');
         $response->assertSee('Passo 2: Escolha o seu Plano');
         $response->assertSee('Plano Mensal');
         $response->assertSee('Plano Anual');
         $response->assertSee('Pagar via Pix');
         $response->assertSee('Pagar com Cartão de Crédito');
+        $response->assertSee('Instrument Serif');
+    }
+
+    public function test_pending_page_preselects_plan_from_query_parameter(): void
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'pending',
+            'plano_expira_em' => null,
+            'slug' => null,
+        ]);
+
+        // Pré-seleciona plano anual
+        $responseYearly = $this->actingAs($user)->get('/pagamento/pendente?plan=yearly');
+        $responseYearly->assertOk();
+        $responseYearly->assertSee('id="planCardYearly"', false);
+        $responseYearly->assertSee('border-[#37322f] ring-2 ring-[#d7f56b]/50', false);
+
+        // Pré-seleciona plano mensal
+        $responseMonthly = $this->actingAs($user)->get('/pagamento/pendente?plan=monthly');
+        $responseMonthly->assertOk();
+        $responseMonthly->assertSee('id="planCardMonthly"', false);
+        $responseMonthly->assertSee('border-[#37322f] ring-2 ring-[#37322f]/15', false);
+    }
+
+    public function test_renew_page_renders_brillance_stepper_and_plans(): void
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'active',
+            'plano_expira_em' => now()->addDays(15),
+            'slug' => 'loja-renovacao-teste',
+            'tipo_cliente' => 'direct',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('subscription.renew'));
+
+        $response->assertOk();
+        $response->assertSee('zap', false);
+        $response->assertSee('catálogo', false);
+        $response->assertSee('Passo 1: Identificação', false);
+        $response->assertSee('Passo 2: Plano & Pagamento', false);
+        $response->assertSee('Plano Mensal');
+        $response->assertSee('Plano Anual');
     }
 
     public function test_generate_requires_documento(): void
