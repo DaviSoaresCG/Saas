@@ -193,3 +193,108 @@ test('cart page renders sob consulta badge instead of price when catalog is sob 
     $response->assertSee('rounded-full border border-amber-500/20 bg-amber-500/10', false);
     $response->assertDontSee('id="item-subtotal-' . $product->id . '"', false);
 });
+
+test('cart page renders order summary card with rounded-3xl, font-serif total and pill checkout button', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $product = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Colar de Pérolas',
+        'preco_base' => 350.00,
+        'sku' => 'COL-001',
+        'estoque' => 4,
+        'status' => true,
+        'description' => 'Colar de pérolas naturais',
+    ]);
+
+    $cart = [
+        $product->id => [
+            'id' => $product->id,
+            'name' => $product->nome,
+            'value' => 350.00,
+            'quantity' => 2,
+            'path' => '',
+        ],
+    ];
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $response = $this->withSession(['cart' => $cart])
+        ->get("http://{$user->slug}.{$domain}/cart/index");
+
+    $response->assertOk();
+
+    // 1. Order Summary Card frame
+    $response->assertSee('rounded-3xl border border-[var(--text-base)]/10 bg-[var(--bg-card)]', false);
+    $response->assertSee('font-serif text-2xl sm:text-3xl text-[var(--text-base)] tracking-tight', false);
+    $response->assertSee('Resumo do Pedido', false);
+
+    // 2. Editorial total in font-serif
+    $response->assertSee('id="summary-total"', false);
+    $response->assertSee('font-serif text-2xl sm:text-3xl font-medium text-[var(--text-base)]', false);
+    $response->assertSee('R$ 700,00', false);
+
+    // 3. Primary checkout CTA in pill style
+    $response->assertSee('id="open-checkout-modal-btn"', false);
+    $response->assertSee('rounded-full bg-[var(--color-primary)] text-[var(--text-on-primary)]', false);
+    $response->assertSee('Finalizar pedido', false);
+});
+
+test('cart page renders checkout identification modal with rounded-3xl, backdrop blur, and refined inputs', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $product = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Relógio Cronógrafo',
+        'preco_base' => 500.00,
+        'sku' => 'REL-002',
+        'estoque' => 3,
+        'status' => true,
+        'description' => 'Relógio cronógrafo em aço',
+    ]);
+
+    $cart = [
+        $product->id => [
+            'id' => $product->id,
+            'name' => $product->nome,
+            'value' => 500.00,
+            'quantity' => 1,
+            'path' => '',
+        ],
+    ];
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $response = $this->withSession(['cart' => $cart])
+        ->get("http://{$user->slug}.{$domain}/cart/index");
+
+    $response->assertOk();
+
+    // 1. Modal backdrop & container
+    $response->assertSee('id="checkout-modal"', false);
+    $response->assertSee('bg-black/60 backdrop-blur-md', false);
+    $response->assertSee('rounded-3xl border border-[var(--text-base)]/10 bg-[var(--bg-card)] p-6 sm:p-8 shadow-2xl', false);
+
+    // 2. Header and close button
+    $response->assertSee('id="close-modal-btn"', false);
+    $response->assertSee('font-serif text-2xl sm:text-3xl font-medium text-[var(--text-base)] tracking-tight', false);
+    $response->assertSee('Identificação do Cliente', false);
+
+    // 3. Form & inputs
+    $response->assertSee('id="checkout-form"', false);
+    $response->assertSee('pedido-finalizar', false);
+    $response->assertSee('id="cliente_nome"', false);
+    $response->assertSee('id="cliente_phone"', false);
+    $response->assertSee('rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-page)]', false);
+    $response->assertSee('focus:ring-2 focus:ring-[var(--color-primary)]/15', false);
+    $response->assertSee('x-mask="(99) 99999-9999"', false);
+
+    // 4. Modal action buttons
+    $response->assertSee('rounded-full bg-[var(--color-primary)]', false);
+    $response->assertSee('Salvar e Enviar Pedido', false);
+    $response->assertSee('id="cancel-modal-btn"', false);
+});

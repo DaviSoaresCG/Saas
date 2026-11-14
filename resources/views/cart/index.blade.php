@@ -133,26 +133,31 @@
             </div>
 
             <div class="lg:col-span-1">
-                <div class="bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-lg shadow-lg p-6 lg:sticky lg:top-8 transition-colors duration-200">
-                    <h2 class="text-2xl font-bold text-[var(--text-base)] border-b border-[var(--color-primary)] pb-4 mb-6">Resumo do Pedido</h2>
+                <div class="rounded-3xl border border-[var(--text-base)]/10 bg-[var(--bg-card)] p-6 sm:p-7 shadow-sm lg:sticky lg:top-8 transition-all">
+                    <h2 class="font-serif text-2xl sm:text-3xl text-[var(--text-base)] tracking-tight border-b border-[var(--text-base)]/10 pb-4">
+                        Resumo do Pedido
+                    </h2>
 
-                    <div class="mt-6 pt-6">
-                        <div class="flex justify-between text-[var(--text-base)] text-xl font-bold">
-                            <span>Total</span>
-                            <span id="summary-total">
+                    <div class="mt-6 pt-2">
+                        <div class="flex items-baseline justify-between text-[var(--text-base)]">
+                            <span class="text-base text-[var(--text-muted)] font-medium">Total</span>
+                            <span id="summary-total" class="font-serif text-2xl sm:text-3xl font-medium text-[var(--text-base)] tracking-tight">
                                 @if (session('sob_consulta'))
-                                    <span class="text-amber-500 font-bold text-lg">Sob Consulta</span>
+                                    <span class="inline-flex items-center rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-sm font-semibold text-amber-600 dark:text-amber-400">
+                                        Sob Consulta
+                                    </span>
                                 @else
                                     R$ {{ number_format($total, 2, ',', '.') }}
                                 @endif
                             </span>
                         </div>
                     </div>
-                    <button type="button" id="open-checkout-modal-btn"
-                        class="mt-8 w-full cursor-pointer bg-[var(--color-primary)] text-[var(--text-on-primary)] text-lg font-semibold py-3 rounded-lg shadow-md hover:opacity-95 transition-all">
-                        Finalizar pedido
-                    </button>
 
+                    <button type="button" id="open-checkout-modal-btn"
+                        class="mt-6 sm:mt-8 w-full inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] text-[var(--text-on-primary)] px-6 py-3.5 text-base font-semibold shadow-sm transition-all hover:opacity-95 active:scale-[0.98] cursor-pointer">
+                        <span>Finalizar pedido</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 stroke-[2] pointer-events-none"></i>
+                    </button>
                 </div>
             </div>
 
@@ -161,49 +166,51 @@
     </div>
 
     <!-- Modal de Finalização / Dados do Cliente -->
-    <div id="checkout-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-all duration-300">
-        <div class="relative w-full max-w-md bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)]">
+    <div id="checkout-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-md p-4 transition-all duration-300">
+        <div class="relative w-full max-w-md rounded-3xl border border-[var(--text-base)]/10 bg-[var(--bg-card)] p-6 sm:p-8 shadow-2xl text-[var(--text-base)]">
             
-            <button type="button" id="close-modal-btn" class="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-base)] transition-colors cursor-pointer">
-                <i data-lucide="x" class="h-6 w-6"></i>
+            <button type="button" id="close-modal-btn"
+                aria-label="Fechar modal"
+                class="absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--text-base)]/5 hover:text-[var(--text-base)] cursor-pointer">
+                <i data-lucide="x" class="h-5 w-5 stroke-[2] pointer-events-none"></i>
             </button>
 
             <div class="mb-6 text-center">
-                <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] mb-3">
-                    <i data-lucide="user-check" class="h-7 w-7"></i>
+                <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--text-base)]/5 text-[var(--text-base)] ring-1 ring-[var(--text-base)]/10 mb-3">
+                    <i data-lucide="user-check" class="h-7 w-7 stroke-[1.75] pointer-events-none"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[var(--text-base)]">Identificação do Cliente</h3>
-                <p class="text-sm text-[var(--text-muted)] mt-1 font-medium">Preencha os campos para salvarmos o seu pedido.</p>
+                <h3 class="font-serif text-2xl sm:text-3xl font-medium text-[var(--text-base)] tracking-tight">Identificação do Cliente</h3>
+                <p class="text-sm text-[var(--text-muted)] mt-1 font-normal">Preencha seus dados para concluirmos o seu pedido.</p>
             </div>
 
             <form id="checkout-form" action="{{ tenant_route('order.finished') }}" method="POST" class="space-y-4">
                 @csrf
                 <div>
-                    <label for="cliente_nome" class="block text-sm font-semibold text-[var(--text-base)] mb-1.5">
+                    <label for="cliente_nome" class="block text-xs sm:text-sm font-semibold text-[var(--text-base)] mb-1.5">
                         Nome completo <span class="text-red-500">*</span>
                     </label>
                     <input type="text" id="cliente_nome" name="cliente_nome" required
                         placeholder="Digite seu nome completo"
-                        class="w-full px-4 py-3 rounded-xl bg-[var(--bg-card)] border border-[var(--color-primary)]/30 text-[var(--text-base)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all">
+                        class="w-full px-4 py-3 rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-page)] text-[var(--text-base)] placeholder-[var(--text-muted)]/70 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 transition-all text-sm sm:text-base">
                 </div>
 
                 <div>
-                    <label for="cliente_phone" class="block text-sm font-semibold text-[var(--text-base)] mb-1.5">
+                    <label for="cliente_phone" class="block text-xs sm:text-sm font-semibold text-[var(--text-base)] mb-1.5">
                         Celular / WhatsApp <span class="text-red-500">*</span>
                     </label>
                     <input type="tel" id="cliente_phone" name="cliente_phone" required
                         placeholder="(00) 90000-0000"
-                        class="w-full px-4 py-3 rounded-xl bg-[var(--bg-card)] border border-[var(--color-primary)]/30 text-[var(--text-base)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all" x-data x-mask="(99) 99999-9999">
+                        class="w-full px-4 py-3 rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-page)] text-[var(--text-base)] placeholder-[var(--text-muted)]/70 focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 transition-all text-sm sm:text-base" x-data x-mask="(99) 99999-9999">
                 </div>
 
                 <div class="pt-2 flex flex-col gap-2.5">
                     <button type="submit"
-                        class="w-full cursor-pointer bg-[var(--color-primary)] hover:opacity-90 text-[var(--text-on-primary)] font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-base">
+                        class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] py-3.5 px-6 font-semibold text-[var(--text-on-primary)] shadow-sm transition-all hover:opacity-95 active:scale-[0.98] cursor-pointer text-sm sm:text-base">
                         <span>Salvar e Enviar Pedido</span>
-                        <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                        <i data-lucide="arrow-right" class="h-4 w-4 stroke-[2] pointer-events-none"></i>
                     </button>
                     <button type="button" id="cancel-modal-btn"
-                        class="w-full cursor-pointer bg-transparent hover:bg-gray-500/10 text-[var(--text-muted)] font-semibold py-2.5 rounded-xl transition-all text-sm">
+                        class="w-full inline-flex items-center justify-center rounded-full bg-transparent py-2.5 px-6 font-medium text-[var(--text-muted)] transition-all hover:bg-[var(--text-base)]/5 hover:text-[var(--text-base)] cursor-pointer text-sm">
                         Cancelar
                     </button>
                 </div>
