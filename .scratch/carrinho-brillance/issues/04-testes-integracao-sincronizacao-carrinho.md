@@ -4,10 +4,11 @@
 
 **Blocked by:** 03 — Redesenho do resumo do pedido e do modal de identificação do cliente
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Criação de testes de feature cobrindo a renderização visual da página de carrinho com tipografia `Instrument Serif`, empty state e botões pill.
-- [ ] Testes de integração validando os cards de produto, atributos, observações, preço normal e sob consulta.
-- [ ] Validação do modal de checkout com campos de cliente e rota de finalização.
-- [ ] Testes de persistência e sincronização assíncrona no endpoint `/cart/update` e no contador `#cart-badge`.
-- [ ] Execução da suíte completa de testes (`php artisan test`) com 100% de aprovação e zero regressões.
+- [x] Criação de testes de feature cobrindo a renderização visual da página de carrinho com tipografia `Instrument Serif`, empty state e botões pill.
+- [x] Testes de integração validando os cards de produto, atributos, observações, preço normal e sob consulta.
+- [x] Validação do modal de checkout com campos de cliente e rota de finalização.
+- [x] Testes de persistência e sincronização assíncrona no endpoint `/cart/update` e no contador `#cart-badge`.
+- [x] Execução da suíte completa de testes (`php artisan test`) com 100% de aprovação e zero regressões.
+
