@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Catalogo;
 use App\Models\User;
 
 test('storefront layout loads instrument serif and inter typography in styles stack', function () {
@@ -38,4 +39,57 @@ test('app.css clean theme defines brillance palette variables and preserves alte
     expect($cssContent)->toContain('[data-theme="lavender"]');
     expect($cssContent)->toContain('[data-theme="terracotta"]');
     expect($cssContent)->toContain('[data-theme="cyber"]');
+});
+
+test('storefront header renders brillance styling with backdrop blur, rounded-2xl logo, font-serif store name and pill navigation', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+        'nome_loja' => 'Boutique Elegance',
+    ]);
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $response = $this->get("http://{$user->slug}.{$domain}/produtos");
+
+    $response->assertOk();
+    // Header container with backdrop-blur-xl and subtle border
+    $response->assertSee('backdrop-blur-xl', false);
+    $response->assertSee('border-b border-[var(--text-base)]/10', false);
+
+    // Store logo container with rounded-2xl
+    $response->assertSee('rounded-2xl', false);
+
+    // Store name with editorial serif
+    $response->assertSee('font-serif', false);
+    $response->assertSee('Boutique Elegance', false);
+
+    // Dashboard pill button
+    $response->assertSee('rounded-full border border-[var(--text-base)]/15', false);
+
+    // Cart pill button and badge
+    $response->assertSee('id="cart-badge"', false);
+    $response->assertSee('rounded-full bg-[var(--color-primary)]', false);
+});
+
+test('storefront header renders elegant catalog name badge when catalogoName is present and visible', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $catalogo = Catalogo::create([
+        'user_id' => $user->id,
+        'nome' => 'Coleção Especial de Inverno',
+        'hash' => 'inverno12345',
+        'desconto_index' => 15.00,
+        'sob_consulta' => false,
+        'mostrar_nome' => true,
+    ]);
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $response = $this->get("http://{$domain}/{$catalogo->hash}/produtos");
+
+    $response->assertOk();
+    $response->assertSee('Coleção Especial de Inverno', false);
+    $response->assertSee('rounded-full border border-[var(--text-base)]/10', false);
 });

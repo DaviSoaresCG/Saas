@@ -2,7 +2,7 @@
 
 **What to build:** Ao clicar para adicionar um produto ao carrinho em qualquer ponto da vitrine, o cliente interage com um modal de compra moderno no estilo Brillance. O container apresenta cantos arredondados generosos (`rounded-3xl`), sombra suave e borda sutil, com o preço do produto destacado em `Instrument Serif`, controles de quantidade (`-` e `+`) táteis com transições suaves, campos de observação/atributos integrados com anel de foco delicado e botão de ação primária com micro-interações de clique e feedback visual, mantendo todo o comportamento do formulário e manipulação via JavaScript existentes.
 
-**Blocked by:** 02 — Redesenho editorial do cabeçalho da loja, navegação e contador do carrinho
+**Blocked by:** Nenhum — Ticket 02 concluído.
 
 **Status:** ready-for-agent
 

@@ -4,12 +4,12 @@
 
 **Blocked by:** Nenhum — Ticket 01 concluído.
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Redesenho da barra superior fixa (`header`) com altura otimizada, efeito `backdrop-blur-xl`, fundo `bg-[var(--bg-page)]/90` e borda `border-b border-[var(--text-base)]/10`.
-- [ ] Moldura da logo/avatar da loja com cantos arredondados refinados (`rounded-2xl`), fundo `bg-[var(--bg-card)]` e borda sutil, mantendo ícone com bom contraste quando não houver imagem.
-- [ ] Nome da loja e título da página com hierarquia tipográfica clara, destacando o nome com classe editorial `font-serif`.
-- [ ] Botão do Dashboard estilizado no formato pill discreto (`rounded-full border border-[var(--text-base)]/15 bg-[var(--bg-card)] text-[var(--text-base)] hover:bg-[var(--text-base)]/5 shadow-sm`).
-- [ ] Botão do Carrinho redesenhado em formato pill com ícone e badge numérico harmonioso (suportando contadores normais e `99+` sem quebras de layout).
-- [ ] Faixa ou badge central para exibição do `$catalogoName` com cantos arredondados suaves quando configurado para exibição.
+- [x] Redesenho da barra superior fixa (`header`) com altura otimizada, efeito `backdrop-blur-xl`, fundo `bg-[var(--bg-page)]/90` e borda `border-b border-[var(--text-base)]/10`.
+- [x] Moldura da logo/avatar da loja com cantos arredondados refinados (`rounded-2xl`), fundo `bg-[var(--bg-card)]` e borda sutil, mantendo ícone com bom contraste quando não houver imagem.
+- [x] Nome da loja e título da página com hierarquia tipográfica clara, destacando o nome com classe editorial `font-serif`.
+- [x] Botão do Dashboard estilizado no formato pill discreto (`rounded-full border border-[var(--text-base)]/15 bg-[var(--bg-card)] text-[var(--text-base)] hover:bg-[var(--text-base)]/5 shadow-sm`).
+- [x] Botão do Carrinho redesenhado em formato pill com ícone e badge numérico harmonioso (suportando contadores normais e `99+` sem quebras de layout).
+- [x] Faixa ou badge central para exibição do `$catalogoName` com cantos arredondados suaves quando configurado para exibição.
 

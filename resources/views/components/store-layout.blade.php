@@ -23,54 +23,56 @@
 
 <x-app-layout :title="$tabTitle ?? $title ?? null" :logo-url="$storeLogo ?? $logoUrl ?? null">
     <div class="min-h-screen bg-[var(--bg-page)] font-sans antialiased flex flex-col">
-        <header class="sticky top-0 z-20 h-20 sm:h-24 w-full bg-[var(--bg-page)]/95 ">
-            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-                <div class="flex items-center gap-3 min-w-0 sm:mt-6 mt-2">
+        <header class="sticky top-0 z-20 w-full bg-[var(--bg-page)]/90 backdrop-blur-xl border-b border-[var(--text-base)]/10 transition-all">
+            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3 min-w-0">
                     @php
                         $displayLogo = $storeLogo ?? $logoUrl ?? null;
                     @endphp
                     @if (!empty($displayLogo))
-                        <div class="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full overflow-hidden shrink-0 border-2 border-[var(--color-primary)]/30 bg-[var(--bg-card)] shadow-sm" >
+                        <div class="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl overflow-hidden shrink-0 border border-[var(--text-base)]/10 bg-[var(--bg-card)] shadow-sm">
                             <img src="{{ $displayLogo }}" alt="{{ $storeName }}" class="h-full w-full object-cover">
                         </div>
                     @else
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[var(--color-primary)] shrink-0 shadow-sm">
-                            <i data-lucide="shopping-bag" class="h-5 w-5 sm:h-6 sm:w-6 text-[var(--text-on-primary)]"></i>
+                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-[var(--color-primary)] text-[var(--text-on-primary)] shrink-0 shadow-sm">
+                            <i data-lucide="shopping-bag" class="h-5 w-5 sm:h-6 sm:w-6"></i>
                         </div>
                     @endif
-                    <div class="min-w-0">
-                        <p class="text-sm font-medium text-[var(--text-base)] tracking-wide truncate">{{ $storeName }}</p>
-                        @if ($pageTitle)
-                            <p class="text-sm font-bold text-[var(--text-base)] truncate">{{ $pageTitle }}</p>
-                        @else
-                            <p class="text-sm font-bold text-[var(--text-base)] truncate">Catálogo</p>
-                        @endif
+                    <div class="min-w-0 flex flex-col justify-center">
+                        <p class="font-serif text-lg sm:text-2xl font-normal text-[var(--text-base)] tracking-tight truncate leading-tight">
+                            {{ $storeName }}
+                        </p>
+                        <p class="text-xs sm:text-sm font-medium text-[var(--text-muted)] tracking-wide truncate">
+                            {{ $pageTitle ?: 'Catálogo' }}
+                        </p>
                     </div>
                 </div>
-                @if(!Route::is('variant.*'))
                 <nav class="flex items-center gap-2 sm:gap-3 shrink-0">
-                    <a href="{{ route('dashboard') }}"
-                        class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] transition-colors shadow-lg shadow-[var(--color-primary)]/20">
-                        <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
-                        <span class="hidden sm:inline">Dashboard</span>
-                    </a>
-                @endif
+                    @if(!Route::is('variant.*'))
+                        <a href="{{ route('dashboard') }}"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[var(--text-base)]/15 bg-[var(--bg-card)] px-3.5 py-2 text-xs sm:text-sm font-medium text-[var(--text-base)] hover:bg-[var(--text-base)]/5 shadow-sm transition-all duration-200">
+                            <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                            <span class="hidden sm:inline">Dashboard</span>
+                        </a>
+                    @endif
                     <a href="{{ Route::is('variant.*') ? route('variant.cart.index', ['slug' => $slug]) : route('cart.index') }}"
-                        class="relative inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-3 py-2 text-sm text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/20 font-medium transition-colors">
-                        <span class="relative inline-flex items-center">
-                            <i data-lucide="shopping-cart" class="h-4 w-4"></i>
-                            <span id="cart-badge"
-                                class="{{ ($cartCount ?? 0) > 0 ? '' : 'hidden ' }}absolute -top-3 -right-3.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-[var(--color-primary)] leading-none">
-                                {{ ($cartCount ?? 0) > 99 ? '99+' : ($cartCount ?? 0) }}
-                            </span>
+                        class="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs sm:text-sm font-semibold text-[var(--text-on-primary)] shadow-sm hover:opacity-95 active:scale-[0.98] transition-all duration-200">
+                        <i data-lucide="shopping-cart" class="h-4 w-4"></i>
+                        <span class="hidden sm:inline font-medium">Carrinho</span>
+                        <span id="cart-badge"
+                            class="{{ ($cartCount ?? 0) > 0 ? '' : 'hidden ' }}inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-600 px-1.5 text-[10px] font-bold text-white shadow-sm leading-none">
+                            {{ ($cartCount ?? 0) > 99 ? '99+' : ($cartCount ?? 0) }}
                         </span>
                     </a>
                 </nav>
             </div>
             @if(!empty($catalogoName) && ($mostrarNome ?? true))
-            <div class="w-full text-center py-1.5 border-t border-[var(--color-primary)]/5 bg-[var(--color-primary)]/5">
-                <h3 class="text-[var(--text-base)] font-bold text-sm sm:text-base">{{ $catalogoName }}</h3>
-            </div>
+                <div class="w-full border-t border-[var(--text-base)]/10 bg-[var(--bg-card)]/50 backdrop-blur-md py-2 px-4 text-center">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-[var(--text-base)]/10 bg-[var(--bg-card)] px-3.5 py-1 text-xs sm:text-sm font-medium text-[var(--text-base)] shadow-sm">
+                        <i data-lucide="tag" class="h-3.5 w-3.5 text-[var(--text-muted)]"></i>
+                        <span>{{ $catalogoName }}</span>
+                    </span>
+                </div>
             @endif
         </header>
 
