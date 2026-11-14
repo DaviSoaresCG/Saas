@@ -20,7 +20,7 @@ test('email verification screen can be rendered with brillance layout', function
     $response->assertSee('lojista@exemplo.com', false);
     $response->assertSee(route('verification.send'), false);
     $response->assertSee(route('logout'), false);
-    $response->assertSee('homem-bonito-elegante-e-barbudo', false);
+    $response->assertSee('mulher_comprando1.jpg', false);
 });
 
 test('email verification notification can be resent with status feedback', function () {
@@ -65,7 +65,7 @@ test('email can be verified and renders brillance success screen', function () {
     $response->assertSee('Conta verificada com sucesso!', false);
     $response->assertSee(route('plans'), false);
     $response->assertSee('Escolher meu plano', false);
-    $response->assertSee('homem-bonito-elegante-e-barbudo', false);
+    $response->assertSee('mulher_comprando1.jpg', false);
 });
 
 test('email is not verified with invalid hash', function () {

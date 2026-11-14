@@ -126,7 +126,7 @@
 
         {{-- Coluna Direita: Imagem Editorial Desktop --}}
         <aside class="relative hidden overflow-hidden bg-[#37322f] lg:flex lg:min-h-screen lg:items-end">
-            <img src="https://img.magnific.com/fotos-gratis/homem-bonito-elegante-e-barbudo-posando-contra-a-parede-branca_176420-33011.jpg?semt=ais_hybrid&w=740&q=80" alt="Cliente sorrindo enquanto faz compras pelo celular" class="absolute inset-0 size-full object-cover object-[36%_center]">
+            <img src="{{ asset('img/mulher_comprando1.jpg') }}" alt="Cliente sorrindo enquanto faz compras pelo celular" class="absolute inset-0 size-full object-cover object-[36%_center]">
             <div class="absolute inset-0 bg-gradient-to-t from-[#25231f]/85 via-[#25231f]/20 to-[#25231f]/10"></div>
             <div class="relative max-w-[560px] px-10 pb-12 text-white xl:px-16 xl:pb-16">
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-white backdrop-blur-sm">

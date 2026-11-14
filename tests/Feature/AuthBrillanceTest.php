@@ -34,7 +34,7 @@ test('auth split layout renders split screen grid with typography and assets', f
     $view->assertSee("© {$currentYear} ZapCatálogo", false);
 
     // Right column: Photography, badge and headline
-    $view->assertSee('homem-bonito-elegante-e-barbudo', false);
+    $view->assertSee('mulher_comprando1.jpg', false);
     $view->assertSee('Simples para você. Fácil para seus clientes.', false);
     $view->assertSee('Uma vitrine que transforma visitas em conversas.', false);
     $view->assertSee('Organize seu catálogo e receba cada pedido pronto para continuar no WhatsApp.', false);
@@ -54,7 +54,7 @@ test('login screen renders brillance split layout with toggle senha and register
     $response->assertSee('Entrar', false);
     $response->assertSee('Ainda não tem conta?', false);
     $response->assertSee(route('register'), false);
-    $response->assertSee('homem-bonito-elegante-e-barbudo', false);
+    $response->assertSee('mulher_comprando1.jpg', false);
 });
 
 test('login screen displays validation error on failed authentication', function () {
@@ -99,7 +99,7 @@ test('register screen renders brillance split layout with all onboarding fields'
     $response->assertSee('Criar minha conta', false);
     $response->assertSee('Já tem uma conta?', false);
     $response->assertSee(route('login'), false);
-    $response->assertSee('homem-bonito-elegante-e-barbudo', false);
+    $response->assertSee('mulher_comprando1.jpg', false);
 });
 
 test('register screen displays validation errors when submitting empty form', function () {
@@ -141,7 +141,7 @@ test('forgot-password screen renders brillance split layout with recovery fields
     $response->assertSee('name="email"', false);
     $response->assertSee('Enviar link de recuperação', false);
     $response->assertSee(route('login'), false);
-    $response->assertSee('homem-bonito-elegante-e-barbudo', false);
+    $response->assertSee('mulher_comprando1.jpg', false);
 });
 
 test('forgot-password can request reset password link', function () {
@@ -171,7 +171,7 @@ test('reset-password screen renders brillance split layout with token and passwo
         $response->assertSee('name="password"', false);
         $response->assertSee('name="password_confirmation"', false);
         $response->assertSee('Redefinir senha', false);
-        $response->assertSee('homem-bonito-elegante-e-barbudo', false);
+        $response->assertSee('mulher_comprando1.jpg', false);
 
         return true;
     });
