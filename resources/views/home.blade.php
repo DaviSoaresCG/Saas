@@ -569,7 +569,7 @@
         {{-- Banner Shopper Story (Ticket 04) --}}
         <section aria-label="Compre com praticidade pelo celular" class="px-5 pb-20 md:px-8 md:pb-28">
             <div class="relative mx-auto flex min-h-[360px] max-w-[1160px] items-center overflow-hidden rounded-[28px] bg-[#37322f] shadow-lg md:min-h-[430px]">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mulher_comprando-FAop2IuzUjyZMb0XWzE60Z2JJCNfuL.jpg" alt="Cliente sorrindo enquanto faz compras pelo celular" class="absolute inset-0 size-full object-cover object-[35%_center]">
+                <img src="{{ asset('img/mulher_comprando1.jpg') }}" alt="Cliente sorrindo enquanto faz compras pelo celular" class="absolute inset-0 size-full object-cover object-[35%_center]">
                 <div class="absolute inset-0 bg-gradient-to-r from-[#25231f]/10 via-[#25231f]/35 to-[#25231f]/85"></div>
                 <div class="relative ml-auto max-w-[520px] px-7 py-12 text-white md:px-14 md:py-16">
                     <span class="text-[11px] font-semibold uppercase tracking-[.18em] text-[#d7f56b]">Uma compra fácil, do começo ao fim</span>
