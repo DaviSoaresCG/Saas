@@ -73,3 +73,123 @@ test('cart page renders items grid and order summary when cart has products', fu
     $response->assertSee('id="open-checkout-modal-btn"', false);
     $response->assertDontSee('Seu carrinho está vazio', false);
 });
+
+test('cart page renders brillance item cards with tactile quantity controls, attributes badges and subtotal typography', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $product = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Vestido de Seda Floral',
+        'preco_base' => 280.00,
+        'sku' => 'VES-002',
+        'estoque' => 8,
+        'status' => true,
+        'description' => 'Vestido em pura seda com estampa floral',
+    ]);
+
+    $cart = [
+        $product->id => [
+            'id' => $product->id,
+            'name' => $product->nome,
+            'value' => 280.00,
+            'quantity' => 2,
+            'path' => 'https://example.com/vestido.jpg',
+            'atributos' => ['Tamanho: M', 'Cor: Lavanda'],
+            'observacao' => 'Embalar para presente',
+        ],
+    ];
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $response = $this->withSession(['cart' => $cart])
+        ->get("http://{$user->slug}.{$domain}/cart/index");
+
+    $response->assertOk();
+
+    // 1. Card frame and product item metadata
+    $response->assertSee('rounded-2xl border border-[var(--text-base)]/10 bg-[var(--bg-card)]', false);
+    $response->assertSee('data-product-id="' . $product->id . '"', false);
+    $response->assertSee('data-price="280"', false);
+
+    // 2. Image container
+    $response->assertSee('rounded-xl border border-[var(--text-base)]/10', false);
+    $response->assertSee('src="https://example.com/vestido.jpg"', false);
+
+    // 3. Badges for attributes and observation
+    $response->assertSee('Tamanho: M', false);
+    $response->assertSee('Cor: Lavanda', false);
+    $response->assertSee('rounded-full border border-[var(--text-base)]/10 bg-[var(--text-base)]/5 px-2.5 py-0.5 text-xs font-medium text-[var(--text-muted)]', false);
+    $response->assertSee('Embalar para presente', false);
+    $response->assertSee('Obs:', false);
+
+    // 4. Unit price in font-serif
+    $response->assertSee('Unitário:', false);
+    $response->assertSee('font-serif font-medium text-[var(--text-base)] text-sm sm:text-base', false);
+    $response->assertSee('R$ 280,00', false);
+
+    // 5. Tactile quantity controls
+    $response->assertSee('btn-update-cart', false);
+    $response->assertSee('rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-card)]', false);
+    $response->assertSee('data-action="decrement"', false);
+    $response->assertSee('data-action="increment"', false);
+    $response->assertSee('data-lucide="minus"', false);
+    $response->assertSee('data-lucide="plus"', false);
+    $response->assertSee('id="quantity-' . $product->id . '"', false);
+
+    // 6. Editorial subtotal
+    $response->assertSee('id="item-subtotal-' . $product->id . '"', false);
+    $response->assertSee('font-serif text-lg sm:text-xl font-medium text-[var(--text-base)]', false);
+    $response->assertSee('R$ 560,00', false);
+
+    // 7. Refined remove item button
+    $response->assertSee('btn-remove-item', false);
+    $response->assertSee('data-lucide="trash-2"', false);
+});
+
+test('cart page renders sob consulta badge instead of price when catalog is sob consulta', function () {
+    $user = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $catalogo = \App\Models\Catalogo::create([
+        'user_id' => $user->id,
+        'nome' => 'Catálogo Sob Consulta',
+        'hash' => 'consulta1234',
+        'desconto_index' => 0.00,
+        'sob_consulta' => true,
+    ]);
+
+    $product = Products::create([
+        'user_id' => $user->id,
+        'nome' => 'Joia Personalizada Ouro 18k',
+        'preco_base' => 1200.00,
+        'sku' => 'JOI-001',
+        'estoque' => 2,
+        'status' => true,
+        'description' => 'Joia sob medida',
+    ]);
+
+    $cart = [
+        $product->id => [
+            'id' => $product->id,
+            'name' => $product->nome,
+            'value' => 1200.00,
+            'quantity' => 1,
+            'path' => '',
+        ],
+    ];
+
+    $appDomain = config('app.domain', env('APP_DOMAIN', 'saas.test'));
+    $response = $this->withSession(['cart' => $cart])
+        ->get("http://{$appDomain}/{$catalogo->hash}/cart/index");
+
+    $response->assertOk();
+
+    // Sob consulta badge in card item
+    $response->assertSee('Sob Consulta', false);
+    $response->assertSee('rounded-full border border-amber-500/20 bg-amber-500/10', false);
+    $response->assertDontSee('id="item-subtotal-' . $product->id . '"', false);
+});

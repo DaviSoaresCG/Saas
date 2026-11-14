@@ -34,77 +34,102 @@
         @else
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <div class="lg:col-span-2 space-y-3">
+            <div class="lg:col-span-2 space-y-4">
                 @foreach ($cart as $id => $item)
-
-                <div class="bg-[var(--bg-card)] border-2 border-[var(--color-primary)]/40 rounded-2xl shadow-lg p-6 transition-colors duration-200">
-                        <div class="product-item flex flex-col md:flex-row gap-6 items-center  pb-6 "
+                    <div class="product-card rounded-2xl border border-[var(--text-base)]/10 bg-[var(--bg-card)] p-4 sm:p-5 shadow-sm transition-all duration-200 hover:border-[var(--text-base)]/20">
+                        <div class="product-item flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5"
                             data-price="{{ $item['value'] }}" data-product-id="{{ $id }}">
 
-                            <div class="w-32 h-32 md:w-28 md:h-28 flex-shrink-0">
-                                <img class="w-full h-full object-cover rounded-lg shadow-md"
-                                    src="{{ str_starts_with($item['path'] ?? '', 'http') ? $item['path'] : asset('storage/' . $item['path']) }}" alt="{{ $item['name'] }}">
+                            <!-- Imagem do Produto -->
+                            <div class="relative h-24 w-24 sm:h-28 sm:w-28 flex-shrink-0 overflow-hidden rounded-xl border border-[var(--text-base)]/10 bg-[var(--bg-page)]">
+                                @if (!empty($item['path']))
+                                    <img class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                                        src="{{ str_starts_with($item['path'], 'http') ? $item['path'] : asset('storage/' . $item['path']) }}"
+                                        alt="{{ $item['name'] }}">
+                                @else
+                                    <div class="flex h-full w-full items-center justify-center text-[var(--text-muted)] bg-[var(--text-base)]/5">
+                                        <i data-lucide="package" class="h-8 w-8 stroke-[1.5]"></i>
+                                    </div>
+                                @endif
                             </div>
 
-                            <div class="flex-1 w-full md:w-auto">
-                                <h3 class="text-xl font-semibold text-[var(--text-base)]">{{ $item['name'] }}</h3>
+                            <!-- Dados do Produto: Título, Atributos e Observações -->
+                            <div class="flex-1 min-w-0 w-full sm:w-auto">
+                                <h3 class="text-base sm:text-lg font-semibold text-[var(--text-base)] leading-snug">
+                                    {{ $item['name'] }}
+                                </h3>
+
                                 @if (!empty($item['atributos']))
-                                    <div class="mt-1.5 flex flex-wrap gap-1.5">
-                                        @foreach ($item['atributos'] as $atr)
-                                            <span class="inline-flex items-center rounded-lg border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 px-2 py-0.5 text-xs font-semibold text-[var(--text-base)]">
-                                                {{ $atr }}
+                                    <div class="mt-2 flex flex-wrap gap-1.5">
+                                        @foreach ($item['atributos'] as $atributo)
+                                            <span class="inline-flex items-center rounded-full border border-[var(--text-base)]/10 bg-[var(--text-base)]/5 px-2.5 py-0.5 text-xs font-medium text-[var(--text-muted)]">
+                                                {{ $atributo }}
                                             </span>
                                         @endforeach
                                     </div>
                                 @endif
+
                                 @if (!empty($item['observacao']))
-                                    <p class="mt-1 text-xs text-[var(--text-muted)] italic font-medium">
-                                        <span class="font-semibold not-italic">Obs:</span> {{ $item['observacao'] }}
+                                    <div class="mt-2">
+                                        <span class="inline-flex items-center gap-1 rounded-full border border-[var(--text-base)]/10 bg-[var(--text-base)]/5 px-2.5 py-0.5 text-xs font-medium text-[var(--text-muted)]">
+                                            <span class="font-semibold text-[var(--text-base)]">Obs:</span>
+                                            <span>{{ $item['observacao'] }}</span>
+                                        </span>
+                                    </div>
+                                @endif
+
+                                @if (!session('sob_consulta'))
+                                    <p class="mt-1.5 text-xs sm:text-sm text-[var(--text-muted)] font-normal">
+                                        Unitário: <span class="font-serif font-medium text-[var(--text-base)] text-sm sm:text-base">R$ {{ number_format($item['value'], 2, ',', '.') }}</span>
                                     </p>
                                 @endif
                             </div>
 
-                            <div class="flex items-center gap-3">
-                                <button data-action="decrement" data-product-id="{{ $id }}"
-                                    class="flex cursor-pointer btn-update-cart bg-red-600 hover:bg-red-700 px-2 rounded font-bold text-white transition-colors">
-                                    -
-                                </button>
+                            <!-- Controles Táteis de Quantidade, Subtotal e Remoção -->
+                            <div class="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-3 sm:gap-5 pt-3 sm:pt-0 border-t sm:border-t-0 border-[var(--text-base)]/10">
+                                <!-- Seletores Táteis de Quantidade -->
+                                <div class="inline-flex items-center gap-1.5 rounded-2xl border border-[var(--text-base)]/10 bg-[var(--bg-page)] p-1 shadow-2xs">
+                                    <button type="button" data-action="decrement" data-product-id="{{ $id }}"
+                                        aria-label="Diminuir quantidade"
+                                        class="btn-update-cart flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-card)] text-sm font-semibold text-[var(--text-base)] shadow-2xs transition-all hover:bg-[var(--text-base)]/5 active:scale-95 cursor-pointer">
+                                        <i data-lucide="minus" class="h-3.5 w-3.5 stroke-[2] pointer-events-none"></i>
+                                    </button>
 
-                                <span class="item-quantity text-lg font-semibold text-[var(--text-base)]"
-                                    id="quantity-{{ $id }}"> {{ $item['quantity'] }} </span>
+                                    <span class="item-quantity min-w-[2rem] text-center text-sm sm:text-base font-semibold text-[var(--text-base)]"
+                                        id="quantity-{{ $id }}">{{ $item['quantity'] }}</span>
 
-                                <button data-action="increment" data-product-id="{{ $id }}"
-                                    class="flex cursor-pointer font-bold btn-update-cart bg-blue-600 hover:bg-blue-700 px-2 rounded text-white transition-colors">
-                                    +
-                                </button>
-                            </div>
+                                    <button type="button" data-action="increment" data-product-id="{{ $id }}"
+                                        aria-label="Aumentar quantidade"
+                                        class="btn-update-cart flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-card)] text-sm font-semibold text-[var(--text-base)] shadow-2xs transition-all hover:bg-[var(--text-base)]/5 active:scale-95 cursor-pointer">
+                                        <i data-lucide="plus" class="h-3.5 w-3.5 stroke-[2] pointer-events-none"></i>
+                                    </button>
+                                </div>
 
-                            <div class="flex flex-col items-end">
-                                @if (session('sob_consulta'))
-                                    <p class="text-sm font-bold text-amber-500 mb-2">
-                                        Preço Sob Consulta
-                                    </p>
-                                @else
-                                    <p class="text-[var(--text-base)] font-bold">
-                                        Valor Unitário: {{ number_format($item['value'], 2, ',', '.') }}
-                                    </p>
-                                    <span class="item-subtotal text-xl font-bold text-[var(--text-base)] mb-2"
-                                        id="item-subtotal-{{ $id }}">
-                                        R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
-                                    </span>
-                                @endif
-                                <button data-action="remove" data-product-id="{{ $id }}"
-                                    class="btn-remove-item p-1 rounded cursor-pointer text-white bg-red-600 transition-colors text-sm font-medium flex items-center gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                      </svg>
-                                      
+                                <!-- Subtotal ou Badge Sob Consulta -->
+                                <div class="flex flex-col items-end min-w-[5.5rem]">
+                                    @if (session('sob_consulta'))
+                                        <span class="inline-flex items-center rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                                            Sob Consulta
+                                        </span>
+                                    @else
+                                        <span class="item-subtotal font-serif text-lg sm:text-xl font-medium text-[var(--text-base)] tracking-tight"
+                                            id="item-subtotal-{{ $id }}">
+                                            R$ {{ number_format($item['value'] * $item['quantity'], 2, ',', '.') }}
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <!-- Botão de Exclusão -->
+                                <button type="button" data-action="remove" data-product-id="{{ $id }}"
+                                    title="Remover item"
+                                    aria-label="Remover item do carrinho"
+                                    class="btn-remove-item flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--text-base)]/10 text-[var(--text-muted)] transition-all hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-500 active:scale-95 cursor-pointer">
+                                    <i data-lucide="trash-2" class="h-4 w-4 stroke-[1.75] pointer-events-none"></i>
                                 </button>
                             </div>
                         </div>
-                </div>
+                    </div>
                 @endforeach
-
             </div>
 
             <div class="lg:col-span-1">
@@ -287,10 +312,12 @@
 
                         if (itemElement) {
                             if (quantity <= 0) {
-                                itemElement.parentElement.style.transition = 'opacity 0.3s ease-out';
-                                itemElement.parentElement.style.opacity = '0';
+                                const cardElement = itemElement.closest('.product-card') || itemElement.parentElement;
+                                cardElement.style.transition = 'all 0.3s ease-out';
+                                cardElement.style.opacity = '0';
+                                cardElement.style.transform = 'scale(0.96)';
                                 setTimeout(() => {
-                                    itemElement.parentElement.remove();
+                                    cardElement.remove();
                                     if (count === 0) {
                                         location.reload();
                                     }
