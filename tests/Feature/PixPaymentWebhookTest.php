@@ -289,6 +289,110 @@ class PixPaymentWebhookTest extends TestCase
         ]);
     }
 
+    public function test_checkout_pix_page_renders_brillance_design_and_qr_code(): void
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'pending',
+            'plano_expira_em' => null,
+            'slug' => null,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->withSession([
+                'pending_pix' => [
+                    'plan' => 'monthly',
+                    'amount' => 29.90,
+                    'plan_name' => 'Plano Mensal',
+                    'txid' => 'pay_checkout_123',
+                    'qr_code' => '00020126580014br.gov.bcb.pix...',
+                    'qr_code_base64' => 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+                ]
+            ])
+            ->get(route('pagamento.checkout'));
+
+        $response->assertOk();
+        $response->assertSee('zap', false);
+        $response->assertSee('catálogo', false);
+        $response->assertSee('Pagamento via Pix');
+        $response->assertSee('Valor a Pagar');
+        $response->assertSee('29,90');
+        $response->assertSee('Plano Mensal');
+        $response->assertSee('Pix Copia e Cola');
+        $response->assertSee('Instruções para pagamento');
+        $response->assertSee('Simulação Sandbox / Local');
+        $response->assertSee('Instrument Serif');
+
+        // Em ambiente de produção o bloco de simulação não deve ser exibido
+        config(['app.env' => 'production', 'services.asaas.env' => 'production']);
+        $responseProd = $this->actingAs($user)
+            ->withSession([
+                'pending_pix' => [
+                    'plan' => 'monthly',
+                    'amount' => 29.90,
+                    'plan_name' => 'Plano Mensal',
+                    'txid' => 'pay_checkout_123',
+                    'qr_code' => '00020126580014br.gov.bcb.pix...',
+                    'qr_code_base64' => 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+                ]
+            ])
+            ->get(route('pagamento.checkout'));
+        $responseProd->assertOk();
+        $responseProd->assertDontSee('Simulação Sandbox / Local');
+    }
+
+    public function test_payment_status_endpoint_returns_status_and_approved_flag(): void
+    {
+        Http::fake([
+            'https://sandbox.asaas.com/api/v3/payments/*' => Http::response([
+                'id' => 'pay_status_test',
+                'status' => 'PENDING',
+            ], 200),
+        ]);
+
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'status' => 'pending',
+            'plano_expira_em' => null,
+            'slug' => null,
+        ]);
+
+        $transaction = PaymentTransaction::create([
+            'user_id' => $user->id,
+            'payment_id' => 'pay_status_test',
+            'subscription_id' => 'sub_status_test',
+            'amount' => 29.90,
+            'plan' => 'monthly',
+            'status' => 'pending',
+        ]);
+
+        // 1. Status pendente
+        $responsePending = $this->actingAs($user)
+            ->withSession([
+                'pending_pix' => [
+                    'txid' => 'pay_status_test',
+                ]
+            ])
+            ->getJson(route('pagamento.status'));
+
+        $responsePending->assertOk();
+        $responsePending->assertJson(['status' => 'pending']);
+
+        // 2. Status aprovado
+        $transaction->update(['status' => 'approved']);
+
+        $responseApproved = $this->actingAs($user)
+            ->withSession([
+                'pending_pix' => [
+                    'txid' => 'pay_status_test',
+                ]
+            ])
+            ->getJson(route('pagamento.status'));
+
+        $responseApproved->assertOk();
+        $responseApproved->assertJson(['status' => 'approved']);
+    }
+
     public function test_generate_redirects_to_invoice_url_for_credit_card(): void
     {
         $user = User::factory()->create([

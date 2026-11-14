@@ -4,13 +4,12 @@
 
 **Blocked by:** Nenhum — pronto para implementação (Ticket 01 concluído).
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Migração de `resources/views/checkout/pix.blade.php` para o Design System Brillance (fundo `#f7f5f3`, container branco/papel suave, tipografia `Instrument Serif` para valores e títulos).
-- [ ] Exibição limpa do valor da cobrança e identificação do plano contratado.
-- [ ] Card central destacado para o QR Code Pix com moldura branca nítida para facilitar o escaneamento por celulares.
-- [ ] Campo Pix Copia-e-Cola com feedback visual instantâneo ao clicar em "Copiar código" via Alpine.js ou clipboard API nativa.
-- [ ] Indicador de tempo de expiração do QR Code e polling assíncrono para verificar aprovação com redirecionamento automático para a rota de sucesso.
-- [ ] Botão de simulação de pagamento visível apenas em ambiente local ou sandbox para testes rápidos de desenvolvimento.
-- [ ] Testes automatizados cobrindo a renderização do checkout Pix e verificação de status.
-
+- [x] Migração de `resources/views/checkout/pix.blade.php` para o Design System Brillance (fundo `#f7f5f3`, container branco/papel suave, tipografia `Instrument Serif` para valores e títulos).
+- [x] Exibição limpa do valor da cobrança e identificação do plano contratado.
+- [x] Card central destacado para o QR Code Pix com moldura branca nítida para facilitar o escaneamento por celulares.
+- [x] Campo Pix Copia-e-Cola com feedback visual instantâneo ao clicar em "Copiar código" via Alpine.js ou clipboard API nativa.
+- [x] Indicador de tempo de expiração do QR Code e polling assíncrono para verificar aprovação com redirecionamento automático para a rota de sucesso.
+- [x] Botão de simulação de pagamento visível apenas em ambiente local ou sandbox para testes rápidos de desenvolvimento.
+- [x] Testes automatizados cobrindo a renderização do checkout Pix e verificação de status.

@@ -2,7 +2,7 @@
 
 **What to build:** O lojista que acessa o painel enquanto o webhook processa a ativação visualiza a tela `subscription_pending` repaginada no estilo Brillance (removendo referências legadas ao Mercado Pago e centralizando a experiência no Asaas), com indicador animado de verificação de pagamento, selos de conexão segura e polling contínuo para redirecionamento imediato ao dashboard assim que a loja for ativada, com validação na suíte de testes.
 
-**Blocked by:** 02 — Estilização da tela de checkout Pix com QR Code e Copia-e-Cola
+**Blocked by:** Nenhum — pronto para implementação (Ticket 02 concluído).
 
 **Status:** ready-for-agent
 
