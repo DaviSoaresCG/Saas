@@ -82,6 +82,47 @@
             </div>
             @endif
 
+            {{-- ========= ATRIBUTOS DO PRODUTO ========= --}}
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block text-sm font-bold text-[var(--text-base)]">
+                        Atributos do produto
+                        <span class="text-[var(--text-muted)] font-normal text-xs">(ex: tamanhos, cores, voltagens)</span>
+                    </label>
+                    <a href="{{ route('atributos.index') }}" target="_blank"
+                        class="text-xs font-medium text-[var(--color-primary)] hover:underline inline-flex items-center gap-1">
+                        <i data-lucide="plus-circle" class="h-3.5 w-3.5"></i>
+                        Gerenciar atributos
+                    </a>
+                </div>
+
+                @if (isset($atributos) && $atributos->isNotEmpty())
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        @foreach ($atributos as $atributo)
+                            @php
+                                $isChecked = in_array($atributo->id, old('atributos', []));
+                            @endphp
+                            <label class="inline-flex items-center gap-2 rounded-xl border border-[var(--color-primary)]/20 bg-[var(--bg-page)]/40 px-3.5 py-2 cursor-pointer hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/5 transition-all has-[:checked]:border-[var(--color-primary)] has-[:checked]:bg-[var(--color-primary)]/10">
+                                <input type="checkbox" name="atributos[]" value="{{ $atributo->id }}" {{ $isChecked ? 'checked' : '' }}
+                                    class="rounded border-[var(--color-primary)]/30 bg-[var(--bg-card)] text-[var(--color-primary)] focus:ring-0 h-4 w-4">
+                                <span class="text-xs font-semibold text-[var(--text-base)]">{{ $atributo->nome }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="rounded-2xl border border-dashed border-[var(--color-primary)]/25 bg-[var(--bg-page)]/30 p-4 text-center">
+                        <p class="text-xs text-[var(--text-muted)]">
+                            Nenhum atributo cadastrado no momento.
+                            <a href="{{ route('atributos.index') }}" class="font-semibold text-[var(--color-primary)] underline hover:opacity-80 ml-1">
+                                Cadastrar atributos agora
+                            </a>
+                        </p>
+                    </div>
+                @endif
+                @error('atributos') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
+                @error('atributos.*') <p class="mt-2 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
+            </div>
+
             <div class="flex flex-wrap gap-4 pt-4 mt-8 border-t border-[var(--color-primary)]/10">
                 <button type="submit" id="submit-btn"
                     class="inline-flex items-center justify-center gap-2.5 rounded-2xl cursor-pointer bg-[var(--color-primary)] hover:opacity-90 px-7 py-3.5 text-sm font-bold text-[var(--text-on-primary)] shadow-lg shadow-[var(--color-primary)]/25 transition-all shrink-0 active:scale-95">

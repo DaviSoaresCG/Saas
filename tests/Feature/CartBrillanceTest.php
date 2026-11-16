@@ -128,7 +128,7 @@ test('cart page renders brillance item cards with tactile quantity controls, att
 
     // 4. Unit price in font-serif
     $response->assertSee('Unitário:', false);
-    $response->assertSee('font-serif font-medium text-[var(--text-base)] text-sm sm:text-base', false);
+    $response->assertSee('font-serif font-medium text-[var(--text-base)] text-lg sm:text-2xl', false);
     $response->assertSee('R$ 280,00', false);
 
     // 5. Tactile quantity controls

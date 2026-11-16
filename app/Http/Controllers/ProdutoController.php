@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Atributo;
 use App\Models\Grupo;
 use App\Models\ProductClick;
 use App\Models\ProductImage;
@@ -78,8 +79,9 @@ class ProdutoController extends Controller
     public function create($slug)
     {
         $grupos = Grupo::all();
+        $atributos = auth()->user()->atributos()->orderBy('nome')->get();
 
-        return view('admin.create_product', compact('grupos'));
+        return view('admin.create_product', compact('grupos', 'atributos'));
     }
 
     public function store(Request $request)
@@ -121,6 +123,9 @@ class ProdutoController extends Controller
 
                 // Associa grupos
                 $product->grupos()->sync($request->input('grupos', []));
+
+                // Associa atributos
+                $product->atributos()->sync($request->input('atributos', []));
             });
         } catch (\Throwable $e) {
             foreach ($storedPaths as $path) {
@@ -134,11 +139,13 @@ class ProdutoController extends Controller
 
     public function edit($slug, $id)
     {
-        $product = Products::with(['productImages', 'grupos'])->findOrFail($id);
+        $product = Products::with(['productImages', 'grupos', 'atributos'])->findOrFail($id);
         $grupos = Grupo::all();
         $gruposVinculados = $product->grupos->pluck('id')->toArray();
+        $atributos = auth()->user()->atributos()->orderBy('nome')->get();
+        $atributosVinculados = $product->atributos->pluck('id')->toArray();
 
-        return view('admin.edit_product', compact('product', 'grupos', 'gruposVinculados'));
+        return view('admin.edit_product', compact('product', 'grupos', 'gruposVinculados', 'atributos', 'atributosVinculados'));
     }
 
     public function update($slug, Request $request)
@@ -176,6 +183,10 @@ class ProdutoController extends Controller
             }
 
             $product->grupos()->sync($request->input('grupos', []));
+
+            if ($request->has('atributos') || $request->has('_has_atributos')) {
+                $product->atributos()->sync($request->input('atributos', []));
+            }
         });
 
         return redirect()->route('admin.products', ['slug' => auth()->user()->slug])
@@ -291,6 +302,8 @@ class ProdutoController extends Controller
             'images.*'    => 'image|mimes:jpeg,png,jpg,webp|max:10240',
             'grupos'      => 'nullable|array',
             'grupos.*'    => ['integer', Rule::exists('grupos', 'id')->where('user_id', $tenantId)],
+            'atributos'   => 'nullable|array',
+            'atributos.*' => ['integer', Rule::exists('atributos', 'id')->where('user_id', $tenantId)],
         ];
     }
 

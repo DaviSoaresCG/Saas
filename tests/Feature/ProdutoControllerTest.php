@@ -180,7 +180,7 @@ test('product creation and update validate price format and bounds and descripti
     ])->assertSessionHasErrors(['value', 'description']);
 });
 
-test('product create and edit forms render textarea for description without hidden required file inputs or attributes', function () {
+test('product create and edit forms render textarea for description and manage attributes without hidden required file inputs', function () {
     $user = User::factory()->create([
         'tipo_cliente' => 'direct',
         'slug' => 'loja-form-produto',
@@ -202,7 +202,7 @@ test('product create and edit forms render textarea for description without hidd
 
     $createResponse = $this->actingAs($user)->get("{$baseUrl}/products/create");
     $createResponse->assertOk();
-    $createResponse->assertViewMissing('atributos');
+    $createResponse->assertViewHas('atributos');
     $createResponse->assertSee('<textarea name="description"', false);
     $createResponse->assertSee('maxlength="255"', false);
     $createResponse->assertDontSee('onchange="addFiles(this.files)" require', false);
@@ -211,8 +211,8 @@ test('product create and edit forms render textarea for description without hidd
 
     $editResponse = $this->actingAs($user)->get("{$baseUrl}/products/{$product->id}/edit");
     $editResponse->assertOk();
-    $editResponse->assertViewMissing('atributos');
-    $editResponse->assertViewMissing('atributosVinculados');
+    $editResponse->assertViewHas('atributos');
+    $editResponse->assertViewHas('atributosVinculados');
     $editResponse->assertSee('<textarea name="description"', false);
     $editResponse->assertSee('maxlength="255"', false);
 });

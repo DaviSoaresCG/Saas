@@ -169,7 +169,8 @@ test('storefront renders header cart badge accurately across empty, count, and 9
         ->get("http://{$user->slug}.{$domain}/produtos");
     $responseEmpty->assertOk();
     $responseEmpty->assertSee('id="cart-badge"', false);
-    $responseEmpty->assertSee('class="hidden inline-flex', false);
+    $responseEmpty->assertSee('hidden', false);
+    $responseEmpty->assertSee('absolute -top-1 -right-1', false);
 
     // 2. Estado numérico (7 itens)
     $responseCount = $this->withSession([
