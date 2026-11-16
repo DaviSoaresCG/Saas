@@ -64,7 +64,7 @@
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-[var(--text-base)] tracking-tight">
                     {{ $product->name }}
                 </h1>
-                
+
                 @if(isset($user) && $user->tipo_cliente === 'erp')
                     <div class="my-2 border-t border-gray-300 dark:border-gray-700 pt-2">
                         <p class="text-[var(--text-base)] font-medium text-sm">SKU: {{ $product->sku }}</p>

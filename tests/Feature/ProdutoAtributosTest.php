@@ -261,3 +261,37 @@ test('direct client edit product re-renders deselected attributes after validati
     // Because _has_atributos was submitted without attr id, it must NOT show checked
     $response->assertDontSee('value="' . $attr->id . '" checked', false);
 });
+
+test('admin sidebar displays atributos link only for direct clients and highlights it when active', function () {
+    $directUser = User::factory()->create([
+        'tipo_cliente' => 'direct',
+        'slug' => 'loja-sidebar-direct',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $erpUser = User::factory()->create([
+        'tipo_cliente' => 'erp',
+        'slug' => 'loja-sidebar-erp',
+        'plano_expira_em' => now()->addDays(30),
+    ]);
+
+    $domain = env('APP_DOMAIN', 'saas.test');
+
+    // Direct client sees Atributos link in dashboard sidebar
+    app()->instance(User::class, $directUser);
+    $directResponse = $this->actingAs($directUser)->get("http://{$directUser->slug}.{$domain}/dashboard");
+    $directResponse->assertOk();
+    $directResponse->assertSee("http://{$directUser->slug}.{$domain}/atributos", false);
+    $directResponse->assertSee('Atributos');
+
+    // Direct client accessing /atributos sees highlighted sidebar link
+    $atributosResponse = $this->actingAs($directUser)->get("http://{$directUser->slug}.{$domain}/atributos");
+    $atributosResponse->assertOk();
+    $atributosResponse->assertSee('Atributos');
+
+    // ERP client does NOT see Atributos link in dashboard sidebar
+    app()->instance(User::class, $erpUser);
+    $erpResponse = $this->actingAs($erpUser)->get("http://{$erpUser->slug}.{$domain}/dashboard");
+    $erpResponse->assertOk();
+    $erpResponse->assertDontSee("http://{$erpUser->slug}.{$domain}/atributos", false);
+});
