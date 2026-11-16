@@ -84,13 +84,42 @@
                 </div>
 
                 {{-- Form de adicionar ao carrinho (POST) --}}
-                <form action="{{ tenant_route('cart.add', ['id' => $product->id]) }}" method="POST" class="mt-6 space-y-5"
+                <form id="add-to-cart-form" action="{{ tenant_route('cart.add', ['id' => $product->id]) }}" method="POST" class="mt-6 space-y-5"
                     @if(isset($user) && $user->tipo_cliente === 'erp')
                         data-sku="{{ $product->sku }}"
                         data-peso="{{ $product->peso }}"
                     @endif
                 >
                     @csrf
+
+                    @if ($product->atributos && $product->atributos->isNotEmpty())
+                        <div class="space-y-2.5">
+                            <label class="block text-sm font-bold text-[var(--text-base)]">
+                                Opções disponíveis:
+                                <span class="text-xs font-normal text-[var(--text-muted)]">(selecione pelo menos uma opção)</span>
+                            </label>
+
+                            <div class="flex flex-wrap gap-2" id="product-attributes-list">
+                                @foreach ($product->atributos as $attr)
+                                    @php
+                                        $isChecked = is_array(old('atributos')) && in_array($attr->id, old('atributos'));
+                                    @endphp
+                                    <label class="group relative inline-flex cursor-pointer select-none items-center gap-2 rounded-xl border border-[var(--color-primary)]/20 bg-[var(--bg-card)] px-3.5 py-2 text-xs sm:text-sm font-semibold text-[var(--text-base)] shadow-2xs transition-all hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/5 has-[:checked]:border-[var(--color-primary)] has-[:checked]:bg-[var(--color-primary)] has-[:checked]:text-[var(--text-on-primary)] has-[:checked]:shadow-md">
+                                        <input type="checkbox" name="atributos[]" value="{{ $attr->id }}" {{ $isChecked ? 'checked' : '' }}
+                                            class="sr-only attribute-checkbox">
+                                        <span>{{ $attr->nome }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+
+                            <p id="attribute-error" class="hidden text-xs font-semibold text-red-500">
+                                Por favor, selecione ao menos uma opção antes de adicionar ao carrinho.
+                            </p>
+                            @error('atributos')
+                                <p id="attribute-server-error" class="text-xs font-semibold text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
 
                     <button type="submit"
                         class="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--text-on-primary)] shadow-lg transition-all hover:opacity-90 active:scale-95 cursor-pointer">
@@ -117,5 +146,37 @@
                 prev() { this.active = (this.active - 1 + this.total) % this.total; },
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('add-to-cart-form');
+            if (form) {
+                const checkboxes = form.querySelectorAll('.attribute-checkbox');
+                const errorElement = document.getElementById('attribute-error');
+
+                if (checkboxes.length > 0) {
+                    form.addEventListener('submit', function (e) {
+                        const hasSelected = Array.from(checkboxes).some(cb => cb.checked);
+                        if (!hasSelected) {
+                            e.preventDefault();
+                            if (errorElement) {
+                                errorElement.classList.remove('hidden');
+                            }
+                        }
+                    });
+
+                    checkboxes.forEach(cb => {
+                        cb.addEventListener('change', function () {
+                            if (errorElement) {
+                                errorElement.classList.add('hidden');
+                            }
+                            const serverError = document.getElementById('attribute-server-error');
+                            if (serverError) {
+                                serverError.classList.add('hidden');
+                            }
+                        });
+                    });
+                }
+            }
+        });
     </script>
 </x-store-layout>

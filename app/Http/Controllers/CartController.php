@@ -22,7 +22,7 @@ class CartController extends Controller
 
     public function add(Request $request, $slug, $id)
     {
-        $product = Products::where('status', true)->findOrFail($id);
+        $product = Products::where('status', true)->with('atributos')->findOrFail($id);
 
         $cart = session()->get('cart', []);
 
@@ -37,17 +37,41 @@ class CartController extends Controller
         $quantity = max(1, (int) $request->input('quantity', 1));
         $observacao = trim((string) $request->input('observacao', ''));
 
-        // Atributos selecionados pelo cliente (ids)
-        $atributos = $request->input('atributos', []);
+        // Validação e processamento de atributos
+        $productAtributos = $product->atributos;
+        if ($productAtributos->isNotEmpty()) {
+            $rawSelected = (array) $request->input('atributos', []);
+            $selectedIds = array_filter(array_map('intval', $rawSelected));
+
+            if (empty($selectedIds)) {
+                return redirect()->back()
+                    ->withErrors(['atributos' => 'Por favor, selecione ao menos uma opção antes de adicionar ao carrinho.'])
+                    ->withInput();
+            }
+
+            $validIds = $productAtributos->pluck('id')->all();
+            foreach ($selectedIds as $attrId) {
+                if (!in_array($attrId, $validIds, true)) {
+                    return redirect()->back()
+                        ->withErrors(['atributos' => 'Opção de produto selecionada é inválida.'])
+                        ->withInput();
+                }
+            }
+
+            $atributos = array_values(array_unique($selectedIds));
+        } else {
+            $atributos = [];
+        }
+
         sort($atributos);
 
         // Chave única: produto + combinação de atributos + observação
         $cartKey = $id . '_' . implode('_', $atributos) . ($observacao !== '' ? '_' . md5($observacao) : '');
 
-        // Busca os nomes dos atributos selecionados
+        // Busca os nomes dos atributos selecionados diretamente da relação do produto
         $atributoNomes = [];
         if (!empty($atributos)) {
-            $atributoNomes = \App\Models\Atributo::whereIn('id', $atributos)->pluck('nome')->toArray();
+            $atributoNomes = $productAtributos->whereIn('id', $atributos)->pluck('nome')->values()->toArray();
         }
 
         if (isset($cart[$cartKey])) {
@@ -87,7 +111,7 @@ class CartController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required',
             'quantity' => 'required|integer|min:0',
         ]);
 
