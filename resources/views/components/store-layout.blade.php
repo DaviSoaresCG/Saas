@@ -81,7 +81,7 @@
     </div>
 
     @php
-        $renderModal = (!empty($modalCarrinho) || request()->routeIs('products.index', 'variant.products.index'))
+        $renderModal = (!empty($modalCarrinho) || (($isDirectClient ?? true) && request()->routeIs('products.index', 'variant.products.index')))
             && !request()->routeIs('products.show', 'variant.products.show', 'cart.index', 'variant.cart.index', 'order.finished', 'variant.order.finished');
     @endphp
 

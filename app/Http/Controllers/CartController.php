@@ -37,8 +37,9 @@ class CartController extends Controller
         $quantity = max(1, (int) $request->input('quantity', 1));
         $observacao = trim((string) $request->input('observacao', ''));
 
-        // Validação e processamento de atributos
-        $productAtributos = $product->atributos;
+        // Validação e processamento de atributos (apenas clientes diretos)
+        $tenantUser = app(User::class);
+        $productAtributos = ($tenantUser->tipo_cliente === 'direct') ? $product->atributos : collect();
         if ($productAtributos->isNotEmpty()) {
             $rawSelected = (array) $request->input('atributos', []);
             $selectedIds = array_filter(array_map('intval', $rawSelected));

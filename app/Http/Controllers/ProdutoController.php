@@ -22,7 +22,8 @@ class ProdutoController extends Controller
         $selectedGrupo = $request->query('grupo');
         $search = trim((string) $request->query('search', ''));
 
-        $query = Products::with(['atributos', 'productImages', 'grupos'])->where('status', true);
+        $relations = $user->isErp() ? ['productImages', 'grupos'] : ['atributos', 'productImages', 'grupos'];
+        $query = Products::with($relations)->where('status', true);
 
         if ($user->isErp()) {
             $query->orderBy('sku');
@@ -51,7 +52,8 @@ class ProdutoController extends Controller
     public function show($slug, $id)
     {
         $user = app(User::class);
-        $query = Products::with(['atributos', 'productImages', 'grupos']);
+        $relations = $user->isErp() ? ['productImages', 'grupos'] : ['atributos', 'productImages', 'grupos'];
+        $query = Products::with($relations);
 
         if (!auth()->check() || (int) auth()->id() !== (int) $user->id) {
             $query->where('status', true);

@@ -92,7 +92,7 @@
                 >
                     @csrf
 
-                    @if ($product->atributos && $product->atributos->isNotEmpty())
+                    @if ((!isset($user) || $user->tipo_cliente === 'direct') && $product->atributos && $product->atributos->isNotEmpty())
                         <div class="space-y-2.5">
                             <label class="block text-sm font-bold text-[var(--text-base)]">
                                 Opções disponíveis:

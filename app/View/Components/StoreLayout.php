@@ -54,6 +54,7 @@ class StoreLayout extends Component
         $tenantUser = app(User::class);
         $theme = $tenantUser->theme_name;
         $modalCarrinho = (bool) ($tenantUser->modal_carrinho ?? false);
+        $isDirectClient = ($tenantUser->tipo_cliente ?? 'direct') === 'direct';
         $storeLogo = $this->logoUrl;
         $tabTitle = $this->tabTitle;
 
@@ -63,6 +64,6 @@ class StoreLayout extends Component
             $cartCount = (int) array_sum(array_column($cart, 'quantity'));
         }
 
-        return view('components.store-layout', compact('theme', 'modalCarrinho', 'storeLogo', 'tabTitle', 'cartCount'));
+        return view('components.store-layout', compact('theme', 'modalCarrinho', 'isDirectClient', 'storeLogo', 'tabTitle', 'cartCount'));
     }
 }

@@ -1,6 +1,7 @@
 @props(['produto', 'user'])
 @php
-    $hasAtributos = $produto->atributos && $produto->atributos->isNotEmpty();
+    $isDirectClient = !isset($user) || $user->tipo_cliente === 'direct';
+    $hasAtributos = $isDirectClient && $produto->atributos && $produto->atributos->isNotEmpty();
     $atributosJson = $hasAtributos
         ? json_encode($produto->atributos->map(fn($a) => ['id' => $a->id, 'nome' => $a->nome])->values())
         : null;

@@ -295,3 +295,54 @@ test('admin sidebar displays atributos link only for direct clients and highligh
     $erpResponse->assertOk();
     $erpResponse->assertDontSee("http://{$erpUser->slug}.{$domain}/atributos", false);
 });
+
+test('erp clients cannot access atributos panel or display attributes on storefront', function () {
+    $erpUser = User::factory()->create([
+        'tipo_cliente' => 'erp',
+        'slug' => 'loja-erp-sem-atributos',
+        'status' => 'active',
+        'modal_carrinho' => false,
+    ]);
+
+    app()->instance(User::class, $erpUser);
+    $domain = env('APP_DOMAIN', 'saas.test');
+    $baseUrl = "http://{$erpUser->slug}.{$domain}";
+
+    $attr = Atributo::create(['user_id' => $erpUser->id, 'nome' => 'Cor Fantasma']);
+    $product = Products::create([
+        'user_id' => $erpUser->id,
+        'nome' => 'Produto ERP Teste',
+        'slug' => 'produto-erp-teste',
+        'sku' => 'ERP-100',
+        'description' => 'Produto sincronizado via ERP',
+        'preco_base' => 99.90,
+        'status' => true,
+    ]);
+    $product->atributos()->attach($attr->id);
+
+    // 1. Admin /atributos route returns 403 for ERP client
+    $this->actingAs($erpUser)->get("{$baseUrl}/atributos")->assertForbidden();
+
+    // 2. Vitrine does not render data-atributos or attribute modal container
+    $vitrineResponse = $this->get("{$baseUrl}/produtos");
+    $vitrineResponse->assertOk();
+    $vitrineResponse->assertDontSee('data-atributos', false);
+    $vitrineResponse->assertDontSee('id="add-to-cart-modal"', false);
+
+    // 3. Product show page does not display attributes selector
+    $showResponse = $this->get("{$baseUrl}/produtos/{$product->id}");
+    $showResponse->assertOk();
+    $showResponse->assertDontSee('name="atributos[]"', false);
+    $showResponse->assertDontSee('Cor Fantasma', false);
+
+    // 4. Adding ERP product to cart succeeds without attributes
+    $cartResponse = $this->post("{$baseUrl}/cart/add/{$product->id}", [
+        'quantity' => 1,
+    ]);
+    $cartResponse->assertRedirect();
+    $cartResponse->assertSessionHasNoErrors();
+
+    $cart = session('cart', []);
+    $item = reset($cart);
+    expect($item['atributos'])->toBeEmpty();
+});
