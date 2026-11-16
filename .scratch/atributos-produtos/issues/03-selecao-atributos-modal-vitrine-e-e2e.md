@@ -4,10 +4,10 @@
 
 **Blocked by:** 02 — Exibição e seleção obrigatória de atributos na página do produto (`products/show`)
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Cards de produto na vitrine (`resources/views/products/index.blade.php`) passam os atributos disponíveis (`id` e `nome`) nos dados acionados pelo botão de adicionar.
-- [ ] Modal de adicionar ao carrinho (`resources/views/components/store-layout.blade.php` ou script do modal) renderiza dinamicamente as pills de atributos quando o produto possuir opções, exigindo a seleção antes da submissão.
-- [ ] Submissão do modal envia os atributos selecionados para `tenant_route('cart.add')` com sucesso.
-- [ ] Pedido finalizado (`PedidoController::finalizar`) persiste corretamente a descrição dos atributos em `item_pedidos.atributos` e inclui os atributos selecionados na mensagem formatada enviada ao WhatsApp.
-- [ ] Testes de feature automatizados cobrindo a jornada completa: produto com atributos vs. produto sem atributos, modal da vitrine, adição ao carrinho, persistência no pedido e composição do texto de WhatsApp.
+- [x] Cards de produto na vitrine (`resources/views/products/index.blade.php`) passam os atributos disponíveis (`id` e `nome`) nos dados acionados pelo botão de adicionar.
+- [x] Modal de adicionar ao carrinho (`resources/views/components/store-layout.blade.php` ou script do modal) renderiza dinamicamente as pills de atributos quando o produto possuir opções, exigindo a seleção antes da submissão.
+- [x] Submissão do modal envia os atributos selecionados para `tenant_route('cart.add')` com sucesso.
+- [x] Pedido finalizado (`PedidoController::finalizar`) persiste corretamente a descrição dos atributos em `item_pedidos.atributos` e inclui os atributos selecionados na mensagem formatada enviada ao WhatsApp.
+- [x] Testes de feature automatizados cobrindo a jornada completa: produto com atributos vs. produto sem atributos, modal da vitrine, adição ao carrinho, persistência no pedido e composição do texto de WhatsApp.

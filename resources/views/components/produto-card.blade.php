@@ -1,4 +1,10 @@
 @props(['produto', 'user'])
+@php
+    $hasAtributos = $produto->atributos && $produto->atributos->isNotEmpty();
+    $atributosJson = $hasAtributos
+        ? json_encode($produto->atributos->map(fn($a) => ['id' => $a->id, 'nome' => $a->nome])->values())
+        : null;
+@endphp
 <div
     class="group rounded-2xl bg-[var(--bg-card)] overflow-hidden shadow-lg shadow-black/20  transition-all duration-300"
     @if(isset($user) && $user->tipo_cliente === 'erp')
@@ -40,6 +46,9 @@
             @if(isset($user) && $user->tipo_cliente === 'erp')
                 data-sku="{{ $produto->sku }}"
                 data-peso="{{ $produto->peso }}"
+            @endif
+            @if($hasAtributos)
+                data-atributos="{{ $atributosJson }}"
             @endif
         >
             @csrf

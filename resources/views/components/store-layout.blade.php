@@ -80,7 +80,12 @@
         </main>
     </div>
 
-    @if (!empty($modalCarrinho))
+    @php
+        $renderModal = (!empty($modalCarrinho) || request()->routeIs('products.index', 'variant.products.index'))
+            && !request()->routeIs('products.show', 'variant.products.show', 'cart.index', 'variant.cart.index', 'order.finished', 'variant.order.finished');
+    @endphp
+
+    @if ($renderModal)
         <!-- Modal Adicionar Produto ao Carrinho -->
         <div id="add-to-cart-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-md p-4 opacity-0 transition-opacity duration-300 ease-out">
             <div id="add-to-cart-modal-content" class="relative w-full max-w-md bg-[var(--bg-card)] border border-[var(--text-base)]/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-[var(--text-base)] transform scale-95 opacity-0 transition-all duration-300 ease-out">
@@ -144,6 +149,7 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                const isModalSettingEnabled = @json(!empty($modalCarrinho));
                 const addToCartModal = document.getElementById('add-to-cart-modal');
                 const modalContent = document.getElementById('add-to-cart-modal-content');
                 const closeAddModalBtn = document.getElementById('close-add-modal-btn');
@@ -216,15 +222,46 @@
                     }
                 });
 
+                if (modalForm) {
+                    modalForm.addEventListener('submit', function(e) {
+                        const checkboxes = modalForm.querySelectorAll('.modal-attribute-checkbox');
+                        if (checkboxes.length > 0) {
+                            const hasChecked = Array.from(checkboxes).some(cb => cb.checked);
+                            if (!hasChecked) {
+                                e.preventDefault();
+                                const err = document.getElementById('modal-attribute-error');
+                                if (err) err.classList.remove('hidden');
+                                return false;
+                            }
+                        }
+                    });
+                }
+
                 document.querySelectorAll('form[action*="/cart/add/"]').forEach(function(form) {
                     form.addEventListener('submit', function(e) {
                         if (form === modalForm) {
                             return;
                         }
+
+                        const card = form.closest('.group') || form.closest('.p-6') || form.parentElement;
+
+                        // Atributos do produto
+                        const rawAtributos = form.dataset.atributos || form.querySelector('[data-atributos]')?.dataset?.atributos || card?.dataset?.atributos || '[]';
+                        let atributos = [];
+                        try {
+                            atributos = JSON.parse(rawAtributos);
+                        } catch (err) {
+                            atributos = [];
+                        }
+
+                        // Se a loja não tem modal de quantidade ativado e o produto não tem atributos, faz o submit direto (fluxo rápido)
+                        if (!isModalSettingEnabled && (!atributos || atributos.length === 0)) {
+                            return;
+                        }
+
                         e.preventDefault();
 
                         const actionUrl = form.getAttribute('action');
-                        const card = form.closest('.group') || form.closest('.p-6') || form.parentElement;
                         const productName = card ? (card.querySelector('h1, h3, .font-bold')?.innerText || 'Produto') : 'Produto';
                         const productPrice = card ? (card.querySelector('.tabular-nums, .text-emerald-600, .text-amber-500')?.innerText || '') : '';
                         const sku = form.dataset.sku || card?.dataset?.sku || '';
@@ -248,6 +285,39 @@
                                 modalErpInfo.classList.remove('hidden');
                             } else {
                                 modalErpInfo.classList.add('hidden');
+                            }
+                        }
+
+                        if (attrContainer) {
+                            if (atributos && atributos.length > 0) {
+                                attrContainer.innerHTML = `
+                                    <div class="space-y-2">
+                                        <label class="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                                            Opções <span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="flex flex-wrap gap-2" id="modal-attributes-list">
+                                            ${atributos.map(attr => `
+                                                <label class="group relative inline-flex cursor-pointer select-none items-center gap-2 rounded-xl border border-[var(--text-base)]/15 bg-[var(--bg-card)] px-3 py-1.5 text-xs font-semibold text-[var(--text-base)] shadow-2xs transition-all hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/5 has-[:checked]:border-[var(--color-primary)] has-[:checked]:bg-[var(--color-primary)] has-[:checked]:text-[var(--text-on-primary)] has-[:checked]:shadow-md">
+                                                    <input type="checkbox" name="atributos[]" value="${attr.id}" class="sr-only modal-attribute-checkbox">
+                                                    <span>${attr.nome}</span>
+                                                </label>
+                                            `).join('')}
+                                        </div>
+                                        <p id="modal-attribute-error" class="hidden text-xs font-semibold text-red-500">
+                                            Por favor, selecione ao menos uma opção antes de adicionar.
+                                        </p>
+                                    </div>
+                                `;
+                                attrContainer.classList.remove('hidden');
+
+                                attrContainer.querySelectorAll('.modal-attribute-checkbox').forEach(cb => {
+                                    cb.addEventListener('change', () => {
+                                        document.getElementById('modal-attribute-error')?.classList.add('hidden');
+                                    });
+                                });
+                            } else {
+                                attrContainer.innerHTML = '';
+                                attrContainer.classList.add('hidden');
                             }
                         }
 
